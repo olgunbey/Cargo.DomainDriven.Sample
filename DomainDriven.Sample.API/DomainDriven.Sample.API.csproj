@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EventStore.Client.Grpc" Version="23.3.9" />
+    <PackageReference Include="EventStore.Client.Grpc.Streams" Version="23.3.9" />
     <PackageReference Include="MediatR" Version="13.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.17">
@@ -17,12 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CargoManagement\Application\Commands\" />
     <Folder Include="CargoManagement\Application\Queries\" />
-    <Folder Include="CargoManagement\Domain\Events\" />
     <Folder Include="CargoManagement\Persistence\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Customer\Application\" />
+    <Folder Include="Customer\Domain\Aggregates\" />
+    <Folder Include="Customer\Domain\Entities\" />
+    <Folder Include="Customer\Domain\ValueObjects\" />
+    <Folder Include="Customer\Persistence\" />
     <Folder Include="Mail\" />
-    <Folder Include="Customer\" />
   </ItemGroup>
 
 </Project>
