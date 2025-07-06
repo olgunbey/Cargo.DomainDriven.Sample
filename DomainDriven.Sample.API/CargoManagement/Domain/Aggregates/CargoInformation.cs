@@ -5,11 +5,11 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
 {
-    public class CargoInformation : IAggregateRoot, ICargoInformation
+    public class CargoInformation : AggregateRoot, ICargoInformation
     {
         public CargoInformation()
         {
-            Notifications = new List<INotification>();
+            base.Notifications = new List<INotification>();
         }
         public int Id { get; private set; }
 
@@ -22,7 +22,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         public int OrderId { get; private set; }
 
         public int CompanyId { get; private set; }
-        public List<INotification> Notifications { get; set; }
+        public DateTime CargoCreatedDate { get; private set; }
 
         public CargoInformation AddCargoInformation(int customerId, int orderId, int companyId)
         {
@@ -30,17 +30,9 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
             CompanyId = companyId;
             OrderId = orderId;
             CargoSenderId = null;
+            CargoCreatedDate = DateTime.UtcNow;
             Status = new Status(StatusType.Created);
-
-            Notifications.Add(new CargoInformationEvent()
-            {
-                CompanyId = companyId,
-                CustomerId = customerId,
-                OrderId = orderId,
-                Status = Enum.GetName(StatusType.Created)!,
-                CargoCreatedDate = DateTime.UtcNow,
-            });
-
+            base.Notifications.Add(new CargoInformationEvent(this.CompanyId, this.CustomerId, this.OrderId, Enum.GetName(StatusType.Created)!, DateTime.UtcNow, null));
             return this;
         }
         public void UpdateStatus(StatusType statusType)
@@ -51,14 +43,13 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
                 IsDelivered = true;
             }
 
-            Notifications.Add(new CargoInformationEvent()
-            {
-                CompanyId = this.CompanyId,
-                CustomerId = this.CustomerId,
-                OrderId = this.OrderId,
-                Status = Enum.GetName(statusType)!,
-                CargoCreatedDate = DateTime.UtcNow,
-            });
+            base.Notifications.Add(new CargoInformationEvent(this.CompanyId, this.CustomerId, this.OrderId, Enum.GetName(statusType)!, this.CargoCreatedDate, DateTime.UtcNow));
+        }
+
+        public void SetCargoSenderId(int senderId)
+        {
+            this.CargoSenderId = senderId;
+
         }
     }
 }

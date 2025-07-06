@@ -28,6 +28,13 @@
     <Folder Include="Customer\Domain\Entities\" />
     <Folder Include="Customer\Domain\ValueObjects\" />
     <Folder Include="Customer\Persistence\" />
+    <Folder Include="Location\Application\" />
+    <Folder Include="Location\Domain\Aggregates\" />
+    <Folder Include="Location\Domain\Entities\" />
+    <Folder Include="Location\Domain\Events\" />
+    <Folder Include="Location\Domain\Repositories\" />
+    <Folder Include="Location\Domain\ValueObjects\" />
+    <Folder Include="Location\Persistence\" />
     <Folder Include="Mail\" />
   </ItemGroup>
 

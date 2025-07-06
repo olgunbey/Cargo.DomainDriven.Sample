@@ -7,7 +7,8 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Events
     int CustomerId,
     int OrderId,
     string Status,
-    DateTime CargoCreatedDate
+    DateTime CargoCreatedDate,
+    DateTime? CargoUpdatedDate
 ) : INotification;
 
 }
