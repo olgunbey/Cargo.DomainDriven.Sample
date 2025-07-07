@@ -1,8 +1,7 @@
-﻿using DomainDriven.Sample.API.CargoManagement.Domain.Entities;
-using MediatR;
+﻿using MediatR;
 
 
-namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
+namespace DomainDriven.Sample.API.Common
 {
     public class AggregateRoot : IEntity
     {

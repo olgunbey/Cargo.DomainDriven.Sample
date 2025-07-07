@@ -1,4 +1,4 @@
-﻿using DomainDriven.Sample.API.CargoManagement.Domain.Entities;
+﻿using DomainDriven.Sample.API.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Database
