@@ -34,7 +34,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
             CargoSenderId = null;
             CargoCreatedDate = DateTime.UtcNow;
             Status = new Status(StatusType.Created);
-            base.Notifications.Add(new CargoInformationEvent(this.CompanyId, this.CustomerId, this.OrderId, Enum.GetName(StatusType.Created)!, DateTime.UtcNow, null));
+            base.Notifications.Add(new CargoInformationNotification(this.CompanyId, this.CustomerId, this.OrderId, Enum.GetName(StatusType.Created)!, DateTime.UtcNow, null));
             return this;
         }
         public void UpdateStatus(StatusType statusType)
@@ -45,10 +45,10 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
                 IsDelivered = true;
             }
 
-            base.Notifications.Add(new CargoInformationEvent(this.CompanyId, this.CustomerId, this.OrderId, Enum.GetName(statusType)!, this.CargoCreatedDate, DateTime.UtcNow));
+            base.Notifications.Add(new CargoInformationNotification(this.CompanyId, this.CustomerId, this.OrderId, Enum.GetName(statusType)!, this.CargoCreatedDate, DateTime.UtcNow));
         }
 
-        public void SetCargoSenderId(int senderId)
+        public void AssignCargoToEmployee(int senderId)
         {
             this.CargoSenderId = senderId;
         }

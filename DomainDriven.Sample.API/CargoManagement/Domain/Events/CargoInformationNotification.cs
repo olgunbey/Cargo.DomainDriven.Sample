@@ -2,7 +2,7 @@
 
 namespace DomainDriven.Sample.API.CargoManagement.Domain.Events
 {
-    public record CargoInformationEvent(
+    public record CargoInformationNotification(
     int CompanyId,
     int CustomerId,
     int OrderId,
