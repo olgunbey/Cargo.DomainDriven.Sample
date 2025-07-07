@@ -10,7 +10,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.Commands
     {
         public AddCargoInformationRequestDto AddCargoInformationRequestDto { get; set; }
     }
-    public class AddCargoInformationHandler(ICargoInformation cargoInformation, IApplicationDbContext<CargoInformation> cargoInformationDbContext) : IRequestHandler<AddCargoInformationRequest, bool>
+    public class AddCargoInformationHandler(ICargoInformation cargoInformation, IApplicationDbContext cargoInformationDbContext) : IRequestHandler<AddCargoInformationRequest, bool>
     {
         public async Task<bool> Handle(AddCargoInformationRequest request, CancellationToken cancellationToken)
         {
@@ -19,7 +19,8 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.Commands
                   request.AddCargoInformationRequestDto.OrderId,
                   request.AddCargoInformationRequestDto.CompanyId);
 
-            await cargoInformationDbContext.Entity.AddAsync(generateCargoInformation, cancellationToken);
+            cargoInformationDbContext.GetEntity<CargoInformation>().Add(generateCargoInformation);
+            await cargoInformationDbContext.SaveChangesAsync(cancellationToken);
             throw new NotImplementedException();
         }
     }

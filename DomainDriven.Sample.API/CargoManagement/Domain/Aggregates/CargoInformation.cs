@@ -1,6 +1,7 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Domain.Events;
 using DomainDriven.Sample.API.CargoManagement.Domain.Repositories;
 using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
+using DomainDriven.Sample.API.Common;
 using MediatR;
 
 namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
@@ -23,6 +24,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
 
         public int CompanyId { get; private set; }
         public DateTime CargoCreatedDate { get; private set; }
+        public DateTime UpdateCreatedDate { get; private set; }
 
         public CargoInformation AddCargoInformation(int customerId, int orderId, int companyId)
         {
@@ -49,7 +51,6 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         public void SetCargoSenderId(int senderId)
         {
             this.CargoSenderId = senderId;
-
         }
     }
 }

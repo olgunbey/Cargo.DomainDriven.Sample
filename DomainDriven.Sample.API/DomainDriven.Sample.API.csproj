@@ -21,20 +21,17 @@
   <ItemGroup>
     <Folder Include="CargoManagement\Application\Commands\" />
     <Folder Include="CargoManagement\Application\Queries\" />
-    <Folder Include="CargoManagement\Persistence\" />
-    <Folder Include="Controllers\" />
+    <Folder Include="CargoManagement\Domain\Entities\" />
     <Folder Include="Customer\Application\" />
     <Folder Include="Customer\Domain\Aggregates\" />
     <Folder Include="Customer\Domain\Entities\" />
     <Folder Include="Customer\Domain\ValueObjects\" />
     <Folder Include="Customer\Persistence\" />
-    <Folder Include="Location\Application\" />
-    <Folder Include="Location\Domain\Aggregates\" />
-    <Folder Include="Location\Domain\Entities\" />
+    <Folder Include="Location\Application\Dtos\" />
+    <Folder Include="Location\Application\IRepositories\" />
+    <Folder Include="Location\Application\Queries\" />
     <Folder Include="Location\Domain\Events\" />
-    <Folder Include="Location\Domain\Repositories\" />
     <Folder Include="Location\Domain\ValueObjects\" />
-    <Folder Include="Location\Persistence\" />
     <Folder Include="Mail\" />
   </ItemGroup>
 

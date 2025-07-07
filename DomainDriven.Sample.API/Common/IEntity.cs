@@ -1,4 +1,4 @@
-﻿namespace DomainDriven.Sample.API.CargoManagement.Domain.Entities
+﻿namespace DomainDriven.Sample.API.Common
 {
     public interface IEntity
     {
