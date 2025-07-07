@@ -8,5 +8,7 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<TEntity> GetEntity<TEntity>() where TEntity : class, IEntity, new();
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
+
+
     }
 }

@@ -4,9 +4,9 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.CargoManagement.Application.DomainEventHandler
 {
-    public class CargoInformationNotificationHandler(EventStoreClient eventStoreClient) : INotificationHandler<CargoInformationEvent>
+    public class CargoInformationNotificationHandler(EventStoreClient eventStoreClient) : INotificationHandler<CargoInformationNotification>
     {
-        public async Task Handle(CargoInformationEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(CargoInformationNotification notification, CancellationToken cancellationToken)
         {
             await eventStoreClient.AppendToStreamAsync(
                  streamName: $"Cargo-{notification.CompanyId}-{notification.OrderId}",
@@ -15,7 +15,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.DomainEventHandler
                  eventData: new[] {
                     new EventData(
                         eventId: Uuid.NewUuid(),
-                        type: nameof(CargoInformationEvent),
+                        type: nameof(CargoInformationNotification),
                         data: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(notification),
                         metadata: null)
                  });

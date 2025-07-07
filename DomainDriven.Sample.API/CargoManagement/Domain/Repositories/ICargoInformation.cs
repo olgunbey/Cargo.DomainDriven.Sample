@@ -7,5 +7,6 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Repositories
     {
         public CargoInformation AddCargoInformation(int customerId, int orderId, int companyId);
         public void UpdateStatus(StatusType statusType);
+        public void AssignCargoToEmployee(int senderId);
     }
 }
