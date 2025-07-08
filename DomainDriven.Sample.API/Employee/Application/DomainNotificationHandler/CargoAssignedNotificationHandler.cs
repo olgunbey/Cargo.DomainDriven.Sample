@@ -1,8 +1,10 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
+using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Database;
 using DomainDriven.Sample.API.Employee.Domain.Events;
 using EventStore.Client;
 using MediatR;
+using System.Text.Json;
 
 namespace DomainDriven.Sample.API.Employee.Application.DomainNotificationHandler
 {
@@ -20,7 +22,23 @@ namespace DomainDriven.Sample.API.Employee.Application.DomainNotificationHandler
 
             await applicationDbContext.SaveChangesAsync(cancellationToken);
 
-            throw new NotImplementedException();
+            CargoInformationEvent cargoInformationEvent = new CargoInformationEvent(
+                cargoInformation.CompanyId,
+                cargoInformation.CustomerId,
+                cargoInformation.OrderId,
+                Enum.GetName(cargoInformation.Status.StatusType)!,
+                cargoInformation.CargoCode,
+                notification.EmployeeId,
+                cargoInformation.CargoCreatedDate,
+                cargoInformation.UpdateCreatedDate
+                );
+
+            var @event = new EventData(Uuid.NewUuid(), typeof(CargoInformationEvent).Name, JsonSerializer.SerializeToUtf8Bytes(cargoInformationEvent));
+
+            await eventStoreClient.AppendToStreamAsync(
+                 streamName: $"Cargo-{cargoInformation.CargoCode}",
+                 expectedState: StreamState.Any,
+                 eventData: [@event]);
         }
     }
 }
