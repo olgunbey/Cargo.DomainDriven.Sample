@@ -1,9 +1,10 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Domain.Repositories;
+using DomainDriven.Sample.API.Common;
 using MediatR;
 
 namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
 {
-    public class Company : IAggregateRoot, ICompany
+    public class Company : AggregateRoot, ICompany
     {
         public Company()
         {
