@@ -63,5 +63,9 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         {
             this.CargoSenderId = senderId;
         }
+        public CargoInformation ShallowCopy()
+        {
+            return (CargoInformation)MemberwiseClone();
+        }
     }
 }
