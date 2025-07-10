@@ -5,6 +5,5 @@ namespace DomainDriven.Sample.API.Location.Domain.Repositories
     public interface IDistrict
     {
         public District GenerateDistrict(string name);
-        public void AddNeighbourhood(string name);
     }
 }

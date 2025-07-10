@@ -19,7 +19,7 @@ namespace DomainDriven.Sample.API.Employee.Domain.Aggregates
                 throw new InvalidOperationException("Cargo is already assigned to this employee.");
             }
             _cargoIds.Add(cargoId);
-            Notifications.Add(new CargoAssignedNotification(this.Id, cargoId));
+            RaiseDomainEvent(new CargoAssignedNotification(this.Id, cargoId));
         }
     }
 }

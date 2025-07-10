@@ -9,9 +9,9 @@ namespace DomainDriven.Sample.API.Controllers
     public class CargoManagerController(IMediator mediator) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> AddCargo(AddCargoInformationRequest addCargoInformationRequest)
+        public async Task<IActionResult> AddCargo(AddCargoRequest addCargoRequest)
         {
-            var response = await mediator.Send(addCargoInformationRequest);
+            var response = await mediator.Send(addCargoRequest);
             return Ok(response);
         }
     }

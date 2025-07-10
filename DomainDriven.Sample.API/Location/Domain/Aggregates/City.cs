@@ -1,5 +1,6 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Location.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DomainDriven.Sample.API.Location.Domain.Aggregates
 {
@@ -7,10 +8,10 @@ namespace DomainDriven.Sample.API.Location.Domain.Aggregates
     {
         public City()
         {
-            _districts = new List<District>();
+
         }
         public string Name { get; private set; }
-        private List<District> _districts;
+        private readonly List<District> _districts;
         public IReadOnlyCollection<District> Districts => _districts;
 
         public void SetName(string name)

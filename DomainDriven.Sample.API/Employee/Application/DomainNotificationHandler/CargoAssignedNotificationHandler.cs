@@ -30,7 +30,7 @@ namespace DomainDriven.Sample.API.Employee.Application.DomainNotificationHandler
                 cargoInformation.CargoCode,
                 notification.EmployeeId,
                 cargoInformation.CargoCreatedDate,
-                cargoInformation.UpdateCreatedDate
+                cargoInformation.LastUpdatedDate
                 );
 
             var @event = new EventData(Uuid.NewUuid(), typeof(CargoInformationEvent).Name, JsonSerializer.SerializeToUtf8Bytes(cargoInformationEvent));
