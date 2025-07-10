@@ -4,7 +4,7 @@ using EventStore.Client;
 using MediatR;
 using System.Text.Json;
 
-namespace DomainDriven.Sample.API.CargoManagement.Application.DomainNotificationHandler
+namespace DomainDriven.Sample.API.CargoManagement.Application.DomainHandler
 {
     public class CargoAssignedToEmployeeNotificationHandler(EventStoreClient eventStoreClient) : INotificationHandler<CargoAssignedToEmployeeNotification>
     {
