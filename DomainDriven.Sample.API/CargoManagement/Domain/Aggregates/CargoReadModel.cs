@@ -25,6 +25,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         public void UpdateStatus(StatusType statusType)
         {
             this.Status = new Status(statusType);
+            this.LastUpdatedDate = DateTime.UtcNow;
         }
     }
 }

@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="CargoManagement\Domain\Entities\" />
-    <Folder Include="CargoManagement\Domain\Events\EventStore\" />
     <Folder Include="Customer\Application\" />
     <Folder Include="Customer\Domain\Aggregates\" />
     <Folder Include="Customer\Domain\Entities\" />
