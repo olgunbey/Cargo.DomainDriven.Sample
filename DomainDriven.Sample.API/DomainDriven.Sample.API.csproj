@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CargoManagement\Application\Queries\**" />
+    <Content Remove="CargoManagement\Application\Queries\**" />
+    <EmbeddedResource Remove="CargoManagement\Application\Queries\**" />
+    <None Remove="CargoManagement\Application\Queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EventStore.Client.Grpc" Version="23.3.9" />
     <PackageReference Include="EventStore.Client.Grpc.Streams" Version="23.3.9" />
     <PackageReference Include="MediatR" Version="13.0.0" />
@@ -20,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CargoManagement\Application\Queries\" />
     <Folder Include="CargoManagement\Domain\Entities\" />
+    <Folder Include="CargoManagement\Domain\Events\EventStore\" />
     <Folder Include="Customer\Application\" />
     <Folder Include="Customer\Domain\Aggregates\" />
     <Folder Include="Customer\Domain\Entities\" />
@@ -34,7 +41,6 @@
     <Folder Include="Employee\Domain\Repositories\" />
     <Folder Include="Employee\Domain\ValueObject\" />
     <Folder Include="Location\Application\Dtos\" />
-    <Folder Include="Location\Application\IRepositories\" />
     <Folder Include="Location\Application\Queries\" />
     <Folder Include="Location\Domain\Events\" />
     <Folder Include="Location\Domain\ValueObjects\" />

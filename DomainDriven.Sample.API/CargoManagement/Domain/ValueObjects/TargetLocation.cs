@@ -1,0 +1,15 @@
+﻿namespace DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects
+{
+    public class TargetLocation : ValueObject
+    {
+        public TargetLocation(int cityId,int districtId,string detail)
+        {
+            CityId = cityId;
+            DistrictId = districtId;
+            Detail = detail;
+        }
+        public int CityId { get; private set; }
+        public int DistrictId { get; private set; }
+        public string Detail { get; private set; }
+    }
+}
