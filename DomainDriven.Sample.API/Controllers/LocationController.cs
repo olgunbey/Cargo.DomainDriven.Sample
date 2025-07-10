@@ -20,11 +20,6 @@ namespace DomainDriven.Sample.API.Controllers
             bool response = await mediator.Send(addDistrictRequest);
             return Ok(response);
         }
-        [HttpPost]
-        public async Task<IActionResult> AddNeighbourhood(AddNeighbourhoodRequest addCountryRequest)
-        {
-            bool response = await mediator.Send(addCountryRequest);
-            return Ok(response);
-        }
+      
     }
 }

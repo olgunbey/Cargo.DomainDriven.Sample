@@ -5,8 +5,22 @@ namespace DomainDriven.Sample.API.Common
 {
     public class AggregateRoot : IEntity
     {
-        public List<INotification> Notifications { get; set; }
-
+        public AggregateRoot()
+        {
+            _notifications = new();
+        }
         public int Id { get; private set; }
+        private readonly List<INotification> _notifications;
+        public IReadOnlyCollection<INotification> Notifications => _notifications;
+        protected void RaiseDomainEvent(INotification notification)
+        {
+            _notifications.Add(notification);
+        }
+        protected void ClearDomainEvents()
+        {
+            _notifications.Clear();
+        }
+        protected IReadOnlyCollection<INotification> GetDomainEvents() => _notifications.ToList();
+
     }
 }
