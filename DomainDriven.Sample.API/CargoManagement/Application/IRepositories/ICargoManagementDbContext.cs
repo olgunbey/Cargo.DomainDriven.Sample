@@ -8,5 +8,6 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.IRepositories
     {
         public DbSet<CargoReadModel> CargoReadModel { get; set; }
         public DbSet<Company> Company { get; set; }
+        public DbSet<CargoDetailInformation> CargoDetailInformation { get; set; }
     }
 }

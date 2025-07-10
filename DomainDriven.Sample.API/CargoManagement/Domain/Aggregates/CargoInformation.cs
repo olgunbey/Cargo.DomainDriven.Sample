@@ -1,4 +1,5 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
+using DomainDriven.Sample.API.CargoManagement.Domain.Events;
 using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
 using DomainDriven.Sample.API.Common;
 using System.Text;
@@ -20,7 +21,6 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         public DateTime CargoCreatedDate { get; private set; }
         public DateTime LastUpdatedDate { get; private set; }
         public TargetLocation TargetLocation { get; private set; }
-        public string CurrentLocation { get; private set; }
 
         private static string GenerateCargoCode()
         {
@@ -58,11 +58,11 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
             this.CustomerId = customerId;
             this.CompanyId = companyId;
             this.OrderId = orderId;
-            this.CurrentLocation = null;
             this.EmployeeId = null;
             this.TargetLocation = new TargetLocation(cityId, districtId, detail);
             this.CargoCreatedDate = DateTime.UtcNow;
             this.Status = new Status(StatusType.Created);
+            RaiseDomainEvent(new GenerateCargoEvent(detail, this.CargoCode));
             return this;
         }
     }

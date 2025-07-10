@@ -20,7 +20,5 @@ namespace DomainDriven.Sample.API.Common
         {
             _notifications.Clear();
         }
-        protected IReadOnlyCollection<INotification> GetDomainEvents() => _notifications.ToList();
-
     }
 }

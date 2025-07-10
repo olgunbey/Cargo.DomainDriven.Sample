@@ -1,7 +1,6 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
 using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
 using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
-using DomainDriven.Sample.API.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +23,6 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.Commands
             }
 
             cargoReadModel.UpdateStatus(StatusType.InTransit);
-
             await cargoManagementDbContext.SaveChangesAsync(cancellationToken);
         }
     }
