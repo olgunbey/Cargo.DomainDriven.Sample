@@ -1,7 +1,7 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Application.Dtos;
-using DomainDriven.Sample.API.CargoManagement.Application.Events;
 using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
 using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
+using DomainDriven.Sample.API.CargoManagement.Infrastructure.EventStore;
 using EventStore.Client;
 using MediatR;
 
@@ -23,15 +23,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.Commands
                  request.AddCargoRequestDto.DistrictId,
                  request.AddCargoRequestDto.Detail);
 
-            var @event = new CargoGeneratedEvent(
-                customerId: cargoInformation.CustomerId,
-                status: cargoInformation.Status,
-                employeeId: cargoInformation.EmployeeId ?? 0,
-                orderId: cargoInformation.OrderId,
-                cargoCode: cargoInformation.CargoCode,
-                companyId: cargoInformation.CompanyId,
-                cargoCreatedDate: cargoInformation.CargoCreatedDate,
-                lastUpdatedDate: cargoInformation.LastUpdatedDate);
+            var @event = new CargoGeneratedEvent(cargoInformation.CargoCode, cargoInformation.EmployeeId, cargoInformation.CustomerId);
 
             var eventData = new EventData(
                 Uuid.NewUuid(),
