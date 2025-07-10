@@ -1,11 +1,11 @@
-﻿using DomainDriven.Sample.API.CargoManagement.Domain.Repositories;
+﻿using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
 using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
 using DomainDriven.Sample.API.Common;
 using System.Text;
 
 namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
 {
-    public class CargoInformation : AggregateRoot, ICargoInformation
+    public class CargoInformation : AggregateRoot, ICargo
     {
         public CargoInformation()
         {
@@ -35,19 +35,6 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
             }
             return result.ToString();
         }
-        public CargoInformation AddCargoInformation(int customerId, int orderId, int companyId)
-        {
-
-
-            this.CargoCode = GenerateCargoCode();
-            this.CustomerId = customerId;
-            this.CompanyId = companyId;
-            this.OrderId = orderId;
-            this.EmployeeId = null;
-            this.CargoCreatedDate = DateTime.UtcNow;
-            this.Status = new Status(StatusType.Created);
-            return this;
-        }
         public void UpdateStatus(StatusType statusType)
         {
             this.Status = new Status(statusType);
@@ -61,6 +48,18 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         public CargoInformation ShallowCopy()
         {
             return (CargoInformation)MemberwiseClone();
+        }
+
+        public CargoInformation GenerateCargo(int customerId, int orderId, int companyId, int cityId, int districtId, string detail)
+        {
+            this.CargoCode = GenerateCargoCode();
+            this.CustomerId = customerId;
+            this.CompanyId = companyId;
+            this.OrderId = orderId;
+            this.EmployeeId = null;
+            this.CargoCreatedDate = DateTime.UtcNow;
+            this.Status = new Status(StatusType.Created);
+            return this;
         }
     }
 }
