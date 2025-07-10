@@ -1,10 +1,10 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
 
-namespace DomainDriven.Sample.API.CargoManagement.Application.Dtos
+namespace DomainDriven.Sample.API.CargoManagement.Application.Events
 {
-    public class AddCargoEventResponseDto
+    public class CargoInTransitEvent
     {
-        public AddCargoEventResponseDto(int customerId, Status status, int employeeId, int orderId, string cargoCode, int companyId, DateTime cargoCreatedDate, DateTime lastUpdatedDate)
+        public CargoInTransitEvent(int customerId, Status status, int employeeId, int orderId, string cargoCode, int companyId, DateTime cargoCreatedDate, DateTime lastUpdatedDate)
         {
             CustomerId = customerId;
             Status = status;

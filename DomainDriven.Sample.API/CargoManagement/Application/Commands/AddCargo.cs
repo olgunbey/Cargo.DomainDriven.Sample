@@ -1,4 +1,5 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Application.Dtos;
+using DomainDriven.Sample.API.CargoManagement.Application.Events;
 using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
 using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
 using EventStore.Client;
@@ -22,7 +23,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.Commands
                  request.AddCargoRequestDto.DistrictId,
                  request.AddCargoRequestDto.Detail);
 
-            var @event = new AddCargoEventResponseDto(
+            var @event = new CargoGeneratedEvent(
                 customerId: cargoInformation.CustomerId,
                 status: cargoInformation.Status,
                 employeeId: cargoInformation.EmployeeId ?? 0,
@@ -34,7 +35,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Application.Commands
 
             var eventData = new EventData(
                 Uuid.NewUuid(),
-                typeof(AddCargoEventResponseDto).Name,
+                typeof(CargoGeneratedEvent).Name,
                 System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(@event));
 
             await eventStoreClient.AppendToStreamAsync(

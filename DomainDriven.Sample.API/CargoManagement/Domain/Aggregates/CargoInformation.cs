@@ -19,6 +19,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
         public int CompanyId { get; private set; }
         public DateTime CargoCreatedDate { get; private set; }
         public DateTime LastUpdatedDate { get; private set; }
+        public string CurrentLocation { get; private set; }
 
         private static string GenerateCargoCode()
         {
@@ -56,6 +57,7 @@ namespace DomainDriven.Sample.API.CargoManagement.Domain.Aggregates
             this.CustomerId = customerId;
             this.CompanyId = companyId;
             this.OrderId = orderId;
+            this.CurrentLocation = null;
             this.EmployeeId = null;
             this.CargoCreatedDate = DateTime.UtcNow;
             this.Status = new Status(StatusType.Created);
