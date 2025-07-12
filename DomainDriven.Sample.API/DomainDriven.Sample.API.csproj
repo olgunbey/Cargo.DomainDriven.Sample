@@ -44,6 +44,14 @@
     <Folder Include="Location\Domain\Events\" />
     <Folder Include="Location\Domain\ValueObjects\" />
     <Folder Include="Mail\" />
+    <Folder Include="Order\Application\Commands\" />
+    <Folder Include="Order\Application\Dtos\" />
+    <Folder Include="Order\Application\IRepositories\" />
+    <Folder Include="Order\Domain\Aggregates\" />
+    <Folder Include="Order\Domain\Entities\" />
+    <Folder Include="Order\Domain\Events\" />
+    <Folder Include="Order\Domain\ValueObjects\" />
+    <Folder Include="Order\Infrastructure\" />
   </ItemGroup>
 
 </Project>
