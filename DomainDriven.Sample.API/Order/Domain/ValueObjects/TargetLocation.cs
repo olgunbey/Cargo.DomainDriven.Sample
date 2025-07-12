@@ -1,14 +1,9 @@
-﻿
-namespace DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects
+﻿using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
+
+namespace DomainDriven.Sample.API.Order.Domain.ValueObjects
 {
-    public class AddressInformation : ValueObject
+    public class TargetLocation : ValueObject
     {
-        public AddressInformation(int cityId, string detail, int districtId)
-        {
-            CityId = cityId;
-            Detail = detail;
-            DistrictId = districtId;
-        }
         public int CityId { get; private set; }
         public int DistrictId { get; private set; }
         public string Detail { get; private set; }

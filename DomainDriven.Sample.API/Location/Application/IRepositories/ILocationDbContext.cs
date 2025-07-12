@@ -8,6 +8,5 @@ namespace DomainDriven.Sample.API.Location.Application.IRepositories
     public interface ILocationDbContext : IBaseDbContext
     {
         public DbSet<City> City { get; set; }
-        public DbSet<District> District { get; set; }
     }
 }
