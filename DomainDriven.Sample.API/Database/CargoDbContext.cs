@@ -17,6 +17,7 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<District> District { get; set; }
         public DbSet<CargoReadModel> CargoReadModel { get; set; }
         public DbSet<Company> Company { get; set; }
+        public DbSet<CargoDetailInformation> CargoDetailInformation { get; set; }
 
         DbSet<TEntity> IBaseDbContext.GetDbSet<TEntity>()
         {
