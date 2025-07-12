@@ -1,4 +1,5 @@
-﻿namespace DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects
+﻿
+namespace DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects
 {
     public class Status : ValueObject
     {
@@ -7,6 +8,11 @@
             StatusType = statusType;
         }
         public StatusType StatusType { get; private set; }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return StatusType;
+        }
     }
     public enum StatusType
     {

@@ -12,9 +12,9 @@ builder.Services.AddScoped<ICargo, CargoInformation>();
 builder.Services.AddMediatR(cnf => cnf.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CargoDbContext>(options =>
 {
-    options.UseNpgsql("Host=127.0.0.1;Username=postgres;Password=checkpointpassword;Port=5432;Database=Cargo");
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CargoDb"));
 });
-builder.Services.AddScoped<IApplicationDbContext, CargoDbContext>();
+builder.Services.AddScoped<ICargoManagementDbContext, CargoDbContext>();
 builder.Services.AddEventStoreClient("esdb://admin:changeit@localhost:2113?tls=false&tlsVerifyCert=false");
 
 var app = builder.Build();

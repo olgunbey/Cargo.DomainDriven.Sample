@@ -1,4 +1,5 @@
-﻿using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
+﻿using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
+using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
 using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Database;
 using DomainDriven.Sample.API.Employee.Domain.Events;
@@ -8,11 +9,11 @@ using System.Text.Json;
 
 namespace DomainDriven.Sample.API.Employee.Application.DomainNotificationHandler
 {
-    public class CargoAssignedNotificationHandler(IApplicationDbContext applicationDbContext, EventStoreClient eventStoreClient) : INotificationHandler<CargoAssignedNotification>
+    public class CargoAssignedNotificationHandler(ICargoManagementDbContext applicationDbContext, EventStoreClient eventStoreClient) : INotificationHandler<CargoAssignedNotification>
     {
         public async Task Handle(CargoAssignedNotification notification, CancellationToken cancellationToken)
         {
-            CargoInformation? cargoInformation = await applicationDbContext.GetEntity<CargoInformation>()
+            CargoInformation? cargoInformation = await applicationDbContext.GetDbSet<CargoInformation>()
                   .FindAsync(notification.CargoId);
 
             if (cargoInformation == null)

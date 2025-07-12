@@ -1,5 +1,4 @@
-﻿using DomainDriven.Sample.API.Database;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Employee.Application.Commands
@@ -9,11 +8,11 @@ namespace DomainDriven.Sample.API.Employee.Application.Commands
         public int EmployeeId { get; set; }
         public int CargoId { get; set; }
     }
-    public class AssignToEmployeeHandler(IApplicationDbContext applicationDbContext) : IRequestHandler<AssignToEmployeeRequest, bool>
+    public class AssignToEmployeeHandler(DbContext applicationDbContext) : IRequestHandler<AssignToEmployeeRequest, bool>
     {
         public async Task<bool> Handle(AssignToEmployeeRequest request, CancellationToken cancellationToken)
         {
-            DbSet<Domain.Aggregates.Employee> dbEmployee = applicationDbContext.GetEntity<Domain.Aggregates.Employee>();
+            DbSet<Domain.Aggregates.Employee> dbEmployee = applicationDbContext.Set<Domain.Aggregates.Employee>();
 
             Domain.Aggregates.Employee? employee = await dbEmployee.FindAsync(request.EmployeeId);
 
