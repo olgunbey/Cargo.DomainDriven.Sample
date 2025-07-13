@@ -15,13 +15,21 @@ namespace DomainDriven.Sample.API.Database
         }
         public DbSet<City> City { get; set; }
         public DbSet<CargoReadModel> CargoReadModel { get; set; }
-        public DbSet<Company> Company { get; set; }
+        public DbSet<CargoManagement.Domain.Aggregates.Company> Company { get; set; }
         public DbSet<CargoDetailInformation> CargoDetailInformation { get; set; }
         public DbSet<Order.Domain.Aggregates.Order> Order { get; set; }
-
         DbSet<TEntity> IBaseDbContext.GetDbSet<TEntity>()
         {
             return Set<TEntity>();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<CargoReadModel>().OwnsOne(y => y.Status);
+
+            modelBuilder.Entity<Order.Domain.Aggregates.Order>().OwnsOne(y => y.TargetLocation);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
