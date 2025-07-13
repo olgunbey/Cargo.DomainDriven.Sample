@@ -39,8 +39,6 @@
     <Folder Include="Employee\Domain\Entity\" />
     <Folder Include="Employee\Domain\Repositories\" />
     <Folder Include="Employee\Domain\ValueObject\" />
-    <Folder Include="Location\Application\Dtos\" />
-    <Folder Include="Location\Application\Queries\" />
     <Folder Include="Location\Domain\Events\" />
     <Folder Include="Location\Domain\ValueObjects\" />
     <Folder Include="Mail\" />
