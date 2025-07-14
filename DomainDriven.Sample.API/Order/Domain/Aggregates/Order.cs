@@ -1,6 +1,7 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects;
 using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Order.Domain.Entities;
+using DomainDriven.Sample.API.Order.Domain.Events;
 using DomainDriven.Sample.API.Order.Domain.Repository;
 
 namespace DomainDriven.Sample.API.Order.Domain.Aggregates
@@ -25,6 +26,7 @@ namespace DomainDriven.Sample.API.Order.Domain.Aggregates
             this.TargetLocation = new TargetLocation(cityId, districtId, details);
             this.CreatedDate = DateTime.UtcNow;
             this._orderItems = new List<OrderItem>();
+            RaiseDomainEvent(new GenerateOrderEvent());
             return this;
         }
     }

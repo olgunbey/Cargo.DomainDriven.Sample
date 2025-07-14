@@ -4,9 +4,9 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<District> District { get; set; }
+        public List<DistrictDto> District { get; set; }
     }
-    public class District
+    public class DistrictDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

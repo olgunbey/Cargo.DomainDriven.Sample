@@ -1,4 +1,4 @@
-﻿namespace DomainDriven.Sample.API.CargoManagement.Domain.ValueObjects
+﻿namespace DomainDriven.Sample.API.Common
 {
     public abstract class ValueObject : IEquatable<ValueObject>
     {
