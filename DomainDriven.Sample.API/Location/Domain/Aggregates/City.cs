@@ -1,6 +1,6 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Location.Domain.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
+using DomainDriven.Sample.API.Location.Domain.Enums;
 
 namespace DomainDriven.Sample.API.Location.Domain.Aggregates
 {
@@ -13,7 +13,6 @@ namespace DomainDriven.Sample.API.Location.Domain.Aggregates
         public string Name { get; private set; }
         private readonly List<District> _districts;
         public IReadOnlyCollection<District> Districts => _districts;
-
         public void SetName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
