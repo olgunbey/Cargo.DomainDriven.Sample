@@ -1,6 +1,5 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Location.Domain.Entities;
-using DomainDriven.Sample.API.Location.Domain.Enums;
 
 namespace DomainDriven.Sample.API.Location.Domain.Aggregates
 {

@@ -8,7 +8,11 @@ namespace DomainDriven.Sample.API.Order.Domain.Aggregates
 {
     public class Order : AggregateRoot, IOrder
     {
-        private List<OrderItem> _orderItems;
+        public Order()
+        {
+            _orderItems = new List<OrderItem>();
+        }
+        private readonly List<OrderItem> _orderItems;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
         public int CustomerId { get; private set; }
         public TargetLocation TargetLocation { get; private set; }
@@ -25,7 +29,6 @@ namespace DomainDriven.Sample.API.Order.Domain.Aggregates
             this.CustomerId = customerId;
             this.TargetLocation = new TargetLocation(cityId, districtId, details);
             this.CreatedDate = DateTime.UtcNow;
-            this._orderItems = new List<OrderItem>();
             RaiseDomainEvent(new GenerateOrderEvent());
             return this;
         }

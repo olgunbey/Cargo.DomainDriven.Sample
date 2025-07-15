@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICargo, CargoInformation>();
-builder.Services.AddSingleton<IRedisClientsManager>(new RedisManagerPool("localhost:6379"));
+builder.Services.AddSingleton<IRedisClientsManagerAsync>(new RedisManagerPool("localhost:6379"));
 builder.Services.AddMediatR(cnf => cnf.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CargoDbContext>(options =>
 {
