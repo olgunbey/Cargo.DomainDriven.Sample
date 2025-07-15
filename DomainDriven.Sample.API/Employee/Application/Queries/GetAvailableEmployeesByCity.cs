@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Employee.Application.Queries
 {
-    public class GetEmployeeByCityIdRequest : IRequest<ResponseDto<List<GetEmployeeByCityIdResponseDto>>>
+    public class GetAvailableEmployeesByCity : IRequest<ResponseDto<List<GetEmployeeByCityIdResponseDto>>>
     {
         public int CityId { get; set; }
     }
-    public class GetEmployeeByCıtyIdRequestHandler(IEmployeeDbContext employeeDbContext) : IRequestHandler<GetEmployeeByCityIdRequest, ResponseDto<List<GetEmployeeByCityIdResponseDto>>>
+    public class GetEmployeeByCıtyIdRequestHandler(IEmployeeDbContext employeeDbContext) : IRequestHandler<GetAvailableEmployeesByCity, ResponseDto<List<GetEmployeeByCityIdResponseDto>>>
     {
-        public async Task<ResponseDto<List<GetEmployeeByCityIdResponseDto>>> Handle(GetEmployeeByCityIdRequest request, CancellationToken cancellationToken)
+        public async Task<ResponseDto<List<GetEmployeeByCityIdResponseDto>>> Handle(GetAvailableEmployeesByCity request, CancellationToken cancellationToken)
         {
             var getEmployeeByCityId = await employeeDbContext.GetDbSet<Domain.Aggregates.Employee>()
                    .Where(y => y.CityId == request.CityId)

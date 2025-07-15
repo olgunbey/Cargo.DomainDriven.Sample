@@ -32,12 +32,9 @@
   <ItemGroup>
     <Folder Include="CargoManagement\Domain\Entities\" />
     <Folder Include="Customer\Application\" />
-    <Folder Include="Customer\Domain\Aggregates\" />
     <Folder Include="Customer\Domain\Entities\" />
-    <Folder Include="Customer\Domain\ValueObjects\" />
     <Folder Include="Customer\Persistence\" />
     <Folder Include="Employee\Domain\Entity\" />
-    <Folder Include="Employee\Domain\Repositories\" />
     <Folder Include="Employee\Domain\ValueObject\" />
     <Folder Include="Location\Domain\Events\" />
     <Folder Include="Location\Domain\ValueObjects\" />

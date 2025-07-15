@@ -28,5 +28,6 @@ namespace DomainDriven.Sample.API.Location.Persistence.Redis
 
             }
         }
+
     }
 }
