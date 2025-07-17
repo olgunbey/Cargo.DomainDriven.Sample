@@ -17,6 +17,7 @@ namespace DomainDriven.Sample.API.Order.Domain.Aggregates
         public int CustomerId { get; private set; }
         public TargetLocation TargetLocation { get; private set; }
         public DateTime CreatedDate { get; private set; }
+        public bool IsApproved { get; private set; }
 
         public void AddOrderItem(string name, decimal weight, int count)
         {
@@ -31,6 +32,10 @@ namespace DomainDriven.Sample.API.Order.Domain.Aggregates
             this.CreatedDate = DateTime.UtcNow;
             RaiseDomainEvent(new GenerateOrderEvent());
             return this;
+        }
+        public void SetApproved(bool approved)
+        {
+            this.IsApproved = approved;
         }
     }
 }

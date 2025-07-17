@@ -36,6 +36,7 @@
     <Folder Include="Customer\Persistence\" />
     <Folder Include="Employee\Domain\Entity\" />
     <Folder Include="Employee\Domain\ValueObject\" />
+    <Folder Include="Employee\Infrastructure\" />
     <Folder Include="Location\Domain\Events\" />
     <Folder Include="Location\Domain\ValueObjects\" />
     <Folder Include="Mail\" />
