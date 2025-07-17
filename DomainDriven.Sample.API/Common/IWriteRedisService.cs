@@ -1,7 +1,7 @@
 ﻿namespace DomainDriven.Sample.API.Common
 {
-    public interface IWriteRedisService<in T> where T : class
+    public interface IWriteRedisService<T> where T : AggregateRoot
     {
-        public Task AddOrUpdate<T>(string key, T value);
+        public Task AddOrUpdate(string key);
     }
 }
