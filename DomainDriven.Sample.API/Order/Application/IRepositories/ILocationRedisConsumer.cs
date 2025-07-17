@@ -4,6 +4,6 @@ namespace DomainDriven.Sample.API.Order.Application.IRepositories
 {
     public interface ILocationRedisConsumer
     {
-        public Task<LocationReadCacheDto?> ConsumeAsync(string key);
+        public Task<LocationCacheDto?> ConsumeAsync(string key);
     }
 }

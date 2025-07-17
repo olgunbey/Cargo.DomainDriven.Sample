@@ -11,7 +11,7 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
     {
         public int EmployeeId { get; set; }
     }
-    public class GetAllOrderByEmployeeIdRequestHandler(IOrderDbContext orderDbContext) : IRequestHandler<GetAllOrderByEmployeeIdRequest, ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>>
+    public class GetAllOrderByEmployeeIdRequestHandler(IOrderDbContext orderDbContext, ILocationRedisConsumer locationRedisConsumer) : IRequestHandler<GetAllOrderByEmployeeIdRequest, ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>>
     {
 
         public async Task<ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>> Handle(GetAllOrderByEmployeeIdRequest request, CancellationToken cancellationToken)
@@ -20,6 +20,7 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
             Domain.Aggregates.Order? order = await dbOrders.FindAsync(request.EmployeeId);
 
 
+            var cacheLocation = await locationRedisConsumer.ConsumeAsync("Location-City");
 
             DbSet<OrderCustomerReadModel> dbOrderCustomerReadModels = orderDbContext.GetDbSet<OrderCustomerReadModel>();
 
@@ -36,16 +37,16 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
                          Location = new()
                          {
                              CityId = y.CustomerReadModel.LocationReadModel.CityId,
-                             CityName = y.CustomerReadModel.LocationReadModel.CityName,
+                             CityName = cacheLocation!.CityDto.First(x => x.CityId == y.CustomerReadModel.LocationReadModel.CityId).CityName,
                              DistrictId = y.CustomerReadModel.LocationReadModel.DistrictId,
-                             DistrictName = y.CustomerReadModel.LocationReadModel.DistrictName,
+                             DistrictName = cacheLocation.CityDto.SelectMany(y => y.Districts).First(x => x.Id == y.CustomerReadModel.LocationReadModel.DistrictId).Name,
                              Detail = y.CustomerReadModel.LocationReadModel.Detail
                          },
 
                      },
                      EmployeeId = y.EmployeeId,
                      OrderId = y.OrderId
-                 }).ToListAsync();
+                 }).ToListAsync(cancellationToken);
 
             return ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>.Success(responseData, 200);
 

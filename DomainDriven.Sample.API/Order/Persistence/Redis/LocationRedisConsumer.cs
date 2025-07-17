@@ -6,11 +6,11 @@ namespace DomainDriven.Sample.API.Order.Persistence.Redis
 {
     public class LocationRedisConsumer(IRedisClientsManagerAsync redisClientsManagerAsync) : ILocationRedisConsumer
     {
-        public async Task<LocationReadCacheDto?> ConsumeAsync(string key)
+        public async Task<LocationCacheDto?> ConsumeAsync(string key)
         {
             await using (var redisClient = await redisClientsManagerAsync.GetClientAsync())
             {
-                return await redisClient.GetAsync<LocationReadCacheDto>(key);
+                return await redisClient.GetAsync<LocationCacheDto>(key);
             }
         }
     }

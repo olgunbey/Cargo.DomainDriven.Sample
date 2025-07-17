@@ -1,6 +1,6 @@
 ﻿namespace DomainDriven.Sample.API.Order.Application.Dtos
 {
-    public class LocationReadCacheDto
+    public class LocationCacheDto
     {
         public List<CityDto> CityDto { get; set; }
     }
