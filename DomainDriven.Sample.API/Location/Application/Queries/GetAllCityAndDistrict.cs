@@ -17,7 +17,7 @@ namespace DomainDriven.Sample.API.Location.Application.Queries
             {
                 Id = city.Id,
                 Name = city.Name,
-                District = city.Districts.Select(district => new Dtos.District
+                District = city.Districts.Select(district => new DistrictDto
                 {
                     Id = district.Id,
                     Name = district.Name

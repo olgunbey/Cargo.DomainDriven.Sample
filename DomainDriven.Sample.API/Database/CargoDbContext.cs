@@ -1,9 +1,11 @@
 ﻿using DomainDriven.Sample.API.CargoManagement.Application.IRepositories;
 using DomainDriven.Sample.API.CargoManagement.Domain.Aggregates;
 using DomainDriven.Sample.API.Common;
+using DomainDriven.Sample.API.Employee.Application.Queries;
 using DomainDriven.Sample.API.Location.Application.IRepositories;
 using DomainDriven.Sample.API.Location.Domain.Aggregates;
 using DomainDriven.Sample.API.Order.Application.IRepositories;
+using DomainDriven.Sample.API.Order.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Database
@@ -18,6 +20,9 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<CargoManagement.Domain.Aggregates.Company> Company { get; set; }
         public DbSet<CargoDetailInformation> CargoDetailInformation { get; set; }
         public DbSet<Order.Domain.Aggregates.Order> Order { get; set; }
+        public DbSet<CustomerReadModel> CustomerReadModel { get; set; }
+        public DbSet<OrderChooseEmployee> OrderChooseEmployee { get; set; }
+
         DbSet<TEntity> IBaseDbContext.GetDbSet<TEntity>()
         {
             return Set<TEntity>();
