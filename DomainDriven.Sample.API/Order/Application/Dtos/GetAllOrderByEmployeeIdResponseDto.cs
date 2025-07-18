@@ -18,9 +18,20 @@
             public string PhoneNumber { get; set; }
             public LocationResponseDto Location { get; set; }
         }
+        public class OrderResponseDto
+        {
+            public CustomerResponseDto CustomerResponseDto { get; set; }
+            public LocationResponseDto TargetLocation { get; set; }
+            public List<OrderItemDto> OrderItems { get; set; }
+        }
+        public class OrderItemDto
+        {
+            public string Name { get;  set; }
+            public int Count { get;  set; }
+            public decimal Weight { get;  set; }
+        }
         public int Id { get; set; }
-        public int OrderId { get; set; }
-        public int EmployeeId { get; set; }
-        public CustomerResponseDto Customer { get; set; }
+        public OrderResponseDto Order { get; set; }
+
     }
 }
