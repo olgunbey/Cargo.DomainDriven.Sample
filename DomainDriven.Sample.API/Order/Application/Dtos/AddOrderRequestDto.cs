@@ -3,11 +3,11 @@
     public class AddOrderRequestDto
     {
         public int CustomerId { get; set; }
-        public int MyProperty { get; set; }
         public List<AddOrderItemRequestDto> OrderItems { get; set; }
         public int CityId { get; set; }
         public int DistrictId { get; set; }
         public string Detail { get; set; }
+        public int EmployeeId { get; set; }
     }
     public class AddOrderItemRequestDto
     {

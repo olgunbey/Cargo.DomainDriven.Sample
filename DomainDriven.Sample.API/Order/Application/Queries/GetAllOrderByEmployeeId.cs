@@ -11,14 +11,14 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
     {
         public int EmployeeId { get; set; }
     }
-    public class GetAllOrderByEmployeeIdRequestHandler(IOrderDbContext orderDbContext, ILocationRedisConsumer locationRedisConsumer) : IRequestHandler<GetAllOrderByEmployeeIdRequest, ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>>
+    public class GetAllOrderByEmployeeIdRequestHandler(IOrderDbContext orderDbContext, ILocationApiClient locationApiClient) : IRequestHandler<GetAllOrderByEmployeeIdRequest, ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>>
     {
 
         public async Task<ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>> Handle(GetAllOrderByEmployeeIdRequest request, CancellationToken cancellationToken)
         {
             DbSet<Domain.Aggregates.Order> dbOrders = orderDbContext.GetDbSet<Domain.Aggregates.Order>();
             Domain.Aggregates.Order? order = await dbOrders.FindAsync(request.EmployeeId);
-            var cacheLocation = await locationRedisConsumer.ConsumeAsync("Location-City");
+            var cacheLocation = await locationApiClient.GetLocationById()//burası düzeltilecek
 
             var dictCity = cacheLocation!.CityDto.ToDictionary(x => x.CityId);
             var dictDistrict = cacheLocation.CityDto.SelectMany(x => x.Districts).ToDictionary(x => x.Id);

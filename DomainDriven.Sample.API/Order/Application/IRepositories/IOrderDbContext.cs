@@ -1,5 +1,6 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Employee.Application.Queries;
+using DomainDriven.Sample.API.Order.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Order.Application.IRepositories
@@ -8,6 +9,7 @@ namespace DomainDriven.Sample.API.Order.Application.IRepositories
     {
         public DbSet<Domain.Aggregates.Order> Order { get; set; }
         public DbSet<CustomerReadModel> CustomerReadModel { get; set; }
+        public DbSet<OrderChooseEmployee> OrderChooseEmployee { get; set; }
 
     }
 }

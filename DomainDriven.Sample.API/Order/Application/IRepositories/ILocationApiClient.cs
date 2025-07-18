@@ -2,8 +2,8 @@
 
 namespace DomainDriven.Sample.API.Order.Application.IRepositories
 {
-    public interface ILocationRedisConsumer
+    public interface ILocationApiClient
     {
-        public Task<LocationCacheDto?> ConsumeAsync(string key);
+        public Task<LocationApiResponse> GetLocationById(int cityId, int districtId);
     }
 }

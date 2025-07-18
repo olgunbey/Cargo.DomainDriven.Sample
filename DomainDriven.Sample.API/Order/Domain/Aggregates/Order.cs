@@ -30,7 +30,6 @@ namespace DomainDriven.Sample.API.Order.Domain.Aggregates
             this.CustomerId = customerId;
             this.TargetLocation = new TargetLocation(cityId, districtId, details);
             this.CreatedDate = DateTime.UtcNow;
-            RaiseDomainEvent(new GenerateOrderEvent());
             return this;
         }
         public void SetApproved(bool approved)
