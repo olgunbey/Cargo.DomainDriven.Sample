@@ -15,7 +15,7 @@ namespace DomainDriven.Sample.API.Order.Application.DomainEventHandler
             DbSet<Domain.Aggregates.Order> dbOrder = orderDbContext.GetDbSet<Domain.Aggregates.Order>();
 
             var getOrder = await dbOrder.FindAsync(notification.OrderId);
-            var customerResponse = await customerApiClient.GetCustomerById(getOrder.CustomerId);
+            var customerResponse = await customerApiClient.GetCustomerById(getOrder!.CustomerId);
 
 
             var customerLocation = await locationApiClient.GetLocationById(customerResponse.CurrentCityId, customerResponse.CurrentDistrictId);
@@ -25,24 +25,17 @@ namespace DomainDriven.Sample.API.Order.Application.DomainEventHandler
                 EmployeeId = notification.EmployeeId,
                 CustomerReadModel = new CustomerReadModelDto()
                 {
-                    Id = customerResponse.Id,
+
                     FirstName = customerResponse.FirstName,
                     LastName = customerResponse.LastName,
                     PhoneNumber = customerResponse.PhoneNumber,
-                    CurrentLocationModel = new()
-                    {
-                        CityId = customerResponse.CurrentCityId,
-                        CityName = customerLocation.CityName,
-                        DistrictId = customerResponse.CurrentDistrictId,
-                        DistrictName = customerLocation.DistrictName,
-                        Detail = customerResponse.Detail
-                    }
+                    CurrentCityName = customerLocation.CityName,
+                    CurrentDistrictName = customerLocation.DistrictName,
+                    CurrentDetail = customerResponse.CurrentDetail
                 },
                 TargetLocationModel = new LocationReadModel()
                 {
-                    CityId = getOrder.TargetLocation.CityId,
                     CityName = customerLocation.CityName,
-                    DistrictId = getOrder.TargetLocation.DistrictId,
                     DistrictName = customerLocation.DistrictName,
                     Detail = getOrder.TargetLocation.Detail
                 }
