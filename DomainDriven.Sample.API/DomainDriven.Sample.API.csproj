@@ -38,6 +38,7 @@
     <Folder Include="Employee\Domain\ValueObject\" />
     <Folder Include="Location\Domain\Events\" />
     <Folder Include="Location\Domain\ValueObjects\" />
+    <Folder Include="Location\Persistence\" />
     <Folder Include="Mail\" />
   </ItemGroup>
 

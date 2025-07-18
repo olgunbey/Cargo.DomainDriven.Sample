@@ -11,14 +11,13 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
     {
         public int EmployeeId { get; set; }
     }
-    public class GetAllOrderByEmployeeIdRequestHandler(IOrderDbContext orderDbContext, ILocationApiClient locationApiClient) : IRequestHandler<GetAllOrderByEmployeeIdRequest, ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>>
+    public class GetAllOrderByEmployeeIdRequestHandler(IOrderDbContext orderDbContext, IRedisService redisService) : IRequestHandler<GetAllOrderByEmployeeIdRequest, ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>>
     {
 
         public async Task<ResponseDto<List<GetAllOrderByEmployeeIdResponseDto>>> Handle(GetAllOrderByEmployeeIdRequest request, CancellationToken cancellationToken)
         {
             DbSet<Domain.Aggregates.Order> dbOrders = orderDbContext.GetDbSet<Domain.Aggregates.Order>();
-            Domain.Aggregates.Order? order = await dbOrders.FindAsync(request.EmployeeId);
-            var cacheLocation = await locationApiClient.GetLocationById()//burası düzeltilecek
+            var cacheLocation = await redisService.GetAsync<LocationCacheDto>("Location");
 
             var dictCity = cacheLocation!.CityDto.ToDictionary(x => x.CityId);
             var dictDistrict = cacheLocation.CityDto.SelectMany(x => x.Districts).ToDictionary(x => x.Id);
@@ -64,19 +63,19 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
                             PhoneNumber = y.CustomerReadModel.PhoneNumber,
                             Location = new()
                             {
-                                CityId = y.CustomerReadModel.LocationReadModel.CityId,
-                                CityName = dictCity[y.CustomerReadModel.LocationReadModel.CityId].CityName,
-                                DistrictId = y.CustomerReadModel.LocationReadModel.DistrictId,
-                                DistrictName = dictDistrict[y.CustomerReadModel.LocationReadModel.DistrictId].Name,
-                                Detail = y.CustomerReadModel.LocationReadModel.Detail
+                                CityId = y.CustomerReadModel.CurrentLocationModel.CityId,
+                                CityName = dictCity[y.CustomerReadModel.CurrentLocationModel.CityId].CityName,
+                                DistrictId = y.CustomerReadModel.CurrentLocationModel.DistrictId,
+                                DistrictName = dictDistrict[y.CustomerReadModel.CurrentLocationModel.DistrictId].Name,
+                                Detail = y.CustomerReadModel.CurrentLocationModel.Detail
                             }
                         },
                         TargetLocation = new()
                         {
                             CityId = orders[y.OrderId].TargetLocation.CityId,
-                            CityName = dictCity[y.CustomerReadModel.LocationReadModel.CityId].CityName,
+                            CityName = dictCity[y.TargetLocationModel.CityId].CityName,
                             DistrictId = orders[y.OrderId].TargetLocation.DistrictId,
-                            DistrictName = dictDistrict[y.CustomerReadModel.LocationReadModel.DistrictId].Name,
+                            DistrictName = dictDistrict[y.TargetLocationModel.DistrictId].Name,
                             Detail = orders[y.OrderId].TargetLocation.Detail
                         },
                         OrderItems = orders[y.OrderId].OrderItems.ToList()
