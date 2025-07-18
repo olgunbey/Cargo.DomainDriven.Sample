@@ -57,26 +57,21 @@ namespace DomainDriven.Sample.API.Order.Application.Queries
                     {
                         CustomerResponseDto = new()
                         {
-                            Id = y.CustomerReadModel.Id,
                             FirstName = y.CustomerReadModel.FirstName,
                             LastName = y.CustomerReadModel.LastName,
                             PhoneNumber = y.CustomerReadModel.PhoneNumber,
                             Location = new()
                             {
-                                CityId = y.CustomerReadModel.CurrentLocationModel.CityId,
-                                CityName = dictCity[y.CustomerReadModel.CurrentLocationModel.CityId].CityName,
-                                DistrictId = y.CustomerReadModel.CurrentLocationModel.DistrictId,
-                                DistrictName = dictDistrict[y.CustomerReadModel.CurrentLocationModel.DistrictId].Name,
-                                Detail = y.CustomerReadModel.CurrentLocationModel.Detail
+                                CityName = y.CustomerReadModel.CurrentCityName,
+                                DistrictName = y.CustomerReadModel.CurrentDistrictName,
+                                Detail = y.CustomerReadModel.CurrentDetail
                             }
                         },
                         TargetLocation = new()
                         {
-                            CityId = orders[y.OrderId].TargetLocation.CityId,
-                            CityName = dictCity[y.TargetLocationModel.CityId].CityName,
-                            DistrictId = orders[y.OrderId].TargetLocation.DistrictId,
-                            DistrictName = dictDistrict[y.TargetLocationModel.DistrictId].Name,
-                            Detail = orders[y.OrderId].TargetLocation.Detail
+                            CityName = y.TargetLocationModel.CityName,
+                            DistrictName = y.TargetLocationModel.DistrictName,
+                            Detail = y.TargetLocationModel.Detail
                         },
                         OrderItems = orders[y.OrderId].OrderItems.ToList()
                     },

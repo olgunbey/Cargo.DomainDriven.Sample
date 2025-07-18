@@ -8,6 +8,6 @@
         public string PhoneNumber { get; set; }
         public int CurrentCityId { get; set; }
         public int CurrentDistrictId { get; set; }
-        public string Detail { get; set; }
+        public string CurrentDetail { get; set; }
     }
 }

@@ -10,17 +10,17 @@
     }
     public class CustomerReadModelDto
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
-        public LocationReadModel CurrentLocationModel { get; set; }
+        public string CurrentCityName { get; set; }
+        public string CurrentDistrictName { get; set; }
+        public string CurrentDetail { get; set; }
+
     }
     public class LocationReadModel
     {
-        public int CityId { get; set; }
         public string CityName { get; set; }
-        public int DistrictId { get; set; }
         public string DistrictName { get; set; }
         public string Detail { get; set; }
     }
