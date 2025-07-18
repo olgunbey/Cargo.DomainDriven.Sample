@@ -15,7 +15,10 @@ namespace DomainDriven.Sample.API.Order.Application.Commands
     {
         public async Task<ResponseDto<NoContentDto>> Handle(AddOrderRequest request, CancellationToken cancellationToken)
         {
-            Domain.Aggregates.Order generateOrder = order.GenerateOrder(request.RequestDto.CustomerId, request.RequestDto.CityId, request.RequestDto.DistrictId, request.RequestDto.Detail);
+            Domain.Aggregates.Order generateOrder = order.GenerateOrder(request.RequestDto.CustomerId,
+                request.RequestDto.CityId,
+                request.RequestDto.DistrictId,
+                request.RequestDto.Detail);
             try
             {
                 request.RequestDto.OrderItems.ForEach(item =>
