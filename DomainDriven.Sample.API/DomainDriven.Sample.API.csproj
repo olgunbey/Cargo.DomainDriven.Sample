@@ -17,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MongoDB.Driver" Version="3.4.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="ServiceStack.Redis" Version="8.8.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -28,7 +29,7 @@
     <Folder Include="Feature\Location\Application\" />
     <Folder Include="Feature\Order\Application\" />
     <Folder Include="Feature\Order\Infrastructure\" />
-    <Folder Include="Feature\Product\Application\" />
+    <Folder Include="Feature\Product\Application\Queries\" />
     <Folder Include="Feature\Product\Domain\Entities\" />
     <Folder Include="Feature\Product\Domain\ValueObjects\" />
     <Folder Include="Feature\Product\Infrastructure\" />
