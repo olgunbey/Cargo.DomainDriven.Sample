@@ -1,7 +1,4 @@
-﻿using MediatR;
-
-
-namespace DomainDriven.Sample.API.Common
+﻿namespace DomainDriven.Sample.API.Common
 {
     public class AggregateRoot : IEntity
     {
@@ -10,9 +7,9 @@ namespace DomainDriven.Sample.API.Common
             _notifications = new();
         }
         public int Id { get; private set; }
-        private readonly List<INotification> _notifications;
-        public IReadOnlyCollection<INotification> Notifications => _notifications;
-        protected void RaiseDomainEvent(INotification notification)
+        private readonly List<ICustomizeNotification> _notifications;
+        public IReadOnlyCollection<ICustomizeNotification> Notifications => _notifications;
+        protected void RaiseDomainEvent(ICustomizeNotification notification)
         {
             _notifications.Add(notification);
         }
