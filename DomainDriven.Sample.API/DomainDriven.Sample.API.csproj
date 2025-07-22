@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CargoManagement\Application\Queries\**" />
-    <Content Remove="CargoManagement\Application\Queries\**" />
-    <EmbeddedResource Remove="CargoManagement\Application\Queries\**" />
-    <None Remove="CargoManagement\Application\Queries\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EventStore.Client.Grpc" Version="23.3.9" />
     <PackageReference Include="EventStore.Client.Grpc.Streams" Version="23.3.9" />
     <PackageReference Include="MassTransit" Version="8.5.1" />
@@ -30,17 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CargoManagement\Domain\Entities\" />
-    <Folder Include="Customer\Application\" />
-    <Folder Include="Customer\Domain\Entities\" />
-    <Folder Include="Customer\Persistence\" />
-    <Folder Include="Employee\Domain\Entity\" />
-    <Folder Include="Employee\Domain\ValueObject\" />
-    <Folder Include="Employee\Infrastructure\" />
-    <Folder Include="Location\Domain\Events\" />
-    <Folder Include="Location\Domain\ValueObjects\" />
-    <Folder Include="Location\Persistence\" />
-    <Folder Include="Mail\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Feature\Cargo\Application\" />
+    <Folder Include="Feature\Location\Application\" />
+    <Folder Include="Feature\Order\Application\" />
+    <Folder Include="Feature\Order\Infrastructure\" />
+    <Folder Include="Feature\Product\Application\" />
+    <Folder Include="Feature\Product\Domain\Entities\" />
+    <Folder Include="Feature\Product\Domain\ValueObjects\" />
+    <Folder Include="Feature\Product\Infrastructure\" />
   </ItemGroup>
 
 </Project>
