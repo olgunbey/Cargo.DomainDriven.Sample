@@ -6,5 +6,6 @@ namespace DomainDriven.Sample.API.Common
     {
         public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class;
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        
     }
 }
