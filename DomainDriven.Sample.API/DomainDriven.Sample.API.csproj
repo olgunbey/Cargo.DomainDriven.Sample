@@ -25,9 +25,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Feature\Cargo\Application\" />
+    <Folder Include="Feature\Cargo\Application\Dtos\" />
+    <Folder Include="Feature\Cargo\Application\Queries\" />
     <Folder Include="Feature\Location\Application\" />
-    <Folder Include="Feature\Order\Application\" />
+    <Folder Include="Feature\Order\Application\Dtos\" />
+    <Folder Include="Feature\Order\Application\Queries\" />
     <Folder Include="Feature\Order\Infrastructure\" />
     <Folder Include="Feature\Product\Domain\Entities\" />
     <Folder Include="Feature\Product\Domain\ValueObjects\" />
