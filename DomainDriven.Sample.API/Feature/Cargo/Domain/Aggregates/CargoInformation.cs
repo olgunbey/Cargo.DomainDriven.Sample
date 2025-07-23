@@ -12,15 +12,25 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates
         public CargoStatus CargoStatus { get; private set; }
         public string CargoCode { get; private set; }
         public DateTime EstimateDateTime { get; private set; }
-
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdateDateTime { get; set; }
         public CargoInformation GenerateCargo(int companyId, DateTime estimatedDateTime, int orderId)
         {
             CompanyId = companyId;
             OrderId = orderId;
             EstimateDateTime = estimatedDateTime;
             CargoStatus = CargoStatus.PickedUp;
-            RaiseDomainEvent(new GenerateCargoEvent(companyId, orderId, estimatedDateTime) { ShouldLogEvent = true });
+            CreatedDate = DateTime.UtcNow;
+            CargoCode = "Test123";
+            RaiseDomainEvent(new GenerateCargoEvent(companyId, orderId, estimatedDateTime, CreatedDate, CargoCode) { ShouldLogEvent = true });
             return this;
+        }
+
+        public void UpdateCargoStatus(CargoStatus cargoStatus)
+        {
+            CargoStatus = cargoStatus;
+            UpdateDateTime = DateTime.UtcNow;
+            RaiseDomainEvent(new UpdateCargoStatusEvent(cargoStatus, UpdateDateTime, CargoCode) { ShouldLogEvent = true });
         }
     }
 }

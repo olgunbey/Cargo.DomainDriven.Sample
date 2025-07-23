@@ -7,7 +7,6 @@
         AtDistributionCenter, // Dağıtım merkezine ulaştı
         OutForDelivery,       // Teslimata çıktı
         Delivered,            // Teslim edildi
-        Completed,            // Süreç tamamlandı
         Cancelled,           // İptal edildi
         Rejected,            // Reddedildi (örn. fiyat reddi)
         Returned             // İade edildi
