@@ -4,7 +4,7 @@ using DomainDriven.Sample.API.Feature.Order.Domain.ValueObjects;
 
 namespace DomainDriven.Sample.API.Feature.Order.Domain.Aggregates
 {
-    public class Order : AggregateRoot
+    public class OrderInformation : AggregateRoot
     {
         public OrderStatus OrderStatus { get; private set; }
         public TargetLocation TargetLocation { get; private set; }
