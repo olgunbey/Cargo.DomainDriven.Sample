@@ -1,4 +1,6 @@
 using DomainDriven.Sample.API.Database;
+using DomainDriven.Sample.API.Feature.Product.Application.IntegrationEventHandlers;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using ServiceStack.Redis;
 
@@ -16,6 +18,24 @@ builder.Services.AddDbContext<CargoDbContext>(options =>
 });
 
 builder.Services.AddEventStoreClient("esdb://admin:changeit@localhost:2113?tls=false&tlsVerifyCert=false");
+
+builder.Services.AddMassTransit<IBus>(configure =>
+{
+    configure.AddConsumer<OrderReceivedIntegrationEventHandler>();
+    configure.UsingRabbitMq((context, configurator) =>
+    {
+        
+        configurator.Host(builder.Configuration.GetSection("AmqpConf")["Host"], config =>
+        {
+            config.Username(builder.Configuration.GetSection("AmqpConf")["Username"]!);
+            config.Password(builder.Configuration.GetSection("AmqpConf")["Password"]!);
+
+        });
+        configurator.ReceiveEndpoint("OrderReceivedIntegrationEvent", cnf => cnf.ConfigureConsumer<OrderReceivedIntegrationEventHandler>(context));
+
+    });
+
+});
 
 var app = builder.Build();
 
