@@ -23,12 +23,17 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
                 CargoStatus.Returned => (typeof(ReturnedStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new ReturnedStatusEvent(notification.UpdatedDateTime, notification.CargoCode)))
             };
 
+
+
             EventData eventData = new(Uuid.NewUuid(), type, byteSerialize);
 
             var writeResult = await eventStoreClient.AppendToStreamAsync(
                   streamName: $"Cargo-{notification.CargoCode}",
                   expectedState: StreamState.Any,
                   eventData: [eventData]);
+
+
+            //burada integration event fırlatıp order'de status kodu güncelleyecegiz
 
 
         }

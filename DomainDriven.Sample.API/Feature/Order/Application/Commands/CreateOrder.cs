@@ -12,14 +12,21 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
         public int CityId { get; set; }
         public string Detail { get; set; }
         public int CustomerId { get; set; }
-        public List<int> ProductItemIds { get; set; }
+        public List<ProductItem> ProductItems { get; set; }
         public bool PaymentStatus { get; set; }
+        public class ProductItem
+        {
+            public int Id { get; set; }
+            public int Count { get; set; }
+        }
     }
     public class CreateOrderRequestHandler(IOrderDbContext orderDbContext, IOrderInformation orderInformation) : IRequestHandler<CreateOrderRequest, ResponseDto<NoContentDto>>
     {
         public async Task<ResponseDto<NoContentDto>> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
         {
-            var generateOrder = orderInformation.CreateOrder(request.DistrictId, request.CityId, request.Detail, request.CustomerId, request.ProductItemIds, request.PaymentStatus);
+
+            List<(int ProductId, int Count)> productItems = request.ProductItems.Select(y => (ProductId: y.Id, Count: y.Count)).ToList();
+            var generateOrder = orderInformation.CreateOrder(request.DistrictId, request.CityId, request.Detail, request.CustomerId, productItems, request.PaymentStatus);
 
             orderDbContext.GetDbSet<OrderInformation>()
                 .Add(generateOrder);

@@ -30,7 +30,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates
         {
             CargoStatus = cargoStatus;
             UpdateDateTime = DateTime.UtcNow;
-            RaiseDomainEvent(new UpdateCargoStatusEvent(cargoStatus, UpdateDateTime, CargoCode) { ShouldLogEvent = true });
+            RaiseDomainEvent(new UpdateCargoStatusEvent(cargoStatus, UpdateDateTime, CargoCode, OrderId) { ShouldLogEvent = true });
         }
     }
 }
