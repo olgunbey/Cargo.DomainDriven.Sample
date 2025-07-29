@@ -1,14 +1,17 @@
-﻿using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
+﻿using DomainDriven.Sample.API.Feature.Cargo.Application.Dtos;
+using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Enums;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Events;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Events.CargoStatusEvent;
+using DomainDriven.Sample.API.IntegrationEvents;
 using EventStore.Client;
+using MassTransit;
 using MediatR;
 using System.Text.Json;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
 {
-    public class UpdateCargoStatusEventHandler(EventStoreClient eventStoreClient, ICargoDbContext cargoDbContext) : INotificationHandler<UpdateCargoStatusEvent>
+    public class UpdateCargoStatusEventHandler(EventStoreClient eventStoreClient, ICargoDbContext cargoDbContext, IPublishEndpoint publishEndpoint) : INotificationHandler<UpdateCargoStatusEvent>
     {
         public async Task Handle(UpdateCargoStatusEvent notification, CancellationToken cancellationToken)
         {
@@ -20,7 +23,8 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
                 CargoStatus.OutForDelivery => (typeof(OutForDeliveryStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new OutForDeliveryStatusEvent(notification.UpdatedDateTime, notification.CargoCode))),
                 CargoStatus.Delivered => (typeof(DeliveredStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new DeliveredStatusEvent(notification.UpdatedDateTime, notification.CargoCode))),
                 CargoStatus.Rejected => (typeof(RejectedStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new RejectedStatusEvent(notification.UpdatedDateTime, notification.CargoCode))),
-                CargoStatus.Returned => (typeof(ReturnedStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new ReturnedStatusEvent(notification.UpdatedDateTime, notification.CargoCode)))
+                CargoStatus.Returned => (typeof(ReturnedStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new ReturnedStatusEvent(notification.UpdatedDateTime, notification.CargoCode))),
+                CargoStatus.PickedUp => (typeof(PickedUpStatusEvent).Name, JsonSerializer.SerializeToUtf8Bytes(new PickedUpStatusEvent(notification.UpdatedDateTime, notification.CargoCode))),
             };
 
 
@@ -33,7 +37,8 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
                   eventData: [eventData]);
 
 
-            //burada integration event fırlatıp order'de status kodu güncelleyecegiz
+            var updateOrderMapper = OrderStatusMapper.MapToDto(notification.CargoStatus);
+            await publishEndpoint.Publish(new CargoStatusUpdateIntegrationEvent(notification.OrderId, updateOrderMapper));
 
 
         }

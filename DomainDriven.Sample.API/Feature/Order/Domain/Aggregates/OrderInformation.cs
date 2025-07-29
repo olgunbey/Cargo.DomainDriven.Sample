@@ -26,6 +26,10 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Aggregates
             RaiseDomainEvent(new CreateOrderEvent(_productItem, customerId, TargetLocation, paymentStatus) { ShouldLogEvent = true });
             return this;
         }
+        public void UpdateStatus(OrderStatus status)
+        {
+            OrderStatus = status;
+        }
 
     }
 }

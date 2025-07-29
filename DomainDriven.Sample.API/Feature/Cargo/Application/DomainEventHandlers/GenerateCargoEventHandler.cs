@@ -1,12 +1,14 @@
 ﻿using DomainDriven.Sample.API.Feature.Cargo.Domain.Events;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Events.CargoStatusEvent;
+using DomainDriven.Sample.API.IntegrationEvents;
 using EventStore.Client;
+using MassTransit;
 using MediatR;
 using System.Text.Json;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
 {
-    public class GenerateCargoEventHandler(EventStoreClient eventStoreClient) : INotificationHandler<GenerateCargoEvent>
+    public class GenerateCargoEventHandler(EventStoreClient eventStoreClient, IPublishEndpoint publishEndpoint) : INotificationHandler<GenerateCargoEvent>
     {
         public async Task Handle(GenerateCargoEvent notification, CancellationToken cancellationToken)
         {
@@ -23,6 +25,9 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
                  streamName: $"Cargo-{notification.CargoCode}",
                  expectedState: StreamState.Any,
                  eventData: [eventData]);
+
+
+            await publishEndpoint.Publish(new CargoStatusUpdateIntegrationEvent(notification.OrderId, CargoStatusDto.PickedUp));
         }
     }
 }
