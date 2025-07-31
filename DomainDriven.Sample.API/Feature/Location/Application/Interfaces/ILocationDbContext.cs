@@ -2,7 +2,7 @@
 using DomainDriven.Sample.API.Feature.Location.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
-namespace DomainDriven.Sample.API.Feature.Location.Infrastructure.Persistence
+namespace DomainDriven.Sample.API.Feature.Location.Application.Interfaces
 {
     public interface ILocationDbContext : IBaseDbContext
     {

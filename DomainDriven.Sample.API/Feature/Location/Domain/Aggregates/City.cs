@@ -1,6 +1,7 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Feature.Location.Domain.Entities;
-using DomainDriven.Sample.API.Feature.Location.Domain.Events;
+using DomainDriven.Sample.API.Feature.Location.Domain.Events.City;
+using DomainDriven.Sample.API.Feature.Location.Domain.Events.District;
 using DomainDriven.Sample.API.Feature.Location.Domain.Interfaces;
 
 namespace DomainDriven.Sample.API.Feature.Location.Domain.Aggregates
@@ -15,6 +16,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Domain.Aggregates
         public City AddCity(string cityName)
         {
             this.Name = cityName;
+            RaiseDomainEvent(new AddCityEvent(this.Name, this.Id));
             return this;
         }
 
@@ -22,10 +24,18 @@ namespace DomainDriven.Sample.API.Feature.Location.Domain.Aggregates
         {
             _districts.Add(new District(Name));
         }
-        public void UpdateCity(int id, string cityName)
+        public void UpdateCity(Guid id, string cityName)
         {
             this.Name = cityName;
             RaiseDomainEvent(new UpdateCityEvent(id, cityName));
+        }
+        public void UpdateDistrict(Guid districtId, string districtName)
+        {
+            var updateDistrict = _districts.Single(y => y.Id == districtId);
+
+            updateDistrict.UpdateName(districtName);
+
+            RaiseDomainEvent(new UpdateDistrictEvent(districtId, districtName));
         }
     }
 }

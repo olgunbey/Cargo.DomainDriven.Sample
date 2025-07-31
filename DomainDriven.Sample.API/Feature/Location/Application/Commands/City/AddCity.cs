@@ -1,10 +1,10 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Feature.Location.Application.Dtos;
+using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Location.Domain.Interfaces;
-using DomainDriven.Sample.API.Feature.Location.Infrastructure.Persistence;
 using MediatR;
 
-namespace DomainDriven.Sample.API.Feature.Location.Application.Commands
+namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.City
 {
     public class AddCityRequest : IRequest<ResponseDto<NoContentDto>>
     {
