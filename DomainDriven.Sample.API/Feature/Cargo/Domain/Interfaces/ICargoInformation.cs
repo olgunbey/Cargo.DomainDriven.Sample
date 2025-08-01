@@ -7,5 +7,6 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Interfaces
     {
         public CargoInformation GenerateCargo(int companyId, DateTime estimatedDateTime, int orderId);
         public void UpdateCargoStatus(CargoStatus cargoStatus);
+        public void AddProduct(IEnumerable<(int Id, string Name, int Count)> products);
     }
 }

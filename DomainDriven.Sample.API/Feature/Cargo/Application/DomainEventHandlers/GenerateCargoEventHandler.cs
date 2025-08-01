@@ -12,19 +12,19 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
     {
         public async Task Handle(GenerateCargoEvent notification, CancellationToken cancellationToken)
         {
-            var byteSerializerData = JsonSerializer.SerializeToUtf8Bytes(new CreateCargoEvent(
-                notification.CompanyId,
-                notification.OrderId,
-                notification.EstimatedDateTime,
-                notification.CreatedDate,
-                notification.CargoCode
-                ));
-            EventData eventData = new EventData(Uuid.NewUuid(), typeof(CreateCargoEvent).Name, byteSerializerData);
+            //var byteSerializerData = JsonSerializer.SerializeToUtf8Bytes(new CreateCargoEvent(
+            //    notification.CompanyId,
+            //    notification.OrderId,
+            //    notification.EstimatedDateTime,
+            //    notification.CreatedDate,
+            //    notification.CargoCode
+            //    ));
+            //EventData eventData = new EventData(Uuid.NewUuid(), typeof(CreateCargoEvent).Name, byteSerializerData);
 
-            await eventStoreClient.AppendToStreamAsync(
-                 streamName: $"Cargo-{notification.CargoCode}",
-                 expectedState: StreamState.Any,
-                 eventData: [eventData]);
+            //await eventStoreClient.AppendToStreamAsync(
+            //     streamName: $"Cargo-{notification.CargoCode}",
+            //     expectedState: StreamState.Any,
+            //     eventData: [eventData]);
 
 
             await publishEndpoint.Publish(new CargoStatusUpdateIntegrationEvent(notification.OrderId, CargoStatusDto.PickedUp));
