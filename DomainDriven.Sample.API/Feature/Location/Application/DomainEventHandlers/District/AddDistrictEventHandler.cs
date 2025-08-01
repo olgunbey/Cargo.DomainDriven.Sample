@@ -9,9 +9,8 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.DomainEventHandle
     {
         public async Task Handle(AddDistrictEvent notification, CancellationToken cancellationToken)
         {
-            var districtReadModel = locationReadModelDbContext.GetDbSet<DistrictReadModel>();
 
-            districtReadModel.Add(new DistrictReadModel
+            locationReadModelDbContext.DistrictReadModel.Add(new DistrictReadModel
             {
                 Id = notification.Id,
                 CityId = notification.CityId,

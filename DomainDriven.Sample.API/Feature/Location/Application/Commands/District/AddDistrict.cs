@@ -1,6 +1,5 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
-using DomainDriven.Sample.API.Feature.Location.Domain.Aggregates;
 using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.District
@@ -14,7 +13,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.District
     {
         public async Task<ResponseDto<NoContentDto>> Handle(AddDistrictRequest request, CancellationToken cancellationToken)
         {
-            var cityDbSet = locationDbContext.GetDbSet<City>();
+            var cityDbSet = locationDbContext.GetDbSet<Domain.Aggregates.City>();
             var getCity = await cityDbSet.FindAsync(request.CityId);
 
             if (getCity == null)
