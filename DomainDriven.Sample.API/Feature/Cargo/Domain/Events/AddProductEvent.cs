@@ -2,7 +2,7 @@
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Events
 {
-    public record GenerateCargoEvent(int CompanyId, Guid OrderId, DateTime EstimatedDateTime, DateTime CreatedDate, string CargoCode) : ICustomizeNotification
+    public record AddProductEvent(IEnumerable<(Guid Id, string Name)> Products, Guid CargoId) : ICustomizeNotification
     {
         public bool ShouldLogEvent { get; set; }
     }
