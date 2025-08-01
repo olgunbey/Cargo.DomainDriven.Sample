@@ -4,6 +4,6 @@ namespace DomainDriven.Sample.API.Common
 {
     public interface ICustomizeNotification : INotification
     {
-        public bool ShouldLogEvent { get; set; }
+        public bool ShouldLogEvent { get;  set; }
     }
 }
