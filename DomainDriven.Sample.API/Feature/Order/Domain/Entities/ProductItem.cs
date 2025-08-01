@@ -2,10 +2,10 @@
 {
     public class ProductItem
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public int Count { get; private set; }
 
-        public ProductItem(int id, int count)
+        public ProductItem(Guid id, int count)
         {
             this.Count = count;
             this.Id = id;

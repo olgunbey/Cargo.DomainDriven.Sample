@@ -1,15 +1,27 @@
-﻿using DomainDriven.Sample.API.Feature.Order.Domain.Events;
+﻿using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
+using DomainDriven.Sample.API.Feature.Order.Domain.Events;
+using DomainDriven.Sample.API.Feature.Order.Domain.ReadModel;
 using DomainDriven.Sample.API.IntegrationEvents;
 using MassTransit;
 using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
 {
-    public class CreateOrderEventHandler(IPublishEndpoint publishEndpoint) : INotificationHandler<CreateOrderEvent>
+    public class CreateOrderEventHandler(IOrderDbContext orderDbContext, IPublishEndpoint publishEndpoint) : INotificationHandler<CreateOrderEvent>
     {
         public async Task Handle(CreateOrderEvent notification, CancellationToken cancellationToken)
         {
-            await publishEndpoint.Publish(new OrderReceivedIntegrationEvent(notification.ProductItemIds.ToDictionary(y => y.Id, y => y.Count)));
+            var orderProductReadModelDbSet = orderDbContext.GetDbSet<OrderProductRealModel>();
+            var orderProductModel = notification.ProductItems.Select(product => new OrderProductRealModel
+            {
+                OrderId = notification.OrderId,
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+            });
+
+            await orderProductReadModelDbSet.AddRangeAsync(orderProductModel);
+            await orderDbContext.SaveChangesAsync(cancellationToken);
+            await publishEndpoint.Publish(new OrderReceivedIntegrationEvent(notification.ProductItems.ToDictionary(y => y.ProductId, y => y.Count)));
         }
     }
 }

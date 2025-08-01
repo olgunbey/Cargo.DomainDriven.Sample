@@ -9,6 +9,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.IntegrationEventHa
     {
         public async Task Consume(ConsumeContext<OrderReceivedIntegrationEvent> context)
         {
+            //burayı böyle değil eğer bu ürünün stoğu yoksa kullanıcıya stoğu tükendi dön!!!
             await productDbContext.GetDbSet<Domain.Aggregates.Product>()
                   .IntersectBy(context.Message.productIdCount.Select(y => y.Key), x => x.Id)
                   .ExecuteUpdateAsync(x => x.SetProperty(setProperty => setProperty.Stock, x => x.Stock - context.Message.productIdCount[x.Id]));

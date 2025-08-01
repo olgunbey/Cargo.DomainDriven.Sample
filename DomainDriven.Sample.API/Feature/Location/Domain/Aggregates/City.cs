@@ -32,9 +32,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Domain.Aggregates
         public void UpdateDistrict(Guid districtId, string districtName)
         {
             var updateDistrict = _districts.Single(y => y.Id == districtId);
-
             updateDistrict.UpdateName(districtName);
-
             RaiseDomainEvent(new UpdateDistrictEvent(districtId, districtName));
         }
     }
