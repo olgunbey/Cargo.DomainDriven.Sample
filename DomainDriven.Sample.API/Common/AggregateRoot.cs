@@ -6,7 +6,7 @@
         {
             _notifications = new();
         }
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         private readonly List<ICustomizeNotification> _notifications;
         public IReadOnlyCollection<ICustomizeNotification> Notifications => _notifications;
         protected void RaiseDomainEvent(ICustomizeNotification notification)
