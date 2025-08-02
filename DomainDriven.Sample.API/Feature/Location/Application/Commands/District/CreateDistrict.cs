@@ -4,17 +4,16 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.District
 {
-    public class AddDistrictRequest : IRequest<ResponseDto<NoContentDto>>
+    public class CreateDistrictRequest : IRequest<ResponseDto<NoContentDto>>
     {
         public Guid CityId { get; set; }
         public string DistrictName { get; set; }
     }
-    public class AddDistrictRequestHandler(ILocationDbContext locationDbContext) : IRequestHandler<AddDistrictRequest, ResponseDto<NoContentDto>>
+    public class CreateDistrictRequestHandler(ILocationDbContext locationDbContext) : IRequestHandler<CreateDistrictRequest, ResponseDto<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(AddDistrictRequest request, CancellationToken cancellationToken)
+        public async Task<ResponseDto<NoContentDto>> Handle(CreateDistrictRequest request, CancellationToken cancellationToken)
         {
-            var cityDbSet = locationDbContext.GetDbSet<Domain.Aggregates.City>();
-            var getCity = await cityDbSet.FindAsync(request.CityId);
+            var getCity = await locationDbContext.City.FindAsync(request.CityId);
 
             if (getCity == null)
                 return ResponseDto<NoContentDto>.Fail("invalid city");

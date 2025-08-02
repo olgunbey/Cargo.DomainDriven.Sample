@@ -29,8 +29,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
             List<(Guid ProductId, string ProductName, int Count)> productItems = request.ProductItems.Select(y => (ProductId: y.Id, ProductName: y.Name, Count: y.Count)).ToList();
             var generateOrder = new OrderInformation(request.CityId, request.DistrictId, request.Detail, request.CustomerId, productItems, request.PaymentStatus);
 
-            orderDbContext.GetDbSet<OrderInformation>()
-                .Add(generateOrder);
+            orderDbContext.OrderInformation.Add(generateOrder);
 
             await orderDbContext.SaveChangesAsync(cancellationToken);
 
