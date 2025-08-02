@@ -11,8 +11,8 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
     {
         public async Task Handle(CreateOrderEvent notification, CancellationToken cancellationToken)
         {
-            var orderProductReadModelDbSet = orderDbContext.GetDbSet<OrderProductRealModel>();
-            var orderProductModel = notification.ProductItems.Select(product => new OrderProductRealModel
+            var orderProductReadModelDbSet = orderDbContext.GetDbSet<OrderProductReadModel>();
+            var orderProductModel = notification.ProductItems.Select(product => new OrderProductReadModel
             {
                 OrderId = notification.OrderId,
                 ProductId = product.ProductId,

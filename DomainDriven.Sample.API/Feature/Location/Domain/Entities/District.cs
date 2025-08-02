@@ -4,6 +4,10 @@ namespace DomainDriven.Sample.API.Feature.Location.Domain.Entities
 {
     public class District : IEntity
     {
+        public District()
+        {
+
+        }
         public District(string name)
         {
             Name = name;
