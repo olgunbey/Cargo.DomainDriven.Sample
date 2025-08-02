@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Feature\Cargo\Infrastructure\Infrastructure\" />
     <Folder Include="Feature\Cargo\Infrastructure\Persistence\" />
     <Folder Include="Feature\Location\Application\Queries\" />

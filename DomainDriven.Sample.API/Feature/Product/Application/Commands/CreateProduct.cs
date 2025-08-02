@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace DomainDriven.Sample.API.Feature.Product.Application.Commands
 {
-    public class AddProductRequest : IRequest<ResponseDto<NoContentDto>>
+    public class CreateProductRequest : IRequest<ResponseDto<NoContentDto>>
     {
         public string Name { get; set; }
         public int Stock { get; set; }
@@ -16,9 +16,9 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands
         public string ProductAttribute { get; set; }
 
     }
-    public class AddProductRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<AddProductRequest, ResponseDto<NoContentDto>>
+    public class AddProductRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<CreateProductRequest, ResponseDto<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(AddProductRequest request, CancellationToken cancellationToken)
+        public async Task<ResponseDto<NoContentDto>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
         {
             var generateProductAttribute = new ProductAttribute(request.ProductAttribute.ToBsonDocument());
 
