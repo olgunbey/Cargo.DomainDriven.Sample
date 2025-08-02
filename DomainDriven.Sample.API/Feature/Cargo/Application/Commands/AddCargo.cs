@@ -11,6 +11,11 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
         public Guid OrderId { get; set; }
         public DateTime EstimatedDateTime { get; set; }
         public List<ProductDto> Products { get; set; }
+        public Guid DistrictId { get; set; }
+        public string DistrictName { get; set; }
+        public Guid CityId { get; set; }
+        public string CityName { get; set; }
+        public string Detail { get; set; }
 
         public class ProductDto
         {
@@ -22,12 +27,17 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
     {
         public async Task<ResponseDto<NoContentDto>> Handle(AddCargoRequest request, CancellationToken cancellationToken)
         {
-            var cargoInformation = new CargoInformation(request.CompanyId, request.EstimatedDateTime, request.OrderId);
+            var productDtos = request.Products.ToDictionary(y => y.Id, y => y.Name);
+            var cargoInformation = new CargoInformation(request.CompanyId,
+                request.EstimatedDateTime,
+                request.OrderId,
+                request.CityId,
+                request.CityName,
+                request.DistrictId,
+                request.DistrictName,
+                productDtos,
+                request.Detail);
 
-
-            var productDto = request.Products.Select(y => (y.Id, y.Name));
-
-            cargoInformation.AddProduct(productDto);
 
             cargoDbContext.GetDbSet<CargoInformation>()
                 .Add(cargoInformation);
@@ -35,7 +45,6 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
             await cargoDbContext.SaveChangesAsync(cancellationToken);
 
             return ResponseDto<NoContentDto>.Success();
-
 
         }
     }

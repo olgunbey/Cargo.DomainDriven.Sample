@@ -8,7 +8,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Infrastructure.Persistence.Da
     {
         public void Configure(EntityTypeBuilder<City> builder)
         {
-            builder.Property(y => y.Id).UseHiLo();
+            //builder.Property(y => y.Id).UseHiLo();
         }
     }
 }

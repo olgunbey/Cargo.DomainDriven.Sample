@@ -8,7 +8,11 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Aggregates
 {
     public class OrderInformation : AggregateRoot
     {
-        public OrderInformation(Guid cityId, Guid districtId, string detail, int customerId, List<(Guid ProductId, string ProductName,int Count )> productItems, bool paymentStatus)
+        public OrderInformation()
+        {
+
+        }
+        public OrderInformation(Guid cityId, Guid districtId, string detail, int customerId, List<(Guid ProductId, string ProductName, int Count)> productItems, bool paymentStatus)
         {
             var eumerableProductItems = productItems.Select(x => new ProductItem(x.ProductId, x.Count));
             _productItem.AddRange(eumerableProductItems);
