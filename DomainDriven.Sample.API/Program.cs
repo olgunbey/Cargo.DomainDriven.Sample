@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddScoped<IMongoClient>(cnf => new MongoClient("mongodb+srv://olgunbey:UWCtu6HVrcbs6zeu@parametrecluster.hvwzz.mongodb.net/?retryWrites=true&w=majority&appName=ParametreCluster"));
+builder.Services.AddScoped<IMongoClient>(cnf => new MongoClient(builder.Configuration.GetConnectionString("MongoConnection")));
 
 
 builder.Services.AddSingleton<IRedisClientsManagerAsync>(new RedisManagerPool("localhost:6379"));
