@@ -13,8 +13,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.City
     {
         public async Task<ResponseDto<NoContentDto>> Handle(UpdateCityRequest request, CancellationToken cancellationToken)
         {
-            var getCityById = await locationDbContext.GetDbSet<Domain.Aggregates.City>
-                 ().FindAsync(request.Id);
+            var getCityById = await locationDbContext.City.FindAsync(request.Id);
 
             getCityById.UpdateCity(request.Id, request.Name);
 

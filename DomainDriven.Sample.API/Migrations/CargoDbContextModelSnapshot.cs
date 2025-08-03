@@ -277,8 +277,8 @@ namespace DomainDriven.Sample.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()

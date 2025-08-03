@@ -15,8 +15,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.District
     {
         public async Task<ResponseDto<NoContentDto>> Handle(UpdateDistrictRequest request, CancellationToken cancellationToken)
         {
-            var cityDbSet = locationDbContext.GetDbSet<Domain.Aggregates.City>();
-            var getCity = await cityDbSet.SingleAsync(y => y.Id == request.CityId);
+            var getCity = await locationDbContext.City.SingleAsync(y => y.Id == request.CityId);
             getCity.UpdateDistrict(request.DistrictId, request.DistrictName);
             await locationDbContext.SaveChangesAsync(cancellationToken);
             return ResponseDto<NoContentDto>.Success();

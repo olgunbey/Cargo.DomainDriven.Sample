@@ -5,6 +5,7 @@
         public AggregateRoot()
         {
             _notifications = new();
+            this.Id = Guid.NewGuid();
         }
         public Guid Id { get; private set; }
         private readonly List<ICustomizeNotification> _notifications;

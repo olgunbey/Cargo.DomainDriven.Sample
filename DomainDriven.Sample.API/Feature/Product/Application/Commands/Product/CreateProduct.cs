@@ -3,29 +3,31 @@ using DomainDriven.Sample.API.Feature.Product.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Product.Domain.Aggregates;
 using MediatR;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
-namespace DomainDriven.Sample.API.Feature.Product.Application.Commands
+namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
 {
     public class CreateProductRequest : IRequest<ResponseDto<NoContentDto>>
     {
         public string Name { get; set; }
         public int Stock { get; set; }
         public decimal Price { get; set; }
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public string ProductAttribute { get; set; }
 
     }
-    public class AddProductRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<CreateProductRequest, ResponseDto<NoContentDto>>
+    public class CreateProductRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<CreateProductRequest, ResponseDto<NoContentDto>>
     {
         public async Task<ResponseDto<NoContentDto>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
         {
-            var generateProductAttribute = new ProductAttribute(request.ProductAttribute.ToBsonDocument());
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            var bsonDocumentData = BsonDocument.Parse(request.ProductAttribute);
+            var generateProductAttribute = new ProductAttribute(bsonDocumentData);
 
             var mongoDatabase = mongoClient.GetDatabase("DomainDrivenSample");
 
-            await mongoDatabase.GetCollection<ProductAttribute>("ProductAttribute")
-                 .InsertOneAsync(generateProductAttribute);
 
             var generateProduct = new Domain.Aggregates.Product(
                  request.Name,
@@ -40,6 +42,9 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands
                 session.StartTransaction();
                 try
                 {
+                    await mongoDatabase.GetCollection<ProductAttribute>("ProductAttribute")
+                 .InsertOneAsync(generateProductAttribute);
+
                     await productDbContext.SaveChangesAsync(cancellationToken);
                     await session.CommitTransactionAsync();
                 }

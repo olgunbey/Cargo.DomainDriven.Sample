@@ -9,8 +9,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.IntegrationEventHand
     {
         public async Task Consume(ConsumeContext<CargoStatusUpdateIntegrationEvent> context)
         {
-            var getOrderById = await orderDbContext.GetDbSet<Domain.Aggregates.OrderInformation>()
-                  .FindAsync(context.Message.OrderId);
+            var getOrderById = await orderDbContext.OrderInformation.FindAsync(context.Message.OrderId);
 
             var updateOrderStatus = OrderStatusMapper.MapToDomain(context.Message.CargoStatus);
             getOrderById.UpdateStatus(updateOrderStatus);

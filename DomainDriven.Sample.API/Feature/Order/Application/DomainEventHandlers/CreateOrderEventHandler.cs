@@ -11,7 +11,6 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
     {
         public async Task Handle(CreateOrderEvent notification, CancellationToken cancellationToken)
         {
-            var orderProductReadModelDbSet = orderDbContext.GetDbSet<OrderProductReadModel>();
             var orderProductModel = notification.ProductItems.Select(product => new OrderProductReadModel
             {
                 OrderId = notification.OrderId,
@@ -19,7 +18,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
                 ProductName = product.ProductName,
             });
 
-            await orderProductReadModelDbSet.AddRangeAsync(orderProductModel);
+            await orderDbContext.OrderProductRealModel.AddRangeAsync(orderProductModel);
             await orderDbContext.SaveChangesAsync(cancellationToken);
             await publishEndpoint.Publish(new OrderReceivedIntegrationEvent(notification.ProductItems.ToDictionary(y => y.ProductId, y => y.Count)));
         }

@@ -11,7 +11,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Queries
 {
     public class GetAllProductByCategoryIdRequest : IRequest<ResponseDto<List<GetAllProductByCategoryIdDto>>>
     {
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
     }
     public class GetAllProductByCategoryIdRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<GetAllProductByCategoryIdRequest, ResponseDto<List<GetAllProductByCategoryIdDto>>>
     {
@@ -19,7 +19,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Queries
         {
             var mongoDatabase = mongoClient.GetDatabase("DomainDrivenSample");
 
-            var getAllProductByCategoryId = await productDbContext.GetDbSet<Domain.Aggregates.Product>()
+            var getAllProductByCategoryId = await productDbContext.Product
                    .Where(x => x.CategoryId == request.CategoryId)
                    .ToListAsync();
 

@@ -1,6 +1,5 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
-using DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Enums;
 using MediatR;
 
@@ -15,8 +14,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
     {
         public async Task<ResponseDto<NoContentDto>> Handle(UpdateCargoStatusRequest request, CancellationToken cancellationToken)
         {
-            var getCargo = await cargoDbContext.GetDbSet<CargoInformation>()
-                  .FindAsync(request.CargoId);
+            var getCargo = await cargoDbContext.CargoInformation.FindAsync(request.CargoId);
             getCargo.UpdateCargoStatus(request.CargoStatus);
             await cargoDbContext.SaveChangesAsync(cancellationToken);
             return ResponseDto<NoContentDto>.Success();

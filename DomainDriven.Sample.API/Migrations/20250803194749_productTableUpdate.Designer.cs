@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DomainDriven.Sample.API.Migrations
 {
     [DbContext(typeof(CargoDbContext))]
-    [Migration("20250802135402_mig2")]
-    partial class mig2
+    [Migration("20250803194749_productTableUpdate")]
+    partial class productTableUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -280,8 +280,8 @@ namespace DomainDriven.Sample.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()

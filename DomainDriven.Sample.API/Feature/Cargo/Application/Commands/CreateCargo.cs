@@ -23,7 +23,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
             public string Name { get; set; }
         }
     }
-    public class AddCargoRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CreateCargoRequest, ResponseDto<NoContentDto>>
+    public class CreateCargoRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CreateCargoRequest, ResponseDto<NoContentDto>>
     {
         public async Task<ResponseDto<NoContentDto>> Handle(CreateCargoRequest request, CancellationToken cancellationToken)
         {

@@ -15,8 +15,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Queries
     {
         public async Task<ResponseDto<CargoGetByCargoCodeResponseDto>> Handle(CargoGetByCargoCodeRequest request, CancellationToken cancellationToken)
         {
-            var cargoDbSet = cargoDbContext.GetDbSet<CargoInformation>();
-            var getCargoInformation = await cargoDbSet.SingleAsync(y => y.CargoCode == request.CargoCode);
+            var getCargoInformation = await cargoDbContext.CargoInformation.SingleAsync(y => y.CargoCode == request.CargoCode);
 
             var productInfoGetByCargo = cargoDbContext.CargoProductReadModel.Where(y => y.CargoId == getCargoInformation.Id).ToList();
 

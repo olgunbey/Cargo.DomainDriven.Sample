@@ -7,10 +7,8 @@ namespace DomainDriven.Sample.API.Feature.Product.Domain.Aggregates
     {
         public ProductAttribute(BsonDocument value)
         {
-            this.Id = Guid.NewGuid();
             this.Value = value;
         }
-        public Guid Id { get; private set; }
         public BsonDocument Value { get; private set; }
     }
 }
