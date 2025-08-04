@@ -11,7 +11,6 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHand
         {
             await cargoDbContext.CargoProductReadModel.Where(y => y.ProductId == context.Message.ProductId)
                  .ExecuteUpdateAsync(y => y.SetProperty(prop => prop.ProductName, context.Message.ProductName));
-
         }
     }
 }

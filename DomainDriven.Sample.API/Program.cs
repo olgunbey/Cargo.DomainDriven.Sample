@@ -1,4 +1,5 @@
 using DomainDriven.Sample.API.Database;
+using DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHandlers;
 using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
@@ -40,6 +41,8 @@ builder.Services.AddScoped<ILocationDbContext>(provider => provider.GetRequiredS
 builder.Services.AddMassTransit<IBus>(configure =>
 {
     configure.AddConsumer<OrderReceivedIntegrationEventHandler>();
+    configure.AddConsumer<UpdateProductIntegrationEventHandler>();
+
     configure.UsingRabbitMq((context, configurator) =>
     {
 
@@ -50,6 +53,8 @@ builder.Services.AddMassTransit<IBus>(configure =>
 
         });
         configurator.ReceiveEndpoint("OrderReceivedIntegrationEvent", cnf => cnf.ConfigureConsumer<OrderReceivedIntegrationEventHandler>(context));
+        configurator.ReceiveEndpoint("ProductToCargo", cnf => cnf.ConfigureConsumer<UpdateProductIntegrationEventHandler>(context));
+        configurator.ReceiveEndpoint("ProductToOrder", cnf => cnf.ConfigureConsumer<UpdateProductIntegrationEventHandler>(context));
 
     });
 
