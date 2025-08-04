@@ -2,13 +2,14 @@
 
 namespace DomainDriven.Sample.API.Feature.Order.Domain.Entities
 {
-    public class ProductItem:IEntity
+    public class ProductItem : IEntity
     {
         public ProductItem()
         {
-            
+
         }
         public Guid Id { get; private set; }
+        public string Name { get; set; }
         public int Count { get; private set; }
 
         public ProductItem(Guid id, int count)

@@ -1,4 +1,5 @@
 ﻿using DomainDriven.Sample.API.Common;
+using DomainDriven.Sample.API.Feature.Product.Domain.Events.Product;
 
 namespace DomainDriven.Sample.API.Feature.Product.Domain.Aggregates
 {
@@ -17,6 +18,15 @@ namespace DomainDriven.Sample.API.Feature.Product.Domain.Aggregates
         public decimal Price { get; private set; }
         public Guid CategoryId { get; private set; }
         public Guid ProductAttributeId { get; private set; } //BsonDocument olarak MongoDb'de tutulacak
+
+
+        public void UpdateProduct(string name, int stock, decimal price)
+        {
+            this.Name = name;
+            this.Stock = stock;
+            this.Price = price;
+            RaiseDomainEvent(new UpdateProductEvent(this.Id, name, stock, price));
+        }
 
     }
 }

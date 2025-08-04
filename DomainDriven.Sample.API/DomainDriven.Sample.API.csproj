@@ -29,7 +29,9 @@
     <Folder Include="Feature\Location\Application\Queries\" />
     <Folder Include="Feature\Location\Infrastructure\Infrastructure\" />
     <Folder Include="Feature\Order\Application\Queries\" />
+    <Folder Include="Feature\Product\Application\DomainEventHandlers\Category\" />
     <Folder Include="Feature\Product\Domain\Entities\" />
+    <Folder Include="Feature\Product\Domain\Events\Category\" />
     <Folder Include="Feature\Product\Domain\ValueObjects\" />
     <Folder Include="Feature\Product\Infrastructure\" />
   </ItemGroup>
