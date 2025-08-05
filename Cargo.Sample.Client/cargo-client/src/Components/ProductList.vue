@@ -1,0 +1,388 @@
+<template>
+  <div class="product-grid">
+    <div
+      v-for="product in products"
+      :key="product.id"
+      class="product-card"
+      @click.stop="addToCart(product)"
+    >
+      <div class="product-image-wrapper">
+        <img :src="product.image" :alt="product.name" class="product-image" />
+        <div class="product-overlay">
+          <button class="favorite-btn" @click.stop="toggleFavorite(product)">
+            <svg
+              class="heart-icon"
+              :class="{ filled: product.isFavorite }"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.5783 8.50903 2.9987 7.05 2.9987C5.59096 2.9987 4.19169 3.5783 3.16 4.61C2.1283 5.6417 1.5487 7.04097 1.5487 8.5C1.5487 9.95903 2.1283 11.3583 3.16 12.39L12 21.23L20.84 12.39C21.351 11.8792 21.7563 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7563 5.72723 21.351 5.1208 20.84 4.61Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="product-badge" v-if="product.isNew">YENİ</div>
+        </div>
+      </div>
+      <div class="product-info">
+        
+        <h2 class="product-title">{{ product.name }}</h2>
+        <p class="product-description">{{ product.description }}</p>
+        <div class="product-rating" v-if="product.rating">
+          <div class="stars">
+            <span
+              v-for="i in 5"
+              :key="i"
+              class="star"
+              :class="{ filled: i <= product.rating }"
+              >★</span
+            >
+          </div>
+          <span class="rating-text"
+            >({{ product.reviews || Math.floor(Math.random() * 100) + 1 }})</span
+          >
+        </div>
+        <div class="product-bottom">
+          <div class="price-section">
+            <span v-if="product.oldPrice" class="old-price">{{
+              formatPrice(product.oldPrice)
+            }}</span>
+            <span class="product-price">{{ formatPrice(product.price) }}</span>
+            <span v-if="product.oldPrice" class="discount-badge">
+              %{{ Math.round((1 - product.price / product.oldPrice) * 100) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { useCartStore } from "@/stores/cart";
+
+const cart = useCartStore();
+const products = ref([
+  {
+    id: 1,
+    name: "Kulaklık",
+    description: "Kablosuz Bluetooth kulaklık, aktif gürültü engelleme",
+    price: 599.99,
+    oldPrice: 799.99,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80",
+    rating: 4,
+    reviews: 156,
+    isNew: true,
+    isFavorite: false,
+  },
+  {
+    id: 2,
+    name: "Klavye",
+    description: "Mekanik RGB klavye, Cherry MX switches",
+    price: 899.9,
+    image: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=400&q=80",
+    rating: 5,
+    reviews: 89,
+    isNew: false,
+    isFavorite: false,
+  },
+  {
+    id: 3,
+    name: "Mouse",
+    description: "Kablosuz oyuncu faresi, 16000 DPI sensör",
+    price: 349.5,
+    oldPrice: 429.9,
+    image: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=400&q=80",
+    rating: 4,
+    reviews: 234,
+    isNew: false,
+    isFavorite: true,
+  },
+  {
+    id: 4,
+    name: "Monitör",
+    description: "27 inç 144Hz oyuncu monitörü, QHD çözünürlük",
+    price: 3299,
+    oldPrice: 3899,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
+    rating: 5,
+    reviews: 67,
+    isNew: true,
+    isFavorite: false,
+  },
+]);
+
+function addToCart(product) {
+  cart.addItem(product);
+}
+
+function toggleFavorite(product) {
+  product.isFavorite = !product.isFavorite;
+}
+
+function formatPrice(price) {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+  }).format(price);
+}
+</script>
+
+<style scoped>
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  box-sizing: border-box;
+}
+
+.product-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  width: 100%;
+  max-width: 280px;
+  margin: 0;
+  height: 320px;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.product-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
+}
+
+.product-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-image-wrapper:hover .product-image {
+  transform: scale(1.1) rotate(1deg);
+}
+
+/* Overlay sadece görsel alanında ve sadece hover'da aktif */
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.product-image-wrapper:hover .product-overlay {
+  opacity: 1;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+}
+
+.favorite-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.heart-icon {
+  width: 20px;
+  height: 20px;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.heart-icon.filled {
+  color: #ef4444;
+  fill: currentColor;
+}
+
+.product-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  pointer-events: none;
+}
+
+.product-info {
+  padding: 12px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: none;
+  background: transparent; /* Burada herhangi bir kararma yok */
+}
+
+.product-category {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #64748b;
+  flex: 1;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  color: #e2e8f0;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.star.filled {
+  color: #fbbf24;
+}
+
+.rating-text {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.product-bottom {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.price-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.old-price {
+  font-size: 14px;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.product-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: #16a34a;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.discount-badge {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  .product-info {
+    padding: 10px 12px;
+  }
+  .product-image {
+    height: 200px;
+  }
+}
+</style>
