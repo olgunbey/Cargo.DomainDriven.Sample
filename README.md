@@ -1,4 +1,4 @@
-# Cargo.DomainDriven.Sample
+# DomainDriven Sample
 
 Bu proje Domain Driven Design (DDD) prensipleriyle geliştirilmiş bir kargo yönetim örneğidir.
 
