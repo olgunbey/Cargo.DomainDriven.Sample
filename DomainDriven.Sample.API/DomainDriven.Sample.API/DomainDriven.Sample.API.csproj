@@ -24,16 +24,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Feature\Cargo\Infrastructure\Infrastructure\" />
-    <Folder Include="Feature\Cargo\Infrastructure\Persistence\" />
-    <Folder Include="Feature\Location\Application\Queries\" />
-    <Folder Include="Feature\Location\Infrastructure\Infrastructure\" />
-    <Folder Include="Feature\Order\Application\Queries\" />
-    <Folder Include="Feature\Product\Application\DomainEventHandlers\Category\" />
-    <Folder Include="Feature\Product\Domain\Entities\" />
-    <Folder Include="Feature\Product\Domain\Events\Category\" />
-    <Folder Include="Feature\Product\Domain\ValueObjects\" />
-    <Folder Include="Feature\Product\Infrastructure\" />
+    <Folder Include="Database\Feature\Cargo\Infrastructure\Infrastructure\" />
+    <Folder Include="Database\Feature\Cargo\Infrastructure\Persistence\" />
+    <Folder Include="Database\Feature\Customer\Application\Commands\" />
+    <Folder Include="Database\Feature\Customer\Domain\Interfaces\" />
+    <Folder Include="Database\Feature\Customer\Domain\Events\" />
+    <Folder Include="Database\Feature\Location\Application\Queries\" />
+    <Folder Include="Database\Feature\Location\Infrastructure\Infrastructure\" />
+    <Folder Include="Database\Feature\Order\Application\Queries\" />
+    <Folder Include="Database\Feature\Product\Application\DomainEventHandlers\Category\" />
+    <Folder Include="Database\Feature\Product\Domain\Entities\" />
+    <Folder Include="Database\Feature\Product\Domain\Events\Category\" />
+    <Folder Include="Database\Feature\Product\Domain\ValueObjects\" />
+    <Folder Include="Database\Feature\Product\Infrastructure\" />
   </ItemGroup>
 
 </Project>

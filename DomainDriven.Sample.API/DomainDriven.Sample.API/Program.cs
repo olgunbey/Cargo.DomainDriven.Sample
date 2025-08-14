@@ -1,6 +1,7 @@
 using DomainDriven.Sample.API.Database;
 using DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHandlers;
 using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
+using DomainDriven.Sample.API.Feature.Customer.Infrastructure.Persistence;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Product.Application.IntegrationEventHandlers;
@@ -38,6 +39,9 @@ builder.Services.AddScoped<IOrderDbContext>(provider => provider.GetRequiredServ
 
 builder.Services.AddScoped<ILocationDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
+
+
+builder.Services.AddScoped<ICustomerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 builder.Services.AddMassTransit<IBus>(configure =>
 {
     configure.AddConsumer<OrderReceivedIntegrationEventHandler>();

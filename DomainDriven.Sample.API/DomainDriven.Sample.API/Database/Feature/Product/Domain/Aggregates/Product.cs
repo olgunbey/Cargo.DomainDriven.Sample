@@ -25,7 +25,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Domain.Aggregates
             this.Name = name;
             this.Stock = stock;
             this.Price = price;
-            RaiseDomainEvent(new UpdateProductEvent(this.Id, name, stock, price));
+            RaiseDomainEvent(new UpdateProductEvent(this.Id, name));
         }
 
     }

@@ -1,6 +1,8 @@
 ﻿using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.ReadModel;
+using DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates;
+using DomainDriven.Sample.API.Feature.Customer.Infrastructure.Persistence;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Location.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Location.Domain.ReadModel;
@@ -14,7 +16,7 @@ using System.Reflection;
 
 namespace DomainDriven.Sample.API.Database
 {
-    public class CargoDbContext(DbContextOptions<CargoDbContext> dbContextOptions) : DbContext(dbContextOptions), ICargoDbContext, ILocationDbContext, IOrderDbContext, IProductDbContext
+    public class CargoDbContext(DbContextOptions<CargoDbContext> dbContextOptions) : DbContext(dbContextOptions), ICargoDbContext, ILocationDbContext, IOrderDbContext, IProductDbContext, ICustomerDbContext
     {
         public DbSet<Company> Company { get; set; }
         public DbSet<CargoProductReadModel> CargoProductReadModel { get; set; }
@@ -26,6 +28,8 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<CityReadModel> CityReadModel { get; set; }
         public DbSet<DistrictReadModel> DistrictReadModel { get; set; }
         public DbSet<CargoInformation> CargoInformation { get ; set ; }
+        public DbSet<UserCredential> UserCredential { get ; set ; }
+        public DbSet<UserInformation> UserInformation { get ; set ; }
 
         public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
         {
