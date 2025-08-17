@@ -1,8 +1,8 @@
-﻿using DomainDriven.Sample.API.Database.Feature.Product.Application.Queries;
+﻿
 using DomainDriven.Sample.API.Feature.Product.Application.Commands.Category;
+using DomainDriven.Sample.API.Feature.Product.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace DomainDriven.Sample.API.Controllers
 {

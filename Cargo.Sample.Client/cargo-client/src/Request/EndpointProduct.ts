@@ -18,11 +18,12 @@ export class EndpointProduct {
         });
     }
     async getProductsByCategoryId(categoryId:string):Promise<ResponseDto<GetAllProductByCategoryIdResponseDto[]>>{
-        return await fetch(`https://localhost:7208/api/Product/GetAllProductByCategoryId/${categoryId}`, {
+        return await fetch(`https://localhost:7208/api/Product/GetAllProductByCategoryId/`, {
             method:'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'categoryIdRequest': categoryId
             }
         })
         .then(async response => {

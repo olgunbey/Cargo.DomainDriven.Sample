@@ -1,7 +1,6 @@
 ﻿using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Feature.Product.Application.Dtos;
 using DomainDriven.Sample.API.Feature.Product.Application.Interfaces;
-using DomainDriven.Sample.API.Feature.Product.Domain.Aggregates;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
@@ -23,16 +22,18 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Queries
                    .Where(x => x.CategoryId == request.CategoryId)
                    .ToListAsync();
 
-            var query = Builders<ProductAttribute>.Filter.In(y => y.Id, getAllProductByCategoryId.Select(y => y.ProductAttributeId).ToList());
+            //var query = Builders<ProductAttribute>.Filter.In(y => y.Id, getAllProductByCategoryId.Select(y => y.ProductAttributeId).ToList());
 
-            var mongoProductAttributes = (await mongoDatabase.GetCollection<ProductAttribute>("ProductAttribute")
-                 .FindAsync(query)).ToList();
+            //var mongoProductAttributes = (await mongoDatabase.GetCollection<ProductAttribute>("ProductAttribute")
+            //     .FindAsync(query)).ToList();
 
             var response = getAllProductByCategoryId.Select(y => new GetAllProductByCategoryIdDto()
             {
+                ProductId = y.Id,
                 Name = y.Name,
                 Price = y.Price,
-                ProductAttribute = mongoProductAttributes.Single(x => x.Id == y.ProductAttributeId).Value
+                CategoryId = y.CategoryId
+                //ProductAttribute = mongoProductAttributes.Single(x => x.Id == y.ProductAttributeId).Value
             }).ToList();
 
             return ResponseDto<List<GetAllProductByCategoryIdDto>>.Success(response);

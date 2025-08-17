@@ -1,4 +1,3 @@
-import { EndpointProduct } from '@/Request/EndpointProduct'
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
@@ -49,7 +48,6 @@ export const useCartStore = defineStore('cart', {
   getters: {
     itemCount: (state) => state.items.reduce((sum, item) => sum + item.quantity, 0),
     totalPrice: (state) =>
-      state.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
-    getCategory: (state) => new EndpointProduct().getProductsByCategoryId(state.categoryId)
+      state.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   }
 })

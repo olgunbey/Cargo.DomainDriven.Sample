@@ -30,7 +30,6 @@
         </div>
       </div>
       <div class="product-info">
-        
         <h2 class="product-title">{{ product.name }}</h2>
         <p class="product-description">{{ product.description }}</p>
         <div class="product-rating" v-if="product.rating">
@@ -44,7 +43,9 @@
             >
           </div>
           <span class="rating-text"
-            >({{ product.reviews || Math.floor(Math.random() * 100) + 1 }})</span
+            >({{
+              product.reviews || Math.floor(Math.random() * 100) + 1
+            }})</span
           >
         </div>
         <div class="product-bottom">
@@ -53,9 +54,9 @@
               formatPrice(product.oldPrice)
             }}</span>
             <span class="product-price">{{ formatPrice(product.price) }}</span>
-            <span v-if="product.oldPrice" class="discount-badge">
+            <!-- <span v-if="product.oldPrice" class="discount-badge">
               %{{ Math.round((1 - product.price / product.oldPrice) * 100) }}
-            </span>
+            </span> -->
           </div>
         </div>
       </div>
@@ -63,60 +64,33 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
+import { EndpointProduct } from "@/Request/EndpointProduct";
+import { GetAllProductByCategoryIdResponseDto, ResponseDto } from "@/Dtos";
 
 const cart = useCartStore();
-const products = ref([
-  {
-    id: 1,
-    name: "Kulaklık",
-    description: "Kablosuz Bluetooth kulaklık, aktif gürültü engelleme",
-    price: 599.99,
-    oldPrice: 799.99,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80",
-    rating: 4,
-    reviews: 156,
-    isNew: true,
-    isFavorite: false,
-  },
-  {
-    id: 2,
-    name: "Klavye",
-    description: "Mekanik RGB klavye, Cherry MX switches",
-    price: 899.9,
-    image: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=400&q=80",
-    rating: 5,
-    reviews: 89,
-    isNew: false,
-    isFavorite: false,
-  },
-  {
-    id: 3,
-    name: "Mouse",
-    description: "Kablosuz oyuncu faresi, 16000 DPI sensör",
-    price: 349.5,
-    oldPrice: 429.9,
-    image: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=400&q=80",
-    rating: 4,
-    reviews: 234,
-    isNew: false,
-    isFavorite: true,
-  },
-  {
-    id: 4,
-    name: "Monitör",
-    description: "27 inç 144Hz oyuncu monitörü, QHD çözünürlük",
-    price: 3299,
-    oldPrice: 3899,
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
-    rating: 5,
-    reviews: 67,
-    isNew: true,
-    isFavorite: false,
-  },
-]);
+const products = ref([]);
+
+
+watch(
+  ()=> cart.categoryId,
+  async (newCategoryId) => {
+    if(!newCategoryId) return;
+
+    const response:ResponseDto<GetAllProductByCategoryIdResponseDto[]> =await new EndpointProduct().getProductsByCategoryId(newCategoryId);
+    products.value = response.data.map(product => ({
+      id: product.productId,
+      name: product.name,
+      price: product.price,
+      categoryId: product.categoryId,
+      isFavorite: false,
+    }));
+  }
+)
+
+
 
 function addToCart(product) {
   cart.addItem(product);

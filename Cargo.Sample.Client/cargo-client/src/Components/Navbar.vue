@@ -57,18 +57,18 @@ import { ResponseDto,GetAllCategoryResponseDto } from '@/Dtos/index';
 
 const cart = useCartStore()
 const categories = ref([]);
+
+
 onMounted(async () => {
    const getAllCategory:ResponseDto<GetAllCategoryResponseDto[]> = await new EndpointProduct().getAllCategories();
-
-  categories.value = getAllCategory.Data.map(category => ({
+  categories.value = getAllCategory.data.map(category => ({
     id: category.id,
     name: category.categoryName,
   }));
 });
 
 const selectedCategoryId =async (categoryId:string) => {
-await cart.selectedCategoryId(categoryId);
-
+await cart.seletedCategoryId(categoryId);
 }
 
 

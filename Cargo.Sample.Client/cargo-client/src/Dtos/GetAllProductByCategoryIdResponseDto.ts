@@ -1,18 +1,14 @@
 
 export class GetAllProductByCategoryIdResponseDto {
 
-    
-    public id: number;
-    public productName: string;
-    public categoryId: number;
+    public productId:string;
+    public name: string;
+    public categoryId: string;
     public price: number;
-    public description: string
-    constructor(id:number, productName:string, categoryId:number, price:number, description:string) {
-        this.id = id;
-        this.productName = productName;
+    constructor(productId:string, productName:string, categoryId:string, price:number) {
+        this.productId = productId;
+        this.name = productName;
         this.categoryId = categoryId;
         this.price = price;
-        this.description = description;
-        
     }
 }

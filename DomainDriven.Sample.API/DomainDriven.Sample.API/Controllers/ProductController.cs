@@ -1,4 +1,6 @@
 ﻿using DomainDriven.Sample.API.Feature.Product.Application.Commands.Product;
+using DomainDriven.Sample.API.Feature.Product.Application.Dtos;
+using DomainDriven.Sample.API.Feature.Product.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +15,10 @@ namespace DomainDriven.Sample.API.Controllers
         {
             return Ok(await mediator.Send(addProductRequest));
         }
-        public async Task<IActionResult> GetAllProductByCategoryId([FromHeader]string categoryId)
+        [HttpGet]
+        public async Task<IActionResult> GetAllProductByCategoryId([FromHeader] Guid categoryIdRequest)
         {
-
+            return Ok(await mediator.Send(new GetAllProductByCategoryIdRequest() { CategoryId=categoryIdRequest}));
         }
     }
 }

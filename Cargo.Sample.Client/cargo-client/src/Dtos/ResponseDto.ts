@@ -1,13 +1,13 @@
 export class ResponseDto<T> {
 
 
-    public Errors: string[];
-    public Data: T | null;
+    public errors: string[];
+    public data: T | null;
 
 
     constructor(errors:string[],data:T ) {
-        this.Errors = errors || [];
-        this.Data = data || null;
+        this.errors = errors || [];
+        this.data = data || null;
         
     }
 }

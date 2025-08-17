@@ -22,9 +22,9 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
     {
         public async Task<ResponseDto<NoContentDto>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
         {
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-            var bsonDocumentData = BsonDocument.Parse(request.ProductAttribute);
-            var generateProductAttribute = new ProductAttribute(bsonDocumentData);
+            //BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            //var bsonDocumentData = BsonDocument.Parse(request.ProductAttribute);
+            //var generateProductAttribute = new ProductAttribute(bsonDocumentData);
 
             var mongoDatabase = mongoClient.GetDatabase("DomainDrivenSample");
 
@@ -34,26 +34,28 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
                 request.Stock,
                 request.Price,
                 request.CategoryId,
-                generateProductAttribute.Id);
+                /*generateProductAttribute.Id*/
+                Guid.NewGuid());
 
             productDbContext.Product.Add(generateProduct);
-            using (var session = await mongoClient.StartSessionAsync())
-            {
-                session.StartTransaction();
-                try
-                {
-                    await mongoDatabase.GetCollection<ProductAttribute>("ProductAttribute")
-                 .InsertOneAsync(generateProductAttribute);
+            await productDbContext.SaveChangesAsync(cancellationToken);
+            //using (var session = await mongoClient.StartSessionAsync())
+            //{
+            //    session.StartTransaction();
+            //    try
+            //    {
+            //        await mongoDatabase.GetCollection<ProductAttribute>("ProductAttribute")
+            //     .InsertOneAsync(generateProductAttribute);
 
-                    await productDbContext.SaveChangesAsync(cancellationToken);
-                    await session.CommitTransactionAsync();
-                }
-                catch (Exception e)
-                {
-                    await session.AbortTransactionAsync();
-                    return ResponseDto<NoContentDto>.Fail("Hata!!");
-                }
-            }
+            //        await productDbContext.SaveChangesAsync(cancellationToken);
+            //        await session.CommitTransactionAsync();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        await session.AbortTransactionAsync();
+            //        return ResponseDto<NoContentDto>.Fail("Hata!!");
+            //    }
+            //}
             return ResponseDto<NoContentDto>.Success(201);
         }
     }
