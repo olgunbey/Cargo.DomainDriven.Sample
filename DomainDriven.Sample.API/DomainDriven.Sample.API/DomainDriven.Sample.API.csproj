@@ -26,9 +26,7 @@
   <ItemGroup>
     <Folder Include="Feature\Cargo\Infrastructure\Infrastructure\" />
     <Folder Include="Feature\Cargo\Infrastructure\Persistence\" />
-    <Folder Include="Feature\Customer\Application\Commands\" />
     <Folder Include="Feature\Customer\Domain\Interfaces\" />
-    <Folder Include="Feature\Customer\Domain\Events\" />
     <Folder Include="Feature\Location\Application\Queries\" />
     <Folder Include="Feature\Location\Infrastructure\Infrastructure\" />
     <Folder Include="Feature\Order\Application\Queries\" />
