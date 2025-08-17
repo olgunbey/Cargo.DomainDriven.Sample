@@ -13,5 +13,9 @@ namespace DomainDriven.Sample.API.Controllers
         {
             return Ok(await mediator.Send(addProductRequest));
         }
+        public async Task<IActionResult> GetAllProductByCategoryId([FromHeader]string categoryId)
+        {
+
+        }
     }
 }

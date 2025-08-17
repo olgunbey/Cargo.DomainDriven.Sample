@@ -9,23 +9,19 @@
       <!-- Orta: Navigation Menü -->
       <div class="navbar-menu" :class="{ 'navbar-menu-active': mobileMenuOpen }">
         <a href="#" class="nav-item">Ana Sayfa</a>
-        
-        <div class="nav-item dropdown" 
-             @mouseenter="showCategoriesMenu" 
-             @mouseleave="hideCategories">
+
+        <div class="nav-item dropdown" @mouseenter="showCategoriesMenu" @mouseleave="hideCategories">
           <span class="dropdown-trigger">
             Kategoriler
             <i class="arrow" :class="{ 'arrow-rotate': showCategories }">▼</i>
           </span>
-          <div class="dropdown-content" 
-               v-show="showCategories"
-               @mouseenter="showCategoriesMenu"
-               @mouseleave="hideCategories">
-              <RouterLink :to="{ name: 'category', params: { category: 'elektronik' } }" class="dropdown-item" @click="showCategories = false">Elektronik</RouterLink>
-              <RouterLink :to="{ name: 'category', params: { category: 'giyim-aksesuar' } }" class="dropdown-item" @click="showCategories = false">Giyim & Aksesuar</RouterLink>
-              <RouterLink :to="{ name: 'category', params: { category: 'ev-yasam' } }" class="dropdown-item" @click="showCategories = false">Ev & Yaşam</RouterLink>
-              <RouterLink :to="{ name: 'category', params: { category: 'spor-outdoor' } }" class="dropdown-item" @click="showCategories = false">Spor & Outdoor</RouterLink>
-              <RouterLink :to="{ name: 'category', params: { category: 'kitap-hobi' } }" class="dropdown-item" @click="showCategories = false">Kitap & Hobi</RouterLink>
+          <div class="dropdown-content" v-show="showCategories" @mouseenter="showCategoriesMenu"
+            @mouseleave="hideCategories">
+            <div v-for="categoryName in categories" :key="categoryName.id" @click="selectedCategoryId(categoryName.id)">
+              <RouterLink 
+                :to="{ name: 'category', params: { categoryId: `${categoryName.id}` } }" class="dropdown-item"
+                @click="showCategories = false">{{ categoryName.name }}</RouterLink>
+            </div>
           </div>
         </div>
 
@@ -35,15 +31,10 @@
 
       <div class="navbar-actions">
         <div class="search-box">
-          <input 
-            type="text" 
-            placeholder="Ara..." 
-            class="search-input"
-            v-model="searchQuery"
-          >
+          <input type="text" placeholder="Ara..." class="search-input" v-model="searchQuery">
           <button class="search-button">🔍</button>
         </div>
-        
+
         <div class="cart-button" @click="cart.toggleBasket">
           🛒 <span class="cart-count">({{ cart.itemCount }})</span>
         </div>
@@ -57,11 +48,30 @@
   </nav>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
+import { EndpointProduct } from '@/Request/EndpointProduct';
+import { ResponseDto,GetAllCategoryResponseDto } from '@/Dtos/index';
+
 
 const cart = useCartStore()
+const categories = ref([]);
+onMounted(async () => {
+   const getAllCategory:ResponseDto<GetAllCategoryResponseDto[]> = await new EndpointProduct().getAllCategories();
+
+  categories.value = getAllCategory.Data.map(category => ({
+    id: category.id,
+    name: category.categoryName,
+  }));
+});
+
+const selectedCategoryId =async (categoryId:string) => {
+await cart.selectedCategoryId(categoryId);
+
+}
+
+
 const showCategories = ref(false)
 const searchQuery = ref('')
 const mobileMenuOpen = ref(false)
@@ -71,8 +81,10 @@ let hideTimeout = null
 const hideCategories = () => {
   hideTimeout = setTimeout(() => {
     showCategories.value = false
-  }, 150) 
+  }, 150)
 }
+
+
 
 const showCategoriesMenu = () => {
   if (hideTimeout) {
@@ -80,12 +92,6 @@ const showCategoriesMenu = () => {
   }
   showCategories.value = true
 }
-
-const selectCategory = (category) => {
-  console.log('Seçilen kategori:', category)
-  showCategories.value = false
-}
-
 const toggleMobileMenu = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value
 }
@@ -373,9 +379,10 @@ const toggleMobileMenu = () => {
   .logo {
     font-size: 1.5rem;
   }
-  
+
   .cart-button {
     padding: 6px 12px;
     font-size: 14px;
   }
-}</style>
+}
+</style>

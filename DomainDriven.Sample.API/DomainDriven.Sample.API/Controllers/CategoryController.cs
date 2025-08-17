@@ -1,4 +1,5 @@
-﻿using DomainDriven.Sample.API.Feature.Product.Application.Commands.Category;
+﻿using DomainDriven.Sample.API.Database.Feature.Product.Application.Queries;
+using DomainDriven.Sample.API.Feature.Product.Application.Commands.Category;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -13,6 +14,11 @@ namespace DomainDriven.Sample.API.Controllers
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategoryRequest)
         {
             return Ok(await mediator.Send(createCategoryRequest));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategory()
+        {
+            return Ok(await mediator.Send(new GetAllCategoryRequest()));
         }
     }
 }
