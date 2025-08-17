@@ -1,29 +1,16 @@
 <template>
   <div class="product-grid">
-    <div
-      v-for="product in products"
-      :key="product.id"
-      class="product-card"
-      @click.stop="addToCart(product)"
-    >
+    <div v-if="products.length !== 0" v-for="product in products" :key="product.id" class="product-card"
+      @click.stop="addToCart(product)">
       <div class="product-image-wrapper">
         <img :src="product.image" :alt="product.name" class="product-image" />
         <div class="product-overlay">
           <button class="favorite-btn" @click.stop="toggleFavorite(product)">
-            <svg
-              class="heart-icon"
-              :class="{ filled: product.isFavorite }"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg class="heart-icon" :class="{ filled: product.isFavorite }" viewBox="0 0 24 24" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.5783 8.50903 2.9987 7.05 2.9987C5.59096 2.9987 4.19169 3.5783 3.16 4.61C2.1283 5.6417 1.5487 7.04097 1.5487 8.5C1.5487 9.95903 2.1283 11.3583 3.16 12.39L12 21.23L20.84 12.39C21.351 11.8792 21.7563 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7563 5.72723 21.351 5.1208 20.84 4.61Z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
           <div class="product-badge" v-if="product.isNew">YENİ</div>
@@ -34,19 +21,11 @@
         <p class="product-description">{{ product.description }}</p>
         <div class="product-rating" v-if="product.rating">
           <div class="stars">
-            <span
-              v-for="i in 5"
-              :key="i"
-              class="star"
-              :class="{ filled: i <= product.rating }"
-              >★</span
-            >
+            <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= product.rating }">★</span>
           </div>
-          <span class="rating-text"
-            >({{
-              product.reviews || Math.floor(Math.random() * 100) + 1
-            }})</span
-          >
+          <span class="rating-text">({{
+            product.reviews || Math.floor(Math.random() * 100) + 1
+          }})</span>
         </div>
         <div class="product-bottom">
           <div class="price-section">
@@ -58,6 +37,28 @@
               %{{ Math.round((1 - product.price / product.oldPrice) * 100) }}
             </span> -->
           </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="no-products">
+      <div class="empty-card" role="status" aria-live="polite">
+        <span class="glow"></span>
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="64" height="64">
+            <path d="M3 7h18M7 7l2.4 9.6a2 2 0 0 0 2 1.4h2.2a2 2 0 0 0 2-1.4L18 7" fill="none" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="10" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5" />
+            <circle cx="10" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.25" />
+            <path d="M15.5 15.5l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h2>Ürün bulunamadı</h2>
+        <p>Filtreleri daralttın mı? Kategoriyi değiştirerek yeniden dene.</p>
+
+        <!-- İstersen bu butonları kaldırabilirsin -->
+        <div class="actions">
+          <a class="btn ghost">Filtreleri temizle</a>
+          <a class="btn">Tüm ürünleri göster</a>
         </div>
       </div>
     </div>
@@ -75,11 +76,12 @@ const products = ref([]);
 
 
 watch(
-  ()=> cart.categoryId,
+  () => cart.categoryId,
   async (newCategoryId) => {
-    if(!newCategoryId) return;
+    if (!newCategoryId) return;
 
-    const response:ResponseDto<GetAllProductByCategoryIdResponseDto[]> =await new EndpointProduct().getProductsByCategoryId(newCategoryId);
+    const response: ResponseDto<GetAllProductByCategoryIdResponseDto[]> = await new EndpointProduct().getProductsByCategoryId(newCategoryId);
+
     products.value = response.data.map(product => ({
       id: product.productId,
       name: product.name,
@@ -109,6 +111,188 @@ function formatPrice(price) {
 </script>
 
 <style scoped>
+:root {
+  --bg: #0b1020;
+  --fg: #e7eaf3;
+  --muted: #a9b0c6;
+  --card: rgba(255, 255, 255, 0.06);
+  --stroke: rgba(255, 255, 255, 0.15);
+  --accent: #6ea8fe;
+  --accent-2: #b17bff;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f8ff;
+    --fg: #0d1321;
+    --muted: #495060;
+    --card: rgba(255, 255, 255, 0.9);
+    --stroke: rgba(0, 0, 0, 0.08);
+    --accent: #4f7cff;
+    --accent-2: #8f5bff;
+  }
+}
+
+.no-products {
+  position: absolute;
+  /* sayfaya göre konumlandır */
+  top: 50%;
+  /* dikey ortala */
+  left: 50%;
+  /* yatay ortala */
+  transform: translate(-50%, -50%);
+  /* tam ortalama */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  /* opsiyonel, kart boyutu */
+  pointer-events: none;
+  /* tıklanabilirliği kapat */
+  z-index: 10;
+  /* diğer elementlerin üstünde */
+}
+
+.empty-card {
+  position: relative;
+  width: min(720px, 92vw);
+  border-radius: 24px;
+  padding: 28px 28px 30px;
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--stroke);
+  backdrop-filter: blur(8px) saturate(120%);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* animasyonlu çerçeve ışıltısı */
+.empty-card::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 26px;
+  padding: 2px;
+  background: conic-gradient(from 180deg,
+      var(--accent), var(--accent-2), var(--accent), var(--accent-2));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spin 6s linear infinite;
+  opacity: .35;
+}
+
+/* yumuşak parıltı */
+.glow {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 35%, transparent), transparent 70%);
+  filter: blur(40px);
+  animation: float 10s ease-in-out infinite;
+  opacity: .25;
+}
+
+.icon {
+  width: 96px;
+  height: 96px;
+  margin: 4px auto 10px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 22%, transparent), transparent);
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.06);
+  color: color-mix(in oklab, var(--accent) 70%, var(--fg));
+  animation: rise 700ms cubic-bezier(.2, .7, .2, 1) both;
+}
+
+h2 {
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: .2px;
+  margin: 6px 0 6px;
+}
+
+p {
+  margin: 0 auto 18px;
+  max-width: 42ch;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 18%, transparent), transparent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn.ghost {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(-2%);
+  }
+
+  50% {
+    transform: translateY(2%);
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
 html,
 body,
 #app {
@@ -175,11 +359,9 @@ body,
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.4) 0%,
-    rgba(0, 0, 0, 0.1) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.1) 100%);
   opacity: 0;
   transition: all 0.3s ease;
   display: flex;
@@ -250,7 +432,8 @@ body,
   flex-direction: column;
   gap: 8px;
   user-select: none;
-  background: transparent; /* Burada herhangi bir kararma yok */
+  background: transparent;
+  /* Burada herhangi bir kararma yok */
 }
 
 .product-category {
@@ -352,9 +535,11 @@ body,
   .product-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
+
   .product-info {
     padding: 10px 12px;
   }
+
   .product-image {
     height: 200px;
   }
