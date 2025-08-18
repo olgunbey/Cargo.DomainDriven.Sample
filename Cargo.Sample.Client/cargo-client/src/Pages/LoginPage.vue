@@ -32,7 +32,7 @@
 
       <p class="register-text">
         Hesabınız yok mu?
-        <a href="#">Kayıt Ol</a>
+        <a href="/register">Kayıt Ol</a>
       </p>
     </div>
   </div>

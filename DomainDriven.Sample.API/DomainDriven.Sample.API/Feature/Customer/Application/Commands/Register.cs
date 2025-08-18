@@ -18,8 +18,15 @@ namespace DomainDriven.Sample.API.Feature.Customer.Application.Commands
         public async Task<ResponseDto<NoContentDto>> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
             var userCredential = new UserCredential(request.Mail, request.Mail, request.Name, request.Surname, request.Gender);
-            await customerDbContext.UserCredential.AddAsync(userCredential);
-            await customerDbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+                await customerDbContext.UserCredential.AddAsync(userCredential);
+                await customerDbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                return ResponseDto<NoContentDto>.Fail(e.Message, 500);
+            }
             return ResponseDto<NoContentDto>.Success(201);
         }
     }

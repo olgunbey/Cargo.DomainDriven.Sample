@@ -1,5 +1,4 @@
 ﻿using DomainDriven.Sample.API.Feature.Product.Application.Commands.Product;
-using DomainDriven.Sample.API.Feature.Product.Application.Dtos;
 using DomainDriven.Sample.API.Feature.Product.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

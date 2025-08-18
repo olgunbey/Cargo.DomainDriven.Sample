@@ -74,7 +74,6 @@ import { GetAllProductByCategoryIdResponseDto, ResponseDto } from "@/Dtos";
 const cart = useCartStore();
 const products = ref([]);
 
-
 watch(
   () => cart.categoryId,
   async (newCategoryId) => {
