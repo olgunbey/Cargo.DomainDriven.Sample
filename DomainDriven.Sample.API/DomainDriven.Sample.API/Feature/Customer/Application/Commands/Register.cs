@@ -20,7 +20,7 @@ namespace DomainDriven.Sample.API.Feature.Customer.Application.Commands
             var userCredential = new UserCredential(request.Mail, request.Mail, request.Name, request.Surname, request.Gender);
             try
             {
-                await customerDbContext.UserCredential.AddAsync(userCredential);
+                customerDbContext.UserCredential.Add(userCredential);
                 await customerDbContext.SaveChangesAsync(cancellationToken);
             }
             catch (Exception e)

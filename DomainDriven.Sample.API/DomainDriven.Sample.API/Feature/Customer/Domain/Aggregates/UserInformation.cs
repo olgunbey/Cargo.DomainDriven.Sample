@@ -6,9 +6,9 @@ namespace DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates
     {
         public UserInformation()
         {
-            
+
         }
-        public UserInformation(string name, string surname, bool gender, int userCredentialsId)
+        public UserInformation(string name, string surname, bool gender, Guid userCredentialsId)
         {
             this.Name = name;
             this.Surname = surname;
@@ -18,7 +18,7 @@ namespace DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates
         public string Name { get; private set; }
         public string Surname { get; private set; }
         public bool Gender { get; private set; }
-        public int UserCredentialsId { get; private set; }
+        public Guid UserCredentialsId { get; private set; }
 
     }
 }

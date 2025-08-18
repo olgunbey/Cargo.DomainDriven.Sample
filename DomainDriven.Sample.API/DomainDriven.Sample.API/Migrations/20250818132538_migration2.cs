@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DomainDriven.Sample.API.Migrations
 {
     /// <inheritdoc />
-    public partial class mig1 : Migration
+    public partial class migration2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -116,9 +116,6 @@ namespace DomainDriven.Sample.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OrderStatus = table.Column<int>(type: "integer", nullable: false),
-                    TargetLocation_CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TargetLocation_DistrictId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TargetLocation_Detail = table.Column<string>(type: "text", nullable: false),
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
                     PaymentStatus = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -134,10 +131,11 @@ namespace DomainDriven.Sample.API.Migrations
                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductName = table.Column<string>(type: "text", nullable: false),
-                    DistrictId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DistrictName = table.Column<string>(type: "text", nullable: false),
+                    Count = table.Column<int>(type: "integer", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityName = table.Column<string>(type: "text", nullable: false),
+                    DistrictId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DistrictName = table.Column<string>(type: "text", nullable: false),
                     Detail = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -162,6 +160,34 @@ namespace DomainDriven.Sample.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserCredential",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Mail = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserCredential", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserInformation",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Surname = table.Column<string>(type: "text", nullable: false),
+                    Gender = table.Column<bool>(type: "boolean", nullable: false),
+                    UserCredentialsId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserInformation", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "District",
                 columns: table => new
                 {
@@ -179,33 +205,10 @@ namespace DomainDriven.Sample.API.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ProductItem",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Count = table.Column<int>(type: "integer", nullable: false),
-                    OrderInformationId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductItem_OrderInformation_OrderInformationId",
-                        column: x => x.OrderInformationId,
-                        principalTable: "OrderInformation",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_District_CityId",
                 table: "District",
                 column: "CityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductItem_OrderInformationId",
-                table: "ProductItem",
-                column: "OrderInformationId");
         }
 
         /// <inheritdoc />
@@ -233,19 +236,22 @@ namespace DomainDriven.Sample.API.Migrations
                 name: "DistrictReadModel");
 
             migrationBuilder.DropTable(
+                name: "OrderInformation");
+
+            migrationBuilder.DropTable(
                 name: "OrderProductRealModel");
 
             migrationBuilder.DropTable(
                 name: "Product");
 
             migrationBuilder.DropTable(
-                name: "ProductItem");
+                name: "UserCredential");
+
+            migrationBuilder.DropTable(
+                name: "UserInformation");
 
             migrationBuilder.DropTable(
                 name: "City");
-
-            migrationBuilder.DropTable(
-                name: "OrderInformation");
         }
     }
 }

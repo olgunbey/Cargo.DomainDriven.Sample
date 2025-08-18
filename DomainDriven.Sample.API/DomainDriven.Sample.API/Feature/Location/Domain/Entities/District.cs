@@ -12,7 +12,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Domain.Entities
         {
             Name = name;
         }
-        public Guid Id { get; set; }
+        public  Guid Id { get; set; }
         public string Name { get; private set; }
 
         public void UpdateName(string name)

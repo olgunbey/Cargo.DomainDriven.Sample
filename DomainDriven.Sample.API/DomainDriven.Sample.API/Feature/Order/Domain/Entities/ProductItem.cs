@@ -8,9 +8,10 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Entities
         {
 
         }
-        public Guid Id { get; private set; }
+        public  Guid Id { get; set; }
         public string Name { get; set; }
         public int Count { get; private set; }
+
 
         public ProductItem(Guid id, int count)
         {

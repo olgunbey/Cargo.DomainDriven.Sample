@@ -9,11 +9,11 @@ namespace DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates
         {
 
         }
-        public UserCredential(string mail, string password,string name,string surname,bool gender)
+        public UserCredential(string mail, string password, string name, string surname, bool gender)
         {
             this.Mail = mail;
             this.Password = password;
-            RaiseDomainEvent(new CreateUserCredentialEvent(this.Id,name,surname,password,gender));
+            RaiseDomainEvent(new CreateUserCredentialEvent(this.Id, name, surname, password, gender));
         }
         public string Mail { get; private set; }
         public string Password { get; private set; }

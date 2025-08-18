@@ -145,8 +145,8 @@ namespace DomainDriven.Sample.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("UserCredentialsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserCredentialsId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

@@ -4,17 +4,18 @@
     {
         public AggregateRoot()
         {
-            _notifications = new();
             this.Id = Guid.NewGuid();
+            _notifications = new();
         }
-        public Guid Id { get; private set; }
         private readonly List<ICustomizeNotification> _notifications;
         public IReadOnlyCollection<ICustomizeNotification> Notifications => _notifications;
-        protected void RaiseDomainEvent(ICustomizeNotification notification)
+        public Guid Id { get; set; }
+
+        public void RaiseDomainEvent(ICustomizeNotification notification)
         {
             _notifications.Add(notification);
         }
-        protected void ClearDomainEvents()
+        public void ClearDomainEvents()
         {
             _notifications.Clear();
         }
