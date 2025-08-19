@@ -10,7 +10,7 @@ namespace DomainDriven.Sample.API.Controllers
         protected IActionResult ResponseApi<T>(ResponseDto<T> responseDto)
         {
             HttpContext.Response.StatusCode = responseDto.StatusCode;
-            if (responseDto.StatusCode == 200)
+            if (responseDto.StatusCode == 204)
                 return NoContent();
 
 

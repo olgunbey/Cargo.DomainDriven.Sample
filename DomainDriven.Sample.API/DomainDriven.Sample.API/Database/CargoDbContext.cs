@@ -2,12 +2,10 @@
 using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Cargo.Domain.ReadModel;
-using DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Customer.Domain.ReadModels;
 using DomainDriven.Sample.API.Feature.Customer.Infrastructure.Persistence;
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.IdentityServer.Domain.Aggregates;
-using DomainDriven.Sample.API.Feature.IdentityServer.Domain.ReadModel;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Location.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Location.Domain.ReadModel;
@@ -35,9 +33,9 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<CityReadModel> CityReadModel { get; set; }
         public DbSet<DistrictReadModel> DistrictReadModel { get; set; }
         public DbSet<CargoInformation> CargoInformation { get; set; }
-        public DbSet<UserInformation> UserInformation { get; set; }
         public DbSet<ClientCredential> ClientCredential { get; set; }
-        public DbSet<CustomerReadModel> CustomerReadModel { get ; set ; }
+        public DbSet<CustomerReadModel> CustomerReadModel { get; set; } //burayı düşün (c,u,d işlemleri tek bir BC'den olmalı) eğer bunu Customer'de tutarsak nereden güncelleyecegiz
+        public DbSet<UserCredential> UserCredential { get; set; }
 
         public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
         {

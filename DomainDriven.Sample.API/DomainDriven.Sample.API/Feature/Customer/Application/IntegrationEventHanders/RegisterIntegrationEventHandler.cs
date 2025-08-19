@@ -16,7 +16,7 @@ namespace DomainDriven.Sample.API.Feature.Customer.Application.IntegrationEventH
                 Gender = context.Message.Gender
             });
 
-            //await customerDbContext.SaveChangesAsync();
+            await customerDbContext.SaveChangesAsync();
         }
     }
 }

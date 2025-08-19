@@ -13,7 +13,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
         public string Mail { get; set; }
         public string Password { get; set; }
     }
-    public class LoginRequestHandler(IIdentityServerDbContext identityServerDbContext, ITokenService tokenService, IRedisService redisService) : IRequestHandler<LoginRequest, ResponseDto<LoginResponseDto>>
+    public class LoginRequestHandler(IIdentityServerDbContext identityServerDbContext, ITokenService tokenService, IRedisRepository redisService) : IRequestHandler<LoginRequest, ResponseDto<LoginResponseDto>>
     {
         public async Task<ResponseDto<LoginResponseDto>> Handle(LoginRequest request, CancellationToken cancellationToken)
         {
@@ -37,7 +37,11 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 
             var tokenResponse = tokenService.GenerateToken(getCustomerReadModel.Id, getClientCredential.Audience, getClientCredential.Issuer, getClientCredential.ClientSecret);
 
-            var hasCache = await redisService.CacheRefreshToken("refreshToken", new CacheRefreshTokenDto(tokenResponse.RefreshTokenLifeTime, tokenResponse.RefreshToken, tokenResponse.UserId));
+            var getAllCacheRefreshToken = await redisService.GetAllCacheRefreshToken();
+
+            getAllCacheRefreshToken.Add(new CacheRefreshTokenDto(tokenResponse.RefreshTokenLifeTime, tokenResponse.RefreshToken, tokenResponse.UserId));
+
+            var hasCache = await redisService.SetCacheRefreshToken("refreshToken", getAllCacheRefreshToken);
 
             return hasCache ? ResponseDto<LoginResponseDto>.Success(tokenResponse, 200) : ResponseDto<LoginResponseDto>.Fail("Cachlenmedi!!!", 401);
 

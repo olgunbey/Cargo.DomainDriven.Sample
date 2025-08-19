@@ -1,20 +1,34 @@
 ﻿using DomainDriven.Sample.API.Common;
+using DomainDriven.Sample.API.Feature.IdentityServer.Application.Dtos;
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 {
-    public class RefreshTokenControlRequest : IRequest<ResponseDto<NoContentDto>>
+    public class RefreshTokenControlRequest : IRequest<ResponseDto<LoginResponseDto>>
     {
         public string RefreshToken { get; set; }
     }
-    public class RefreshTokenControlRequestHandler(IRedisService redisService) : IRequestHandler<RefreshTokenControlRequest, ResponseDto<NoContentDto>>
+    public class RefreshTokenControlRequestHandler(IRedisRepository redisService, ITokenService tokenService) : IRequestHandler<RefreshTokenControlRequest, ResponseDto<LoginResponseDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(RefreshTokenControlRequest request, CancellationToken cancellationToken)
+        public async Task<ResponseDto<LoginResponseDto>> Handle(RefreshTokenControlRequest request, CancellationToken cancellationToken)
         {
-            bool checkRefreshToken = await redisService.CheckRefreshToken(request.RefreshToken);
+            var getAllCacheRefreshToken = await redisService.GetAllCacheRefreshToken();
 
-            return checkRefreshToken ? ResponseDto<NoContentDto>.Success(200) : ResponseDto<NoContentDto>.Fail("Tekrar giriş yapın", 401);
+            var getRefreshToken = getAllCacheRefreshToken.SingleOrDefault(u => u.refreshToken == request.RefreshToken);
+            if (getRefreshToken == null)
+            {
+                return ResponseDto<LoginResponseDto>.Fail("Unauthorized", 401);
+            }
+
+            getAllCacheRefreshToken.Remove(getRefreshToken);
+            var token = tokenService.GenerateToken(Guid.Parse(getRefreshToken.userId), "https://localhost:7208", "https://localhost:7208", "testSecret");
+
+            getAllCacheRefreshToken.Add(new Dtos.CacheRefreshTokenDto(token.RefreshTokenLifeTime, token.RefreshToken, token.UserId));
+            await redisService.SetCacheRefreshToken("refreshToken", getAllCacheRefreshToken);
+
+            return ResponseDto<LoginResponseDto>.Success(token);
+
         }
     }
 }

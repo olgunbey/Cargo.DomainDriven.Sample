@@ -3,7 +3,7 @@
     <div class="register-card">
       <h2>Kayıt Ol</h2>
 
-      <Form @submit="handleRegister(registerUser)" :validation-schema="registerSchema">
+      <Form @submit="handleRegister" :validation-schema="registerSchema" class="form">
         <label for="fullname">Ad Soyad</label>
         <Field
           name="fullname"
@@ -18,7 +18,7 @@
         <label for="mail">E-Posta</label>
         <Field
           name="mail"
-          v-model="registerUser.mail"
+          v-model="registerUserDto.mail"
           as="input"
           type="email"
           id="mail"
@@ -31,7 +31,7 @@
         <Field
           name="password"
           as="input"
-          v-model="registerUser.password"
+          v-model="registerUserDto.password"
           type="password"
           id="password"
           placeholder="Şifre giriniz"
@@ -41,7 +41,7 @@
 
         <label for="gender">Cinsiyet</label>
         <Field
-        v-model="registerUser.gender"
+        v-model="registerUserDto.gender"
           name="gender"
           as="select"
           id="gender"
@@ -78,7 +78,7 @@ import { RegisterDto } from "@/Dtos";
 import router from "@/router";
 
 const registerError = ref<string[]>([]);
-const registerUser= ref<RegisterDto>({} as RegisterDto);
+const registerUserDto= ref<RegisterDto>({} as RegisterDto);
 const registerSuccess = ref<Boolean>(false);
 
 const registerSchema = yup.object({
@@ -89,8 +89,8 @@ const registerSchema = yup.object({
 });
 
 
-const handleRegister = async (values: RegisterDto) => {
-    const response = await new EndpointCustomer().registerCustomer(values);
+const handleRegister = async () => {
+    const response = await new EndpointCustomer().registerCustomer(registerUserDto.value);
     if (response.errors.length!==0) {
       console.log(response.errors);
       registerError.value = response.errors;
@@ -103,19 +103,18 @@ const handleRegister = async (values: RegisterDto) => {
     }
 };
 
-
 const computedFullName = computed({
   get: () => {
-  const name = registerUser.value.name || "";
-  const surname = registerUser.value.surname || "";
+  const name = registerUserDto.value.name || "";
+  const surname = registerUserDto.value.surname || "";
   return (name + " " + surname).trim() || "";
 },
   set:(val:string) => {
     const nameParts = val.split(" ")
     const name= nameParts.slice(0,-1).join(" ")
-    registerUser.value.name=name
+    registerUserDto.value.name=name
     const surname = nameParts[nameParts.length-1]
-    registerUser.value.surname=surname
+    registerUserDto.value.surname=surname
 
   }
 }
@@ -124,93 +123,122 @@ const computedFullName = computed({
 </script>
 
 <style scoped>
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* yatay ortalama */
+  gap: 1.25rem;
+  width: 100%;
+}
+
+
 .register-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #f3f4f6;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 /* Kart tasarımı */
 .register-card {
   background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
+  transition: transform 0.2s ease-in-out;
 }
+.register-card:hover {
+  transform: translateY(-2px);
+}
+
+
+.register-card label {
+  display: block;
+  text-align: center; /* label ortalama */
+  width: 100%;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
 
 .register-card h2 {
   text-align: center;
   color: #333;
   margin-bottom: 1.5rem;
-  font-size: 1.8rem;
+  font-size: 1.75rem;
 }
 
-/* Form inputları */
 .form-input {
-  padding: 0.6rem 0.8rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  width: 90%;
+  padding: 0.65rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
   outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease-in-out;
+  text-align: center; /* input içindeki yazıyı ortala */
 }
-
 .form-input:focus {
-  border-color: #6366f1;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 /* Hata mesajları */
 .error-message {
+  height: 1.2rem; /* her zaman bu kadar yer ayır */
+  text-align: center;
+  font-size: 0.8rem;
   color: #b91c1c;
-  font-size: 0.85rem;
-  margin-bottom: 0.8rem;
-  display: block;
+  margin-top: 0.2rem;
+  overflow-wrap: break-word; /* uzun metinleri satırla */
 }
 
-.error-box {
+.error-box,
+.success-box {
   margin-top: 1rem;
   padding: 0.6rem 1rem;
-  background-color: #fee2e2;
-  color: #b91c1c;
-  border: 1px solid #fca5a5;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.9rem;
   text-align: center;
   max-width: 400px;
+}
+
+.error-box {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.success-box {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
 }
 
 /* Buton */
 .submit-btn {
-  background: #6366f1;
-  color: white;
-  padding: 0.7rem;
-  border: none;
-  border-radius: 8px;
+  width: 100%;
+  padding: 0.65rem 0;
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
   font-size: 1rem;
-  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.2s, transform 0.2s;
 }
-
 .submit-btn:hover {
-  background: #4f46e5;
-}
-.success-box {
-  margin-top: 1rem;
-  padding: 0.6rem 1rem;
-  background-color: #d1fae5; /* açık yeşil */
-  color: #065f46; /* koyu yeşil */
-  border: 1px solid #10b981;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  text-align: center;
-  max-width: 400px;
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 </style>

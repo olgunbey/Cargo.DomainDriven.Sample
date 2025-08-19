@@ -4,9 +4,9 @@ using ServiceStack.Redis;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure
 {
-    public class RedisService(IRedisClientsManagerAsync redisClientsManagerAsync) : IRedisService
+    public class RedisRepository(IRedisClientsManagerAsync redisClientsManagerAsync) : IRedisRepository
     {
-        public async Task<bool> CacheRefreshToken(string cacheKey, CacheRefreshTokenDto cacheRefreshTokenDto)
+        public async Task<bool> SetCacheRefreshToken(string cacheKey, List<CacheRefreshTokenDto> cacheRefreshTokenDto)
         {
             await using (var client = await redisClientsManagerAsync.GetClientAsync())
             {
@@ -14,7 +14,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure
             }
         }
 
-        public async Task<bool> CheckRefreshToken(string refreshToken)
+        public async Task<CacheRefreshTokenDto?> GetRefreshToken(string refreshToken)
         {
             await using (var client = await redisClientsManagerAsync.GetClientAsync())
             {
@@ -22,12 +22,19 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure
 
                 var getUserRefreshToken = cacheRefreshTokenDto.SingleOrDefault(y => y.refreshToken == refreshToken);
                 if (getUserRefreshToken == null)
-                    return false;
+                    return null;
 
                 if (getUserRefreshToken.refreshTokenLifeTime < DateTime.UtcNow)
-                    return false;
+                    return null;
 
-                return true;
+                return getUserRefreshToken;
+            }
+        }
+        public async Task<List<CacheRefreshTokenDto>> GetAllCacheRefreshToken()
+        {
+            await using (var client = await redisClientsManagerAsync.GetClientAsync())
+            {
+                return await client.GetAsync<List<CacheRefreshTokenDto>>("refreshToken");
             }
         }
     }

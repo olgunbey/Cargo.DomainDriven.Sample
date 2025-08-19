@@ -1,5 +1,4 @@
 ﻿using DomainDriven.Sample.API.Common;
-using DomainDriven.Sample.API.Feature.Customer.Domain.Events;
 
 namespace DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates
 {
@@ -14,7 +13,6 @@ namespace DomainDriven.Sample.API.Feature.Customer.Domain.Aggregates
             this.Name = name;
             this.Surname = surname;
             this.Gender = gender;
-            RaiseDomainEvent(new RegisterUserEvent(mail, password));
         }
         public string Name { get; private set; }
         public string Surname { get; private set; }

@@ -23,7 +23,6 @@ namespace DomainDriven.Sample.API.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
             return this.ResponseApi(await mediator.Send(registerRequest));
-
         }
     }
 }

@@ -1,6 +1,7 @@
 using DomainDriven.Sample.API.Database;
 using DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHandlers;
 using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
+using DomainDriven.Sample.API.Feature.Customer.Application.IntegrationEventHanders;
 using DomainDriven.Sample.API.Feature.Customer.Infrastructure.Persistence;
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure;
@@ -43,15 +44,16 @@ builder.Services.AddScoped<ILocationDbContext>(provider => provider.GetRequiredS
 
 builder.Services.AddScoped<IIdentityServerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
-builder.Services.AddScoped<IRedisService, RedisService>();
+builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 
 builder.Services.AddScoped<ICustomerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
-builder.Services.AddMassTransit<IBus>(configure =>
+builder.Services.AddMassTransit(configure =>
 {
     configure.AddConsumer<OrderReceivedIntegrationEventHandler>();
     configure.AddConsumer<UpdateProductIntegrationEventHandler>();
+    configure.AddConsumer<RegisterIntegrationEventHandler>();
 
     configure.UsingRabbitMq((context, configurator) =>
     {
@@ -65,6 +67,7 @@ builder.Services.AddMassTransit<IBus>(configure =>
         configurator.ReceiveEndpoint("OrderReceivedIntegrationEvent", cnf => cnf.ConfigureConsumer<OrderReceivedIntegrationEventHandler>(context));
         configurator.ReceiveEndpoint("ProductToCargo", cnf => cnf.ConfigureConsumer<UpdateProductIntegrationEventHandler>(context));
         configurator.ReceiveEndpoint("ProductToOrder", cnf => cnf.ConfigureConsumer<UpdateProductIntegrationEventHandler>(context));
+        configurator.ReceiveEndpoint("IdentityServerToCustomer",cnf=>cnf.ConfigureConsumer<RegisterIntegrationEventHandler>(context));
 
     });
 

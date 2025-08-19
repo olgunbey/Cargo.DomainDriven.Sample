@@ -7,7 +7,6 @@ namespace DomainDriven.Sample.API.Feature.Customer.Infrastructure.Persistence
 {
     public interface ICustomerDbContext : IBaseDbContext
     {
-        public DbSet<UserInformation> UserInformation { get; set; }
         public DbSet<CustomerReadModel> CustomerReadModel { get; set; }
     }
 }
