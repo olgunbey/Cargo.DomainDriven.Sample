@@ -21,11 +21,13 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="ServiceStack.Redis" Version="8.8.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Feature\Cargo\Infrastructure\Infrastructure\" />
     <Folder Include="Feature\Cargo\Infrastructure\Persistence\" />
+    <Folder Include="Feature\Customer\Domain\Events\" />
     <Folder Include="Feature\Customer\Domain\Interfaces\" />
     <Folder Include="Feature\Location\Application\Queries\" />
     <Folder Include="Feature\Location\Infrastructure\Infrastructure\" />
