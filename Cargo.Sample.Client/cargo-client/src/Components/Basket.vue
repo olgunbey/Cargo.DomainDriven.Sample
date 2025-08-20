@@ -10,14 +10,14 @@
     <div class="basket-content">
       <div v-if="cart.items.length === 0" class="empty-cart">Sepetiniz boş</div>
       <ul v-else>
-        <li v-for="item in cart.items" :key="item.product.id" class="basket-item">
+        <li v-for="item in cart.items" :key="item.product.productId" class="basket-item">
           <img :src="item.product.image" :alt="item.product.name" />
           <div class="basket-item-info">
             <span class="name">{{ item.product.name }}</span>
             <span class="quantity">× {{ item.quantity }}</span>
           </div>
           <span class="price">{{ formatPrice(item.product.price * item.quantity) }}</span>
-          <button class="remove-btn" @click="cart.removeItem(item.product.id)">×</button>
+          <button class="remove-btn" @click="cart.removeItem(item.product.productId)">×</button>
         </li>
       </ul>
     </div>

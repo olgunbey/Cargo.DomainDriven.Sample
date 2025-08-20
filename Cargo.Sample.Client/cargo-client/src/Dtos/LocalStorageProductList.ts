@@ -2,10 +2,10 @@ import { ProductDto } from "./ProductDto";
 
 export class LocalStorageProductList {
 
-    public productDto:ProductDto;
+    public product:ProductDto;
     public quantity:number;
-    constructor(productDto:ProductDto,quantity:number) {
-        this.productDto=productDto
+    constructor(product:ProductDto,quantity:number) {
+        this.product=product
         this.quantity=quantity
     }
 

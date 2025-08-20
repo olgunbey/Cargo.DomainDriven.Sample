@@ -1,4 +1,6 @@
-import { ResponseDto,RegisterDto,LoginDto,LoginResponseDto } from "@/Dtos";
+import { ResponseDto } from "@/Dtos";
+import { LoginDto, LoginResponseDto,RegisterDto } from "@/Pages";
+
 export class EndpointCustomer {
     async registerCustomer(customer:RegisterDto): Promise<ResponseDto<RegisterDto[]>> 
     {

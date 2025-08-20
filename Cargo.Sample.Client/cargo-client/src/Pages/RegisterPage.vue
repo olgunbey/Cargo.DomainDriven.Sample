@@ -74,8 +74,18 @@ import { computed, ref } from "vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { EndpointCustomer } from "@/Request/EndpointCustomer";
-import { RegisterDto } from "@/Dtos";
 import router from "@/router";
+
+
+export interface RegisterDto {
+
+    name:string;
+    surname:string;
+    mail:string;
+    password:string;
+    gender:boolean;
+}
+
 
 const registerError = ref<string[]>([]);
 const registerUserDto= ref<RegisterDto>({} as RegisterDto);
@@ -87,6 +97,8 @@ const registerSchema = yup.object({
   password: yup.string().min(6, "Şifre en az 6 karakter olmalı").required("Şifre gerekli"),
   gender: yup.boolean().nullable().required("Cinsiyet seçiniz"),
 });
+
+
 
 
 const handleRegister = async () => {
