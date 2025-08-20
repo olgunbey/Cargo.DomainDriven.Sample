@@ -30,7 +30,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure
                 return getUserRefreshToken;
             }
         }
-        public async Task<List<CacheRefreshTokenDto>> GetAllCacheRefreshToken()
+        public async Task<List<CacheRefreshTokenDto>?> GetAllCacheRefreshToken()
         {
             await using (var client = await redisClientsManagerAsync.GetClientAsync())
             {

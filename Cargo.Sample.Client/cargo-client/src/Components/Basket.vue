@@ -38,11 +38,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useCartStore } from '@/stores/cart'
 const cart = useCartStore()
 
-function formatPrice(price) {
+function formatPrice(price:any) {
   return new Intl.NumberFormat('tr-TR', {
     style: 'currency',
     currency: 'TRY',

@@ -1,6 +1,7 @@
-
-
 export interface LoginDto {
-    email:string;
+    clientId:string;
+    clientSecret:string;
+    mail:string;
     password:string;
+
 }

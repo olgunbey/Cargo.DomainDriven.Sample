@@ -1,43 +1,13 @@
 <template>
   <div class="product-grid">
-    <div v-if="products.length !== 0" v-for="product in products" :key="product.id" class="product-card"
+    <div v-if="products?.length !== 0" v-for="product in products" :key="product?.productId" class="product-card"
       @click.stop="addToCart(product)">
       <div class="product-image-wrapper">
         <img :src="product.image" :alt="product.name" class="product-image" />
-        <div class="product-overlay">
-          <button class="favorite-btn" @click.stop="toggleFavorite(product)">
-            <svg class="heart-icon" :class="{ filled: product.isFavorite }" viewBox="0 0 24 24" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.5783 8.50903 2.9987 7.05 2.9987C5.59096 2.9987 4.19169 3.5783 3.16 4.61C2.1283 5.6417 1.5487 7.04097 1.5487 8.5C1.5487 9.95903 2.1283 11.3583 3.16 12.39L12 21.23L20.84 12.39C21.351 11.8792 21.7563 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7563 5.72723 21.351 5.1208 20.84 4.61Z"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
-          <div class="product-badge" v-if="product.isNew">YENİ</div>
-        </div>
       </div>
       <div class="product-info">
         <h2 class="product-title">{{ product.name }}</h2>
         <p class="product-description">{{ product.description }}</p>
-        <div class="product-rating" v-if="product.rating">
-          <div class="stars">
-            <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= product.rating }">★</span>
-          </div>
-          <span class="rating-text">({{
-            product.reviews || Math.floor(Math.random() * 100) + 1
-          }})</span>
-        </div>
-        <div class="product-bottom">
-          <div class="price-section">
-            <span v-if="product.oldPrice" class="old-price">{{
-              formatPrice(product.oldPrice)
-            }}</span>
-            <span class="product-price">{{ formatPrice(product.price) }}</span>
-            <!-- <span v-if="product.oldPrice" class="discount-badge">
-              %{{ Math.round((1 - product.price / product.oldPrice) * 100) }}
-            </span> -->
-          </div>
-        </div>
       </div>
     </div>
     <div v-else class="no-products">
@@ -55,7 +25,6 @@
         <h2>Ürün bulunamadı</h2>
         <p>Filtreleri daralttın mı? Kategoriyi değiştirerek yeniden dene.</p>
 
-        <!-- İstersen bu butonları kaldırabilirsin -->
         <div class="actions">
           <a class="btn ghost">Filtreleri temizle</a>
           <a class="btn">Tüm ürünleri göster</a>
@@ -69,39 +38,28 @@
 import { ref, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { EndpointProduct } from "@/Request/EndpointProduct";
-import { GetAllProductByCategoryIdResponseDto, ResponseDto } from "@/Dtos";
+import { ProductDto, ResponseDto } from "@/Dtos";
 
 const cart = useCartStore();
-const products = ref([]);
+const products = ref<ProductDto[]>();
 
 watch(
   () => cart.categoryId,
   async (newCategoryId) => {
     if (!newCategoryId) return;
-
-    const response: ResponseDto<GetAllProductByCategoryIdResponseDto[]> = await new EndpointProduct().getProductsByCategoryId(newCategoryId);
-
-    products.value = response.data.map(product => ({
-      id: product.productId,
-      name: product.name,
-      price: product.price,
-      categoryId: product.categoryId,
-      isFavorite: false,
-    }));
+    const response: ResponseDto<ProductDto[]> = await new EndpointProduct().getProductsByCategoryId(newCategoryId);
+    products.value = response.data ?? [];
   }
 )
 
 
 
-function addToCart(product) {
+function addToCart(product:ProductDto) {
   cart.addItem(product);
 }
 
-function toggleFavorite(product) {
-  product.isFavorite = !product.isFavorite;
-}
 
-function formatPrice(price) {
+function formatPrice(price:number) {
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",
     currency: "TRY",

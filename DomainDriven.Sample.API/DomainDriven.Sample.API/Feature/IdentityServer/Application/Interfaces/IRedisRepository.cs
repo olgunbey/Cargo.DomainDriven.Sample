@@ -6,6 +6,6 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces
     {
         public Task<CacheRefreshTokenDto?> GetRefreshToken(string refreshToken);
         public Task<bool> SetCacheRefreshToken(string cacheKey, List<CacheRefreshTokenDto> cacheRefreshTokenDto);
-        public Task<List<CacheRefreshTokenDto>> GetAllCacheRefreshToken();
+        public Task<List<CacheRefreshTokenDto>?> GetAllCacheRefreshToken();
     }
 }

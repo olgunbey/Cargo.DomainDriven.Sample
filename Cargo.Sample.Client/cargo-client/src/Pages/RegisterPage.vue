@@ -98,8 +98,7 @@ const handleRegister = async () => {
     else
     {
       registerSuccess.value=true;
-      setTimeout(()=>{router.push({path:'/product'});},500);
-      
+      setTimeout(()=>{router.push({path:'/product'})},500);
     }
 };
 

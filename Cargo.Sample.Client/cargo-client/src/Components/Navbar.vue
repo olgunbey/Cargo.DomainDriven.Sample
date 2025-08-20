@@ -17,10 +17,10 @@
           </span>
           <div class="dropdown-content" v-show="showCategories" @mouseenter="showCategoriesMenu"
             @mouseleave="hideCategories">
-            <div v-for="categoryName in categories" :key="categoryName.id" @click="selectedCategoryId(categoryName.id)">
+            <div v-for="category in categories" :key="category.id" @click="selectedCategoryId(category.id)">
               <RouterLink 
-                :to="{ name: 'category', params: { categoryId: `${categoryName.id}` } }" class="dropdown-item"
-                @click="showCategories = false">{{ categoryName.name }}</RouterLink>
+                :to="{ name: 'category', params: { categoryId: `${category.id}` } }" class="dropdown-item"
+                @click="showCategories = false">{{ category.name }}</RouterLink>
             </div>
           </div>
         </div>
@@ -56,15 +56,21 @@ import { ResponseDto,GetAllCategoryResponseDto } from '@/Dtos/index';
 
 
 const cart = useCartStore()
-const categories = ref([]);
+const categories = ref<CategoryDto[]>();
 
+class CategoryDto {
+  public id:string;
+  public name:string;
+  
+  constructor(id:string,name:string) {
+        this.id=id;
+        this.name=name;
+  }
+}
 
 onMounted(async () => {
    const getAllCategory:ResponseDto<GetAllCategoryResponseDto[]> = await new EndpointProduct().getAllCategories();
-  categories.value = getAllCategory.data.map(category => ({
-    id: category.id,
-    name: category.categoryName,
-  }));
+  categories.value = getAllCategory.data?.map(category=> new CategoryDto(category.id,category.categoryName))
 });
 
 const selectedCategoryId =async (categoryId:string) => {
@@ -76,7 +82,7 @@ const showCategories = ref(false)
 const searchQuery = ref('')
 const mobileMenuOpen = ref(false)
 
-let hideTimeout = null
+let hideTimeout: number | null | undefined
 
 const hideCategories = () => {
   hideTimeout = setTimeout(() => {

@@ -1,10 +1,18 @@
+import { ProductDto,LocalStorageProductList } from '@/Dtos';
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
-  state: () => ({
-    items: JSON.parse(localStorage.getItem('cartItems')) || [],
+  state: (): {
+    items: LocalStorageProductList[];
+    basketOpen: boolean;
+    categoryId: string;
+  } => ({
+    items: (() => {
+      const stored = localStorage.getItem('cartItems');
+      return stored ? JSON.parse(stored) as LocalStorageProductList[] : [];
+    })(),
     basketOpen: false,
-    categoryId:"",
+    categoryId: "",
   }),
 
   actions: {
@@ -14,20 +22,23 @@ export const useCartStore = defineStore('cart', {
     closeBasket() {
       this.basketOpen = false
     },
-    addItem(product) {
-      const existing = this.items.find(i => i.product.id === product.id)
+    addItem(product:ProductDto) {
+      const existing = this.items.find(i => i.productDto.productId === product.productId)
       if (existing) {
         existing.quantity++
-      } else {
-        this.items.push({ product, quantity: 1 })
+      } else 
+      {
+        const storageAddItem= new LocalStorageProductList(product,1)
+        this.items.push(storageAddItem);
       }
       this.saveToLocalStorage()
     },
     seletedCategoryId(categoryId:string){
       this.categoryId = categoryId
     },
-    removeItem(productId) {
-      const index = this.items.findIndex(item => item.product.id === productId)
+    removeItem(productId:string) {
+
+      const index = this.items.findIndex(item => item.productDto.productId === productId)
       if (index === -1) return
       const item = this.items[index]
       if (item.quantity > 1) {
@@ -48,6 +59,6 @@ export const useCartStore = defineStore('cart', {
   getters: {
     itemCount: (state) => state.items.reduce((sum, item) => sum + item.quantity, 0),
     totalPrice: (state) =>
-      state.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+      state.items.reduce((sum, item) => sum + item.productDto.price * item.quantity, 0)
   }
 })

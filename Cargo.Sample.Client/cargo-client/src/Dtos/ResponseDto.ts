@@ -5,9 +5,9 @@ export class ResponseDto<T> {
     public data: T | null;
 
 
-    constructor(errors:string[],data:T ) {
+    constructor(errors:string[],data:T| null) {
         this.errors = errors || [];
-        this.data = data || null;
+        this.data = data;
         
     }
 }

@@ -1,4 +1,4 @@
-import { ResponseDto,RegisterDto } from "@/Dtos";
+import { ResponseDto,RegisterDto,LoginDto,LoginResponseDto } from "@/Dtos";
 export class EndpointCustomer {
     async registerCustomer(customer:RegisterDto): Promise<ResponseDto<RegisterDto[]>> 
     {
@@ -15,6 +15,20 @@ export class EndpointCustomer {
         }).catch(error => {
             console.log(error);
             return new ResponseDto<RegisterDto[]>([error], null);
+        });
+    }
+    async loginCustomer(loginDto:LoginDto): Promise<ResponseDto<LoginResponseDto>> {
+
+        return await fetch("/api/Identity/Login",{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(loginDto)
+        }).then(async response =>await response.json() as ResponseDto<LoginResponseDto>)
+        .catch(error =>{
+            console.log(error);
+            return new ResponseDto<LoginResponseDto>([error],null)
         });
     }
 }

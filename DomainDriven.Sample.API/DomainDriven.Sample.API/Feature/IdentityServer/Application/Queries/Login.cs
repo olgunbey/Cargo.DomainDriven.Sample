@@ -39,6 +39,10 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 
             var getAllCacheRefreshToken = await redisService.GetAllCacheRefreshToken();
 
+            if (getAllCacheRefreshToken == null)
+            {
+                getAllCacheRefreshToken = new List<CacheRefreshTokenDto>();
+            }
             getAllCacheRefreshToken.Add(new CacheRefreshTokenDto(tokenResponse.RefreshTokenLifeTime, tokenResponse.RefreshToken, tokenResponse.UserId));
 
             var hasCache = await redisService.SetCacheRefreshToken("refreshToken", getAllCacheRefreshToken);

@@ -11,7 +11,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import ProductList from '@/Components/ProductList.vue'
 import Basket from '@/Components/Basket.vue'
 import Navbar from '@/Components/Navbar.vue';

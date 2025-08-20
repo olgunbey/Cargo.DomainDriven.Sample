@@ -75,15 +75,16 @@ builder.Services.AddMassTransit(configure =>
 
 
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowFrontend", policy =>
+//    {
+//        policy.WithOrigins("http://localhost:5173")
+//              .AllowAnyHeader()
+//              .AllowAnyMethod();
+//    });
+//});
+
 
 
 var app = builder.Build();
@@ -91,7 +92,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors();
+//app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
 app.MapControllers();
