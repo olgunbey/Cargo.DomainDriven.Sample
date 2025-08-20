@@ -1,15 +1,15 @@
-import { ProductDto,LocalStorageProductList } from '@/Dtos';
+import { LocalStorageProductListDto, ProductDto } from '@/Dtos';
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
   state: (): {
-    items: LocalStorageProductList[];
+    items: LocalStorageProductListDto[];
     basketOpen: boolean;
     categoryId: string;
   } => ({
     items: (() => {
       const stored = localStorage.getItem('cartItems');
-      return stored ? JSON.parse(stored) as LocalStorageProductList[] : [];
+      return stored ? JSON.parse(stored) as LocalStorageProductListDto[] : [];
     })(),
     basketOpen: false,
     categoryId: "",
@@ -23,12 +23,12 @@ export const useCartStore = defineStore('cart', {
       this.basketOpen = false
     },
     addItem(product:ProductDto) {
-      const existing = this.items.find(i => i.productDto.productId === product.productId)
+      const existing = this.items.find(i => i.product.productId === product.productId)
       if (existing) {
         existing.quantity++
       } else 
       {
-        const storageAddItem= new LocalStorageProductList(product,1)
+        const storageAddItem= new LocalStorageProductListDto(product,1)
         this.items.push(storageAddItem);
       }
       this.saveToLocalStorage()
@@ -38,7 +38,7 @@ export const useCartStore = defineStore('cart', {
     },
     removeItem(productId:string) {
 
-      const index = this.items.findIndex(item => item.productDto.productId === productId)
+      const index = this.items.findIndex(item => item.product.productId === productId)
       if (index === -1) return
       const item = this.items[index]
       if (item.quantity > 1) {
@@ -59,6 +59,6 @@ export const useCartStore = defineStore('cart', {
   getters: {
     itemCount: (state) => state.items.reduce((sum, item) => sum + item.quantity, 0),
     totalPrice: (state) =>
-      state.items.reduce((sum, item) => sum + item.productDto.price * item.quantity, 0)
+      state.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   }
 })

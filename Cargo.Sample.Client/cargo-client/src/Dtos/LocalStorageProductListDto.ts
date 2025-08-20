@@ -1,6 +1,6 @@
 import { ProductDto } from "./ProductDto";
 
-export class LocalStorageProductList {
+export class LocalStorageProductListDto {
 
     public product:ProductDto;
     public quantity:number;

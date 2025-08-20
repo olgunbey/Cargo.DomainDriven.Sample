@@ -4,10 +4,10 @@ import LoginPage from './Pages/LoginPage.vue'
 import RegisterPage from './Pages/RegisterPage.vue'
 
 const routes = [
-    { path: '/', name:'login', component: LoginPage },
-    {path: '/product', component: ProductPage },
-    {path: '/register', component: RegisterPage },
-    { path: '/category/:categoryId', name:'category', component: ProductPage },
+  { path: '/', name: 'login', component: LoginPage },
+  { path: '/product', component: ProductPage },
+  { path: '/register', component: RegisterPage },
+  { path: '/category/:categoryId', name: 'category', component: ProductPage },
 ]
 
 const router = createRouter({
@@ -15,4 +15,21 @@ const router = createRouter({
   routes,
 })
 
+
+router.beforeEach((to, from, next) => {
+
+  //burada refresh token kontrolu yapıp, eüer yoksa login'e yönlendirebilirim...
+  const data = localStorage.getItem("login");
+  const parsedData = data ? JSON.parse(data) : null;
+
+  if (!parsedData && to.path !== "/") {
+
+    next({ path: "/" });
+  }
+  else {
+    next();
+  }
+
+
+})
 export default router
