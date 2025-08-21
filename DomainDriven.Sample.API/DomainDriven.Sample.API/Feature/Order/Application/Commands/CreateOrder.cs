@@ -19,7 +19,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
-            public int Count { get; set; }
+            public int Quantity { get; set; }
         }
 
     }
@@ -28,7 +28,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
         public async Task<ResponseDto<NoContentDto>> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
         {
 
-            List<(Guid ProductId, string ProductName, int Count)> productItems = request.ProductItems.Select(y => (ProductId: y.Id, ProductName: y.Name, Count: y.Count)).ToList();
+            List<(Guid ProductId, string ProductName, int Count)> productItems = request.ProductItems.Select(y => (ProductId: y.Id, ProductName: y.Name, Count: y.Quantity)).ToList();
             var generateOrder = new OrderInformation(request.CityId, request.DistrictId, request.Detail, request.CustomerId, productItems, request.PaymentStatus, request.CityName, request.DistrictName);
 
             orderDbContext.OrderInformation.Add(generateOrder);

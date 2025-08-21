@@ -1,4 +1,5 @@
 ﻿using DomainDriven.Sample.API.Common;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomainDriven.Sample.API.Controllers

@@ -8,7 +8,6 @@ using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.IdentityServer.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Location.Domain.Aggregates;
-using DomainDriven.Sample.API.Feature.Location.Domain.ReadModel;
 using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Order.Domain.ReadModel;
@@ -30,8 +29,6 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<OrderInformation> OrderInformation { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<CityReadModel> CityReadModel { get; set; }
-        public DbSet<DistrictReadModel> DistrictReadModel { get; set; }
         public DbSet<CargoInformation> CargoInformation { get; set; }
         public DbSet<ClientCredential> ClientCredential { get; set; }
         public DbSet<CustomerReadModel> CustomerReadModel { get; set; } //burayı düşün (c,u,d işlemleri tek bir BC'den olmalı) eğer bunu Customer'de tutarsak nereden güncelleyecegiz
