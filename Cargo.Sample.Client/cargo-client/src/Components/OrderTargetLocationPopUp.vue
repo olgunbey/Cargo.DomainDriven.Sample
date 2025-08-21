@@ -4,14 +4,12 @@
       <div class="popup">
         <h2>Adres Bilgileri</h2>
 
-        <!-- Şehir -->
         <label for="city">Şehir</label>
         <select id="city" v-model="cityComputed">
           <option disabled value="">Seçiniz</option>
           <option :value="location" v-for="location in locationDto">{{ location.name }}</option>
         </select>
 
-        <!-- İlçe -->
         <label for="district">İlçe</label>
         <select id="district" v-model="district">
           <option disabled value="">Seçiniz</option>
@@ -19,11 +17,9 @@
             {{ district.name }}</option>
         </select>
 
-        <!-- Detay -->
         <label for="detail">Adres Detayı</label>
         <textarea id="detail" v-model="detail" placeholder="Adres detayını giriniz..."></textarea>
 
-        <!-- Butonlar -->
         <div class="btn-group">
           <button @click="save">Kaydet</button>
           <button @click="cart.closeOrderLocationPopUp()" class="cancel-btn">
@@ -55,13 +51,6 @@ const selectedCityId = ref("")
 
 const districts = ref<District[]>([] as District[]);
 
-const cityComputed = computed({
-  get: () => locationDto.value.find(x => x.cityId === selectedCityId.value),
-  set: (city: LocationDto) => {
-    selectedCityId.value = city.cityId
-    districts.value = city.districtResponses
-  },
-});
 
 onMounted(async () => {
   const response = await endpointLocation.GetAllCity();
@@ -70,9 +59,19 @@ onMounted(async () => {
   }
 });
 
+const cityComputed = computed({
+  get: () => locationDto.value.find(x => x.cityId === selectedCityId.value),
+  set: (city: LocationDto) => {
+    selectedCityId.value = city.cityId
+    detail.value = "";
+    districts.value = city.districtResponses
+  },
+});
+
+
+
 const cart = useCartStore();
 
-const city = ref("");
 const detail = ref("");
 const district = ref("");
 const locationDto = ref([] as LocationDto[])
