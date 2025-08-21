@@ -1,5 +1,6 @@
 import { LocationDto } from "@/Components/OrderTargetLocationPopUp.vue";
-import { ResponseDto } from "@/Dtos";
+import { ResponseDto,NoContentDto,SaveLocationForOrderRequestDto } from "@/Dtos";
+
 
 export class EndpointLocation {
     public static endpointLocation: EndpointLocation | null 
@@ -15,9 +16,6 @@ export class EndpointLocation {
 
 
     async GetAllCity(): Promise<ResponseDto<LocationDto[]>> {
-
-        console.log("req")
-
         return await fetch("/api/Location/GetAllLocation", {
             method: 'GET',
             headers: {
@@ -30,6 +28,22 @@ export class EndpointLocation {
             .catch(error => {
                 console.log(error);
                 return new ResponseDto<LocationDto[]>([error], null)
+            })
+    }
+    async SaveLocationForOrder(dto:SaveLocationForOrderRequestDto):Promise<ResponseDto<NoContentDto>>
+    {
+        return await fetch("/api/Location/SaveLocationForOrder",{
+            method:'POST',
+            headers:{
+                'Content-type':'application/json',
+                'Accept':'application/json'
+            },
+            body:JSON.stringify(dto)
+        })
+        .then(async response => (await response.json())as ResponseDto<NoContentDto>)
+        .catch(error => {
+                console.log(error);
+                return new ResponseDto<NoContentDto[]>([error], null)
             })
     }
 

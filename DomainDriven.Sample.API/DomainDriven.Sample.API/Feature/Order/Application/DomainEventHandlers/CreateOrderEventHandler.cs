@@ -17,11 +17,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
                 ProductId = product.ProductId,
                 Count = product.Count,
                 ProductName = product.ProductName,
-                CityId = notification.CityId,
-                DistrictId = notification.DistrictId,
-                CityName = notification.CityName,
-                Detail = notification.Detail,
-                DistrictName = notification.DistrictName,
+                Detail = notification.Detail
             });
 
             await orderDbContext.OrderProductRealModel.AddRangeAsync(orderProductModel);

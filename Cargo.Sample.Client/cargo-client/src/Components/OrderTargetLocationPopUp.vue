@@ -7,18 +7,29 @@
         <label for="city">Şehir</label>
         <select id="city" v-model="cityComputed">
           <option disabled value="">Seçiniz</option>
-          <option :value="location" v-for="location in locationDto">{{ location.name }}</option>
+          <option :value="location" v-for="location in locationDto">
+            {{ location.name }}
+          </option>
         </select>
 
         <label for="district">İlçe</label>
         <select id="district" v-model="district">
           <option disabled value="">Seçiniz</option>
-          <option v-for="district in districts" :key="district.districtId" :value="district.districtId">
-            {{ district.name }}</option>
+          <option
+            v-for="district in districts"
+            :key="district.districtId"
+            :value="district.districtId"
+          >
+            {{ district.name }}
+          </option>
         </select>
 
         <label for="detail">Adres Detayı</label>
-        <textarea id="detail" v-model="detail" placeholder="Adres detayını giriniz..."></textarea>
+        <textarea
+          id="detail"
+          v-model="detail"
+          placeholder="Adres detayını giriniz..."
+        ></textarea>
 
         <div class="btn-group">
           <button @click="save">Kaydet</button>
@@ -35,6 +46,10 @@
 import { computed, onMounted, ref } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { EndpointLocation } from "@/Request/EndpointLocation";
+import { LoginResponseDto } from "@/Pages";
+import { SaveLocationForOrderRequestDto } from "@/Dtos/SaveLocationForOrderRequestDto";
+
+
 
 export interface LocationDto {
   cityId: string;
@@ -47,10 +62,9 @@ export interface District {
 }
 const endpointLocation = EndpointLocation.SingletonEndpointRequest();
 
-const selectedCityId = ref("")
+const selectedCityId = ref("");
 
 const districts = ref<District[]>([] as District[]);
-
 
 onMounted(async () => {
   const response = await endpointLocation.GetAllCity();
@@ -60,27 +74,41 @@ onMounted(async () => {
 });
 
 const cityComputed = computed({
-  get: () => locationDto.value.find(x => x.cityId === selectedCityId.value),
+  get: () => locationDto.value.find((x) => x.cityId === selectedCityId.value),
   set: (city: LocationDto) => {
-    selectedCityId.value = city.cityId
+    selectedCityId.value = city.cityId;
     detail.value = "";
-    districts.value = city.districtResponses
+    districts.value = city.districtResponses;
   },
 });
 
 
 
 const cart = useCartStore();
-
 const detail = ref("");
 const district = ref("");
-const locationDto = ref([] as LocationDto[])
+const locationDto = ref([] as LocationDto[]);
 
-function save() {
-  console.log("Seçilen Şehir:", cityComputed.value)
-  console.log("Seçilen ilçe", district.value)
-  console.log("Adres Detayı:", detail.value)
+async function save() {
+  console.log("Seçilen Şehir:", cityComputed.value?.cityId);
+  console.log("Seçilen ilçe", district.value);
+  console.log("Adres Detayı:", detail.value);
 
+  const loginLocalStorage = localStorage.getItem("login");
+
+  const jsonLoginLocalStorage = JSON.parse(
+    loginLocalStorage ?? ""
+  ) as LoginResponseDto;
+
+  const dto = new SaveLocationForOrderRequestDto(
+    cityComputed.value?.cityId ?? "",
+    district.value,
+    jsonLoginLocalStorage.userId,
+    detail.value
+  );
+  const response = await endpointLocation.SaveLocationForOrder(dto);
+
+  console.log(response);
   cart.closeOrderLocationPopUp();
 }
 </script>

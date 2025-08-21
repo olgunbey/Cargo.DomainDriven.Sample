@@ -31,8 +31,9 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<Category> Category { get; set; }
         public DbSet<CargoInformation> CargoInformation { get; set; }
         public DbSet<ClientCredential> ClientCredential { get; set; }
-        public DbSet<CustomerReadModel> CustomerReadModel { get; set; } //burayı düşün (c,u,d işlemleri tek bir BC'den olmalı) eğer bunu Customer'de tutarsak nereden güncelleyecegiz
+        public DbSet<CustomerReadModel> CustomerReadModel { get; set; }
         public DbSet<UserCredential> UserCredential { get; set; }
+        public DbSet<CustomerOrderTargetLocation> CustomerOrderTargetLocation { get; set; }
 
         public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
         {
