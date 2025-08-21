@@ -6,6 +6,9 @@ export const useCartStore = defineStore('cart', {
     items: LocalStorageProductListDto[];
     basketOpen: boolean;
     categoryId: string;
+    orderLocationPopUp: boolean;
+    
+
   } => ({
     items: (() => {
       const stored = localStorage.getItem('cartItems');
@@ -13,30 +16,33 @@ export const useCartStore = defineStore('cart', {
     })(),
     basketOpen: false,
     categoryId: "",
+    orderLocationPopUp: false
   }),
 
   actions: {
+    getItems(): LocalStorageProductListDto[] {
+      return this.items
+    },
     toggleBasket() {
       this.basketOpen = !this.basketOpen
     },
     closeBasket() {
       this.basketOpen = false
     },
-    addItem(product:ProductDto) {
+    addItem(product: ProductDto) {
       const existing = this.items.find(i => i.product.productId === product.productId)
       if (existing) {
         existing.quantity++
-      } else 
-      {
-        const storageAddItem= new LocalStorageProductListDto(product,1)
+      } else {
+        const storageAddItem = new LocalStorageProductListDto(product, 1)
         this.items.push(storageAddItem);
       }
       this.saveToLocalStorage()
     },
-    seletedCategoryId(categoryId:string){
+    seletedCategoryId(categoryId: string) {
       this.categoryId = categoryId
     },
-    removeItem(productId:string) {
+    removeItem(productId: string) {
 
       const index = this.items.findIndex(item => item.product.productId === productId)
       if (index === -1) return
@@ -51,9 +57,15 @@ export const useCartStore = defineStore('cart', {
     saveToLocalStorage() {
       localStorage.setItem('cartItems', JSON.stringify(this.items))
     },
-    removeBasket(){
+    removeBasket() {
       this.items = []
       this.saveToLocalStorage()
+    },
+    toggleOrderLocationPopUp(){
+      this.orderLocationPopUp = !this.orderLocationPopUp
+    },
+    closeOrderLocationPopUp(){
+      this.orderLocationPopUp = false;
     }
   },
   getters: {
