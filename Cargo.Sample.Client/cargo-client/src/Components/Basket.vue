@@ -28,7 +28,7 @@
     <footer v-if="cart.items.length" class="basket-footer">
       <div class="total">
         <span>Toplam:</span>
-        <strong>{{ formatPrice(cart.totalPrice) }}</strong>
+        <strong>{{ totalPrice }}</strong>
       </div>
 
       <button class="checkout-btn" @click="buyProduct">Satın Al</button>
@@ -66,7 +66,7 @@
 import { LocalStorageProductListDto } from "@/Dtos";
 import { useCartStore } from "@/stores/cart";
 import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 const cart = useCartStore();
 
@@ -77,8 +77,13 @@ function formatPrice(price: any) {
     currency: "TRY",
   }).format(price);
 }
-
-
+const totalPrice = computed(() => {
+  const sum = cart.items.reduce((total, item) => 
+  {
+    return total + item.product.price * item.quantity;
+  }, 0);
+  return formatPrice(sum);
+});
 export interface GetAllLocationForOrderResponseDto {
   id: string
   customerId: string
