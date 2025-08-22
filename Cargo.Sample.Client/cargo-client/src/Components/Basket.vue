@@ -15,8 +15,12 @@
             <span class="name">{{ item.product.name }}</span>
             <span class="quantity">× {{ item.quantity }}</span>
           </div>
-          <span class="price">{{ formatPrice(item.product.price * item.quantity) }}</span>
-          <button class="remove-btn" @click="cart.removeItem(item.product.productId)">×</button>
+          <span class="price">{{
+            formatPrice(item.product.price * item.quantity)
+          }}</span>
+          <button class="remove-btn" @click="cart.removeItem(item.product.productId)">
+            ×
+          </button>
         </li>
       </ul>
     </div>
@@ -29,7 +33,6 @@
 
       <button class="checkout-btn" @click="buyProduct">Satın Al</button>
 
-
       <button class="clear-cart-btn" @click="deleteBasket">
         🗑 Sepeti Sıfırla
       </button>
@@ -41,43 +44,93 @@
       <OrderTargetLocationPopUp></OrderTargetLocationPopUp>
     </div>
 
+    <div class="address-section">
+      <div v-for="(location, index) in savedLocations" :key="location.id" class="address-card">
+        <span class="delete-btn" @click.stop="deleteAddress(location.id)">×</span>
+
+        <label class="address-label">
+          <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.city" />
+          <div class="address-info">
+            <strong>{{ location.header }}</strong>
+            <p>{{ location.city }} / {{ location.district }}</p>
+            <small>{{ location.detail }}</small>
+          </div>
+        </label>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
+import { LocalStorageProductListDto } from "@/Dtos";
+import { useCartStore } from "@/stores/cart";
+import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue";
+import { ref, watch } from "vue";
 
-import { LocalStorageProductListDto } from '@/Dtos';
-import { useCartStore } from '@/stores/cart'
-import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue"
+const cart = useCartStore();
 
-const cart = useCartStore()
-
+cart.getAllLocation()
 function formatPrice(price: any) {
-  return new Intl.NumberFormat('tr-TR', {
-    style: 'currency',
-    currency: 'TRY',
-  }).format(price)
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+  }).format(price);
 }
 
+
+export interface GetAllLocationForOrderResponseDto {
+  id: string
+  customerId: string
+  locationHeader: string
+  cityName: string
+  districtName: string
+  detail: string
+}
+
+const savedLocations = ref<{ id: string, header: string; city: string; district: string; detail: string }[]>([]);
+
+
+watch(
+  () => cart.getAllLocationForOrderResponseDto,
+  (newValue) => {
+    savedLocations.value = newValue.map(data => ({
+      id: data.id,
+      header: data.locationHeader,
+      city: data.cityName,
+      district: data.districtName,
+      detail: data.detail
+    }))
+  }
+)
+
+
+
+function deleteAddress(orderLocationId: string) {
+  const index = savedLocations.value.findIndex(y => y.id == orderLocationId)
+  savedLocations.value.splice(index, 1)
+  cart.closeBasket()
+}
+
+
 function deleteBasket() {
-  cart.removeBasket()
+  cart.removeBasket();
 }
 
 const isOpenLocation = () => {
-  cart.toggleOrderLocationPopUp()
-}
+  cart.toggleOrderLocationPopUp();
+};
 
+
+
+const selectedAddressId = ref("");
 
 const buyProduct = async () => {
-
   const productListDto: LocalStorageProductListDto[] = cart.getItems();
-
-
-}
+};
 </script>
 
 <style scoped>
-/* Arka plan */
 .overlay {
   position: fixed;
   top: 0;
@@ -129,6 +182,11 @@ const buyProduct = async () => {
 .basket-content {
   flex: 1;
   overflow-y: auto;
+  /* vertical scroll aktif */
+  padding-right: 4px;
+  /* scrollbar boşluğu için */
+  display: flex;
+  flex-direction: column;
 }
 
 .empty-cart {
@@ -222,6 +280,8 @@ const buyProduct = async () => {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .checkout-btn:hover {
@@ -246,5 +306,63 @@ const buyProduct = async () => {
 .clear-cart-btn:hover {
   background: #dc2626;
   opacity: 1;
+}
+
+.address-section {
+  max-height: 200px;
+  /* veya ihtiyaca göre */
+  overflow-y: auto;
+  margin-top: 12px;
+  padding-right: 4px;
+  /* scrollbar boşluğu için */
+}
+
+.address-card {
+  background: rgba(240, 240, 240, 0.6);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.address-card:hover {
+  background: rgba(200, 200, 200, 0.6);
+}
+
+.address-info {
+  margin-left: 8px;
+}
+
+.address-info strong {
+  display: block;
+  font-size: 14px;
+}
+
+.address-info p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.address-label {
+  display: flex;
+  align-items: center;
+}
+
+.address-info small {
+  font-size: 12px;
+  color: #777;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
 }
 </style>

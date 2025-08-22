@@ -1,120 +1,156 @@
 <template>
-  <div>
+  <Form @submit="save" :validation-schema="schema">
     <div class="popup-overlay">
       <div class="popup">
         <h2>Adres Bilgileri</h2>
 
-        <label for="city">Şehir</label>
-        <select id="city" v-model="cityComputed">
-          <option disabled value="">Seçiniz</option>
-          <option :value="location" v-for="location in locationDto">
-            {{ location.name }}
-          </option>
-        </select>
+        <label for="header">Adres Başlığı</label>
+        <Field id="header" name="header" type="text" v-model="header" />
+        <ErrorMessage name="header" class="error-message" />
 
-        <label for="district">İlçe</label>
-        <select id="district" v-model="district">
+        <label for="city">Şehir</label>
+        <Field as="select" name="city" v-model="selectedCityId">
           <option disabled value="">Seçiniz</option>
           <option
-            v-for="district in districts"
-            :key="district.districtId"
-            :value="district.districtId"
+            v-for="location in locationDto"
+            :key="location.cityId"
+            :value="location.cityId"
           >
-            {{ district.name }}
+            {{ location.cityName }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="city" class="error-message" />
+
+        <label for="district">İlçe</label>
+        <Field as="select" name="district" v-model="district">
+          <option disabled value="">Seçiniz</option>
+          <option
+            v-for="dist in districts"
+            :key="dist.districtId"
+            :value="dist.districtId"
+          >
+            {{ dist.districtName }}
+          </option>
+        </Field>
+        <ErrorMessage name="district" class="error-message" />
 
         <label for="detail">Adres Detayı</label>
-        <textarea
+        <Field
+          as="textarea"
           id="detail"
-          v-model="detail"
+          name="detail"
           placeholder="Adres detayını giriniz..."
-        ></textarea>
+          v-model="detail"
+        />
+        <ErrorMessage name="detail" class="error-message" />
 
         <div class="btn-group">
-          <button @click="save">Kaydet</button>
-          <button @click="cart.closeOrderLocationPopUp()" class="cancel-btn">
+          <button type="submit">Kaydet</button>
+          <button
+            type="button"
+            @click="cart.closeOrderLocationPopUp()"
+            class="cancel-btn"
+          >
             Kapat
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </Form>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { EndpointLocation } from "@/Request/EndpointLocation";
 import { LoginResponseDto } from "@/Pages";
 import { SaveLocationForOrderRequestDto } from "@/Dtos/SaveLocationForOrderRequestDto";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 
-
-
-export interface LocationDto {
-  cityId: string;
-  name: string;
-  districtResponses: District[];
-}
 export interface District {
   districtId: string;
-  name: string;
+  districtName: string;
 }
+export interface LocationDto {
+  cityId: string;
+  cityName: string;
+  districtResponses: District[];
+}
+
+const cart = useCartStore();
 const endpointLocation = EndpointLocation.SingletonEndpointRequest();
 
-const selectedCityId = ref("");
+const schema = yup.object({
+  header: yup.string().required("Adres başlığı giriniz"),
+  city: yup.string().required("Şehir seçiniz"),
+  district: yup.string().required("İlçe seçiniz"),
+  detail: yup.string().required("Adres detayı giriniz"),
+});
 
-const districts = ref<District[]>([] as District[]);
+const selectedCityId = ref("");
+const districts = ref<District[]>([]);
+const district = ref("");
+const detail = ref("");
+const header = ref("");
+const locationDto = ref<LocationDto[]>([]);
+
+watch(selectedCityId, (cityId) => {
+  const city = locationDto.value.find((c) => c.cityId === cityId);
+  districts.value = city?.districtResponses || [];
+  district.value = "";
+});
 
 onMounted(async () => {
   const response = await endpointLocation.GetAllCity();
-  if (response.errors != null) {
-    locationDto.value = response.data ? response.data : [];
+  if (response.errors.length == 0) {
+    locationDto.value = response.data ?? [];
   }
 });
 
-const cityComputed = computed({
-  get: () => locationDto.value.find((x) => x.cityId === selectedCityId.value),
-  set: (city: LocationDto) => {
-    selectedCityId.value = city.cityId;
-    detail.value = "";
-    districts.value = city.districtResponses;
-  },
-});
-
-
-
-const cart = useCartStore();
-const detail = ref("");
-const district = ref("");
-const locationDto = ref([] as LocationDto[]);
-
 async function save() {
-  console.log("Seçilen Şehir:", cityComputed.value?.cityId);
-  console.log("Seçilen ilçe", district.value);
-  console.log("Adres Detayı:", detail.value);
-
   const loginLocalStorage = localStorage.getItem("login");
-
   const jsonLoginLocalStorage = JSON.parse(
     loginLocalStorage ?? ""
   ) as LoginResponseDto;
-
   const dto = new SaveLocationForOrderRequestDto(
-    cityComputed.value?.cityId ?? "",
+    selectedCityId.value,
     district.value,
     jsonLoginLocalStorage.userId,
-    detail.value
+    detail.value,
+    header.value
   );
   const response = await endpointLocation.SaveLocationForOrder(dto);
 
-  console.log(response);
-  cart.closeOrderLocationPopUp();
+  if (response.errors.length == 0) { 
+  }
+  await cart.getAllLocation()
+  cart.closeOrderLocationPopUp()
 }
 </script>
 
 <style scoped>
-/* Arka plan */
+label {
+  display: block;
+  margin: 10px 0 5px;
+}
+
+select,
+textarea,
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -127,36 +163,12 @@ async function save() {
   justify-content: center;
 }
 
-/* Popup kutusu */
 .popup {
   background: #fff;
   padding: 20px;
   border-radius: 12px;
   width: 350px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.popup h2 {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-select,
-textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-textarea {
-  min-height: 60px;
-  resize: vertical;
 }
 
 .btn-group {
@@ -172,12 +184,6 @@ button {
   cursor: pointer;
 }
 
-.open-btn {
-  margin: 20px;
-  background: #007bff;
-  color: white;
-}
-
 .cancel-btn {
   background: #aaa;
   color: white;
@@ -186,5 +192,10 @@ button {
 button:not(.cancel-btn) {
   background: #28a745;
   color: white;
+}
+
+.error-message {
+  color: #b91c1c;
+  font-size: 0.8rem;
 }
 </style>
