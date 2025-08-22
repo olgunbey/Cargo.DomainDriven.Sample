@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
 {
-    public class CreateOrderRequest : IRequest<ResponseDto<NoContentDto>>
+    public class CreateOrderRequest : IRequest<Result<NoContentDto>>
     {
         public Guid CityId { get; set; }
         public string CityName { get; set; }
@@ -23,9 +23,9 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
         }
 
     }
-    public class CreateOrderRequestHandler(IOrderDbContext orderDbContext) : IRequestHandler<CreateOrderRequest, ResponseDto<NoContentDto>>
+    public class CreateOrderRequestHandler(IOrderDbContext orderDbContext) : IRequestHandler<CreateOrderRequest, Result<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
+        public async Task<Result<NoContentDto>> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
         {
 
             List<(Guid ProductId, string ProductName, int Count)> productItems = request.ProductItems.Select(y => (ProductId: y.Id, ProductName: y.Name, Count: y.Quantity)).ToList();
@@ -35,7 +35,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
 
             await orderDbContext.SaveChangesAsync(cancellationToken);
 
-            return ResponseDto<NoContentDto>.Success();
+            return Result<NoContentDto>.Success();
         }
     }
 }

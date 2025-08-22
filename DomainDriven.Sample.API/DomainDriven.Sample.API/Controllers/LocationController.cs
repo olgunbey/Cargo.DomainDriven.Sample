@@ -1,5 +1,6 @@
-﻿using DomainDriven.Sample.API.Feature.Location.Application.Commands.City;
+﻿using DomainDriven.Sample.API.Feature.Location.Application.Commands.Location;
 using DomainDriven.Sample.API.Feature.Location.Application.Queries.City;
+using DomainDriven.Sample.API.Feature.Location.Application.Queries.Location;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,11 @@ namespace DomainDriven.Sample.API.Controllers
         public async Task<IActionResult> SaveLocationForOrder([FromBody] SaveLocationForOrderRequest saveLocationForOrderRequest)
         {
             return this.ResponseApi(await mediator.Send(saveLocationForOrderRequest));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllSaveLocationForOrder([FromHeader] Guid customerId)
+        {
+            return this.ResponseApi(await mediator.Send(new GetAllSaveLocationForOrderRequest(customerId)));
         }
     }
 }

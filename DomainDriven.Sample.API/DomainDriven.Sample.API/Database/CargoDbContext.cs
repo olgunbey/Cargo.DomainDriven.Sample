@@ -8,6 +8,7 @@ using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.IdentityServer.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Location.Domain.Aggregates;
+using DomainDriven.Sample.API.Feature.Location.Domain.ReadModels;
 using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Domain.Aggregates;
 using DomainDriven.Sample.API.Feature.Order.Domain.ReadModel;
@@ -34,6 +35,7 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<CustomerReadModel> CustomerReadModel { get; set; }
         public DbSet<UserCredential> UserCredential { get; set; }
         public DbSet<CustomerOrderTargetLocation> CustomerOrderTargetLocation { get; set; }
+        public DbSet<CustomerOrderTargetLocationReadModel> CustomerOrderTargetLocationReadModel { get; set; }
 
         public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
         {

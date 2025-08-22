@@ -8,7 +8,7 @@ namespace DomainDriven.Sample.API.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected IActionResult ResponseApi<T>(ResponseDto<T> responseDto)
+        protected IActionResult ResponseApi<T>(Result<T> responseDto)
         {
             HttpContext.Response.StatusCode = responseDto.StatusCode;
             if (responseDto.StatusCode == 204)

@@ -6,16 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 {
-    public class LoginRequest : IRequest<ResponseDto<LoginResponseDto>>
+    public class LoginRequest : IRequest<Result<LoginResponseDto>>
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string Mail { get; set; }
         public string Password { get; set; }
     }
-    public class LoginRequestHandler(IIdentityServerDbContext identityServerDbContext, ITokenService tokenService, IRedisRepository redisService) : IRequestHandler<LoginRequest, ResponseDto<LoginResponseDto>>
+    public class LoginRequestHandler(IIdentityServerDbContext identityServerDbContext, ITokenService tokenService, IRedisRepository redisService) : IRequestHandler<LoginRequest, Result<LoginResponseDto>>
     {
-        public async Task<ResponseDto<LoginResponseDto>> Handle(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDto>> Handle(LoginRequest request, CancellationToken cancellationToken)
         {
             var getCustomerReadModel = await identityServerDbContext
                 .UserCredential
@@ -23,7 +23,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
                 && x.Password == request.Password);
 
             if (getCustomerReadModel == null)
-                return ResponseDto<LoginResponseDto>.Fail("Kullanıcı adı veya şifre yanlış", 401);
+                return Result<LoginResponseDto>.Fail("Kullanıcı adı veya şifre yanlış", 401);
 
             var getClientCredential = await identityServerDbContext
                  .ClientCredential
@@ -32,7 +32,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 
 
             if (getClientCredential == null)
-                return ResponseDto<LoginResponseDto>.Fail("ClientId veya ClientSecret yanlış", 401);
+                return Result<LoginResponseDto>.Fail("ClientId veya ClientSecret yanlış", 401);
 
 
             var tokenResponse = tokenService.GenerateToken(getCustomerReadModel.Id, getClientCredential.Audience, getClientCredential.Issuer, getClientCredential.ClientSecret);
@@ -47,7 +47,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 
             var hasCache = await redisService.SetCacheRefreshToken("refreshToken", getAllCacheRefreshToken);
 
-            return hasCache ? ResponseDto<LoginResponseDto>.Success(tokenResponse, 200) : ResponseDto<LoginResponseDto>.Fail("Cachlenmedi!!!", 401);
+            return hasCache ? Result<LoginResponseDto>.Success(tokenResponse, 200) : Result<LoginResponseDto>.Fail("Cachlenmedi!!!", 401);
 
         }
     }

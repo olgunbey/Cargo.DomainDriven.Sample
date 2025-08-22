@@ -2,7 +2,7 @@
 
 namespace DomainDriven.Sample.API.Common
 {
-    public class ResponseDto<T>
+    public class Result<T>
     {
         public T Data { get; set; }
 
@@ -10,32 +10,32 @@ namespace DomainDriven.Sample.API.Common
         public int StatusCode { get; set; }
 
         public List<string> Errors { get; set; } = new List<string>();
-        public static ResponseDto<T> Success(T data, int statusCode = 200)
+        public static Result<T> Success(T data, int statusCode = 200)
         {
-            return new ResponseDto<T>
+            return new Result<T>
             {
                 Data = data,
                 StatusCode = statusCode
             };
         }
-        public static ResponseDto<T> Success(int statusCode = 200)
+        public static Result<T> Success(int statusCode = 200)
         {
-            return new ResponseDto<T>
+            return new Result<T>
             {
                 StatusCode = statusCode
             };
         }
-        public static ResponseDto<T> Fail(List<string> errors, int statusCode = 400)
+        public static Result<T> Fail(List<string> errors, int statusCode = 400)
         {
-            return new ResponseDto<T>
+            return new Result<T>
             {
                 Errors = errors,
                 StatusCode = statusCode
             };
         }
-        public static ResponseDto<T> Fail(string error, int statusCode = 400)
+        public static Result<T> Fail(string error, int statusCode = 400)
         {
-            return new ResponseDto<T>
+            return new Result<T>
             {
                 Errors = new List<string> { error },
                 StatusCode = statusCode

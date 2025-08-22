@@ -5,16 +5,16 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
 {
-    public class UpdateProductRequest : IRequest<ResponseDto<UpdateProductDto>>
+    public class UpdateProductRequest : IRequest<Result<UpdateProductDto>>
     {
         public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public int Stock { get; set; }
         public decimal Price { get; set; }
     }
-    public class UpdateProductRequestHandler(IProductDbContext productDbContext) : IRequestHandler<UpdateProductRequest, ResponseDto<UpdateProductDto>>
+    public class UpdateProductRequestHandler(IProductDbContext productDbContext) : IRequestHandler<UpdateProductRequest, Result<UpdateProductDto>>
     {
-        public async Task<ResponseDto<UpdateProductDto>> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateProductDto>> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
         {
             var product = await productDbContext.Product.FindAsync(request.ProductId);
 
@@ -22,7 +22,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
 
             await productDbContext.SaveChangesAsync(cancellationToken);
 
-            return ResponseDto<UpdateProductDto>.Success(new UpdateProductDto(product.Id, product.Name, product.Stock, product.Price));
+            return Result<UpdateProductDto>.Success(new UpdateProductDto(product.Id, product.Name, product.Stock, product.Price));
         }
     }
 }

@@ -5,20 +5,20 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 {
-    public class RefreshTokenControlRequest : IRequest<ResponseDto<LoginResponseDto>>
+    public class RefreshTokenControlRequest : IRequest<Result<LoginResponseDto>>
     {
         public string RefreshToken { get; set; }
     }
-    public class RefreshTokenControlRequestHandler(IRedisRepository redisService, ITokenService tokenService) : IRequestHandler<RefreshTokenControlRequest, ResponseDto<LoginResponseDto>>
+    public class RefreshTokenControlRequestHandler(IRedisRepository redisService, ITokenService tokenService) : IRequestHandler<RefreshTokenControlRequest, Result<LoginResponseDto>>
     {
-        public async Task<ResponseDto<LoginResponseDto>> Handle(RefreshTokenControlRequest request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDto>> Handle(RefreshTokenControlRequest request, CancellationToken cancellationToken)
         {
             var getAllCacheRefreshToken = await redisService.GetAllCacheRefreshToken();
 
             var getRefreshToken = getAllCacheRefreshToken.SingleOrDefault(u => u.refreshToken == request.RefreshToken);
             if (getRefreshToken == null)
             {
-                return ResponseDto<LoginResponseDto>.Fail("Unauthorized", 401);
+                return Result<LoginResponseDto>.Fail("Unauthorized", 401);
             }
 
             getAllCacheRefreshToken.Remove(getRefreshToken);
@@ -27,7 +27,7 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
             getAllCacheRefreshToken.Add(new Dtos.CacheRefreshTokenDto(token.RefreshTokenLifeTime, token.RefreshToken, token.UserId));
             await redisService.SetCacheRefreshToken("refreshToken", getAllCacheRefreshToken);
 
-            return ResponseDto<LoginResponseDto>.Success(token);
+            return Result<LoginResponseDto>.Success(token);
 
         }
     }

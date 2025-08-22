@@ -5,19 +5,19 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
 {
-    public class UpdateCargoStatusRequest : IRequest<ResponseDto<NoContentDto>>
+    public class UpdateCargoStatusRequest : IRequest<Result<NoContentDto>>
     {
         public int CargoId { get; set; }
         public CargoStatus CargoStatus { get; set; }
     }
-    public class UpdateCargoStatusRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<UpdateCargoStatusRequest, ResponseDto<NoContentDto>>
+    public class UpdateCargoStatusRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<UpdateCargoStatusRequest, Result<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(UpdateCargoStatusRequest request, CancellationToken cancellationToken)
+        public async Task<Result<NoContentDto>> Handle(UpdateCargoStatusRequest request, CancellationToken cancellationToken)
         {
             var getCargo = await cargoDbContext.CargoInformation.FindAsync(request.CargoId);
             getCargo.UpdateCargoStatus(request.CargoStatus);
             await cargoDbContext.SaveChangesAsync(cancellationToken);
-            return ResponseDto<NoContentDto>.Success();
+            return Result<NoContentDto>.Success();
         }
     }
 }

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Commands
 {
-    public class RegisterRequest : IRequest<ResponseDto<NoContentDto>>
+    public class RegisterRequest : IRequest<Result<NoContentDto>>
     {
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -13,15 +13,15 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Commands
         public string Password { get; set; }
         public bool Gender { get; set; }
     }
-    public class RegisterRequestHandler(IIdentityServerDbContext identityServerDbContext) : IRequestHandler<RegisterRequest, ResponseDto<NoContentDto>>
+    public class RegisterRequestHandler(IIdentityServerDbContext identityServerDbContext) : IRequestHandler<RegisterRequest, Result<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(RegisterRequest request, CancellationToken cancellationToken)
+        public async Task<Result<NoContentDto>> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
             var userCredential = new UserCredential(request.Mail, request.Password, request.Name, request.Surname, request.Gender);
             identityServerDbContext.UserCredential.Add(userCredential);
             await identityServerDbContext.SaveChangesAsync(cancellationToken);
 
-            return ResponseDto<NoContentDto>.Success();
+            return Result<NoContentDto>.Success();
         }
     }
 }

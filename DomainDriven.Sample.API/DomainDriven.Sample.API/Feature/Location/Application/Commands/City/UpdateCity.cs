@@ -4,14 +4,14 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.City
 {
-    public class UpdateCityRequest : IRequest<ResponseDto<NoContentDto>>
+    public class UpdateCityRequest : IRequest<Result<NoContentDto>>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
-    public class UpdateCityRequestHandler(ILocationDbContext locationDbContext) : IRequestHandler<UpdateCityRequest, ResponseDto<NoContentDto>>
+    public class UpdateCityRequestHandler(ILocationDbContext locationDbContext) : IRequestHandler<UpdateCityRequest, Result<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(UpdateCityRequest request, CancellationToken cancellationToken)
+        public async Task<Result<NoContentDto>> Handle(UpdateCityRequest request, CancellationToken cancellationToken)
         {
             var getCityById = await locationDbContext.City.FindAsync(request.Id);
 
@@ -19,7 +19,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.City
 
             await locationDbContext.SaveChangesAsync(cancellationToken);
 
-            return ResponseDto<NoContentDto>.Success();
+            return Result<NoContentDto>.Success();
         }
     }
 }

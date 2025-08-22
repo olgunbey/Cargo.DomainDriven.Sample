@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
 {
-    public class CreateProductRequest : IRequest<ResponseDto<NoContentDto>>
+    public class CreateProductRequest : IRequest<Result<NoContentDto>>
     {
         public string Name { get; set; }
         public int Stock { get; set; }
@@ -18,9 +18,9 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
         public string ProductAttribute { get; set; }
 
     }
-    public class CreateProductRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<CreateProductRequest, ResponseDto<NoContentDto>>
+    public class CreateProductRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<CreateProductRequest, Result<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
+        public async Task<Result<NoContentDto>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
         {
             //BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
             //var bsonDocumentData = BsonDocument.Parse(request.ProductAttribute);
@@ -56,7 +56,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Commands.Product
             //        return ResponseDto<NoContentDto>.Fail("Hata!!");
             //    }
             //}
-            return ResponseDto<NoContentDto>.Success(201);
+            return Result<NoContentDto>.Success(201);
         }
     }
 }

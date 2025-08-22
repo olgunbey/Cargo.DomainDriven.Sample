@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
 {
-    public class CreateCargoRequest : IRequest<ResponseDto<NoContentDto>>
+    public class CreateCargoRequest : IRequest<Result<NoContentDto>>
     {
         public int CompanyId { get; set; }
         public Guid OrderId { get; set; }
@@ -23,9 +23,9 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
             public string Name { get; set; }
         }
     }
-    public class CreateCargoRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CreateCargoRequest, ResponseDto<NoContentDto>>
+    public class CreateCargoRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CreateCargoRequest, Result<NoContentDto>>
     {
-        public async Task<ResponseDto<NoContentDto>> Handle(CreateCargoRequest request, CancellationToken cancellationToken)
+        public async Task<Result<NoContentDto>> Handle(CreateCargoRequest request, CancellationToken cancellationToken)
         {
             var productDtos = request.Products.ToDictionary(y => y.Id, y => y.Name);
             var cargoInformation = new CargoInformation(request.CompanyId,
@@ -41,7 +41,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
 
             cargoDbContext.CargoInformation.Add(cargoInformation);
             await cargoDbContext.SaveChangesAsync(cancellationToken);
-            return ResponseDto<NoContentDto>.Success();
+            return Result<NoContentDto>.Success();
 
         }
     }

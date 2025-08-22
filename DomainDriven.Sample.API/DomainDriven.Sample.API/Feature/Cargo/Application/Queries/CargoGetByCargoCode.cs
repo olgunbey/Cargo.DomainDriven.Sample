@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.Queries
 {
-    public class CargoGetByCargoCodeRequest : IRequest<ResponseDto<CargoGetByCargoCodeResponseDto>>
+    public class CargoGetByCargoCodeRequest : IRequest<Result<CargoGetByCargoCodeResponseDto>>
     {
         public string CargoCode { get; set; }
     }
-    public class CargoGetByCargoCodeRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CargoGetByCargoCodeRequest, ResponseDto<CargoGetByCargoCodeResponseDto>>
+    public class CargoGetByCargoCodeRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CargoGetByCargoCodeRequest, Result<CargoGetByCargoCodeResponseDto>>
     {
-        public async Task<ResponseDto<CargoGetByCargoCodeResponseDto>> Handle(CargoGetByCargoCodeRequest request, CancellationToken cancellationToken)
+        public async Task<Result<CargoGetByCargoCodeResponseDto>> Handle(CargoGetByCargoCodeRequest request, CancellationToken cancellationToken)
         {
             var getCargoInformation = await cargoDbContext.CargoInformation.SingleAsync(y => y.CargoCode == request.CargoCode);
 
@@ -33,7 +33,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Queries
                 }).ToList()
             };
 
-            return ResponseDto<CargoGetByCargoCodeResponseDto>.Success(responseData);
+            return Result<CargoGetByCargoCodeResponseDto>.Success(responseData);
         }
     }
 

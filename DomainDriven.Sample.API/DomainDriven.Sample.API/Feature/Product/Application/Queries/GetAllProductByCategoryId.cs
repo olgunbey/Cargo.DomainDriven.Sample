@@ -8,13 +8,13 @@ using ServiceStack;
 
 namespace DomainDriven.Sample.API.Feature.Product.Application.Queries
 {
-    public class GetAllProductByCategoryIdRequest : IRequest<ResponseDto<List<GetAllProductByCategoryIdDto>>>
+    public class GetAllProductByCategoryIdRequest : IRequest<Result<List<GetAllProductByCategoryIdDto>>>
     {
         public Guid CategoryId { get; set; }
     }
-    public class GetAllProductByCategoryIdRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<GetAllProductByCategoryIdRequest, ResponseDto<List<GetAllProductByCategoryIdDto>>>
+    public class GetAllProductByCategoryIdRequestHandler(IProductDbContext productDbContext, IMongoClient mongoClient) : IRequestHandler<GetAllProductByCategoryIdRequest, Result<List<GetAllProductByCategoryIdDto>>>
     {
-        public async Task<ResponseDto<List<GetAllProductByCategoryIdDto>>> Handle(GetAllProductByCategoryIdRequest request, CancellationToken cancellationToken)
+        public async Task<Result<List<GetAllProductByCategoryIdDto>>> Handle(GetAllProductByCategoryIdRequest request, CancellationToken cancellationToken)
         {
             var mongoDatabase = mongoClient.GetDatabase("DomainDrivenSample");
 
@@ -36,7 +36,7 @@ namespace DomainDriven.Sample.API.Feature.Product.Application.Queries
                 //ProductAttribute = mongoProductAttributes.Single(x => x.Id == y.ProductAttributeId).Value
             }).ToList();
 
-            return ResponseDto<List<GetAllProductByCategoryIdDto>>.Success(response);
+            return Result<List<GetAllProductByCategoryIdDto>>.Success(response);
 
         }
     }
