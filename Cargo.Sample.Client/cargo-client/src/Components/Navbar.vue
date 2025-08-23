@@ -1,12 +1,10 @@
 <template>
   <nav class="navbar">
     <div class="navbar-container">
-      <!-- Sol: Logo -->
       <div class="navbar-brand">
         <h1 class="logo">MyShop</h1>
       </div>
-
-      <div class="navbar-menu" :class="{ 'navbar-menu-active': mobileMenuOpen }">
+      <div class="navbar-menu" :class="{ 'navbar-menu-active': cart.basketOpen }">
         <a href="#" class="nav-item">Ana Sayfa</a>
 
         <div class="nav-item dropdown" @mouseenter="showCategoriesMenu" @mouseleave="hideCategories">
@@ -35,12 +33,11 @@
         </div>
 
         <div class="cart-button" @click="cart.toggleBasket">
-          🛒 <span class="cart-count">({{ cart.itemCount }})</span>
+          🛒 <span class="cart-count">({{ cart.itemCount }})</span> 
         </div>
 
-
         <button class="mobile-menu-button" @click="toggleMobileMenu">
-          <span class="hamburger-line" :class="{ 'active': mobileMenuOpen }"></span>
+          <span class="hamburger-line" :class="{ 'active': cart.basketOpen }"></span>
         </button>
       </div>
     </div>
@@ -74,7 +71,6 @@ onMounted(async () => {
 
 const showCategories = ref(false)
 const searchQuery = ref('')
-const mobileMenuOpen = ref(false)
 
 let hideTimeout: number | null | undefined
 
@@ -93,7 +89,7 @@ const showCategoriesMenu = () => {
   showCategories.value = true
 }
 const toggleMobileMenu = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value
+  cart.toggleBasket()
 }
 </script>
 

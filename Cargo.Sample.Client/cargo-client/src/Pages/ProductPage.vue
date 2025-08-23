@@ -1,21 +1,15 @@
 <template>
   <div>
-    <Navbar />
-
-    <!-- Sayfa içeriği -->
     <div class="page-wrapper">
-      <!-- Ürün Listesi -->
       <div class="product-list-wrapper">
         <ProductList :product-list="products ?? []" />
       </div>
-      <Basket />
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import ProductList from "@/Components/ProductList.vue";
 import Basket from "@/Components/Basket.vue";
-import Navbar from "@/Components/Navbar.vue";
 import {  ref, watch } from "vue";
 import { ProductDto, ResponseDto } from "@/Dtos";
 import { EndpointProduct } from "@/Request/EndpointProduct";

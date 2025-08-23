@@ -99,8 +99,6 @@ const registerSchema = yup.object({
 });
 
 
-
-
 const handleRegister = async () => {
     const response = await new EndpointCustomer().registerCustomer(registerUserDto.value);
     if (response.errors.length!==0) {
