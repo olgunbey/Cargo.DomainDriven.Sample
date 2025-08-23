@@ -3,7 +3,6 @@
     <div class="popup-overlay">
       <div class="popup">
         <h2>Adres Bilgileri</h2>
-
         <label for="header">Adres Başlığı</label>
         <Field id="header" name="header" type="text" v-model="header" />
         <ErrorMessage name="header" class="error-message" />
@@ -60,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { EndpointLocation } from "@/Request/EndpointLocation";
 import { LoginResponseDto } from "@/Pages";
@@ -88,18 +87,25 @@ const schema = yup.object({
   detail: yup.string().required("Adres detayı giriniz"),
 });
 
-const selectedCityId = ref("");
 const districts = ref<District[]>([]);
 const district = ref("");
 const detail = ref("");
 const header = ref("");
 const locationDto = ref<LocationDto[]>([]);
 
-watch(selectedCityId, (cityId) => {
-  const city = locationDto.value.find((c) => c.cityId === cityId);
-  districts.value = city?.districtResponses || [];
-  district.value = "";
-});
+
+const id = ref<string>()
+
+const selectedCityId=computed({
+  get:()=> id.value,
+  set:(cityId:string)=>{
+    id.value=cityId
+    districts.value= locationDto.value.find(c=>c.cityId==cityId)?.districtResponses ?? []
+    district.value=""
+    detail.value=""
+  }
+}
+)
 
 onMounted(async () => {
   const response = await endpointLocation.GetAllCity();
@@ -115,8 +121,9 @@ async function save() {
     loginLocalStorage ?? ""
   ) as LoginResponseDto
 
+  
   const dto = new SaveLocationForOrderRequestDto(
-    selectedCityId.value,
+    selectedCityId.value ?? "",
     district.value,
     jsonLoginLocalStorage.userId,
     detail.value,

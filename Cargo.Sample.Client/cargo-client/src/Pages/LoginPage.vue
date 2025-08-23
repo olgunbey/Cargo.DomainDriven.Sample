@@ -22,12 +22,15 @@
         <button type="submit">Giriş Yap</button>
       </Form>
 
-      <div v-if="successLogin">
-        <p>Başarılı Giriş!!!</p>
+      <div v-if="executeComputed">
+        <div v-if="successLogin">
+          <p>Başarılı Giriş!!!</p>
+        </div>
+        <div v-else>
+          <p>Kullanıcı Adı veya şifre yanlış</p>
+        </div>
       </div>
-      <div v-else>
-        <p>Kullanıcı Adı veya şifre yanlış</p>
-      </div>
+
 
       <p class="register-text">
         Hesabınız yok mu?
@@ -38,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
@@ -54,7 +57,19 @@ export interface LoginDto {
 
 
 const router = useRouter()
-const successLogin = ref<Boolean>()
+const successLogin = ref<boolean>(false)
+
+const execute = ref<boolean>()
+
+const executeComputed = computed({
+  get: () => execute.value,
+  set: (val: boolean) => {
+    console.log("Setter tetiklendi:", val)
+    execute.value = val
+  }
+})
+
+
 
 const loginDto = ref<LoginDto>({} as LoginDto)
 
@@ -79,19 +94,20 @@ const handleLogin = async () => {
   loginDto.value.clientSecret = clientSecret
 
   var response = await new EndpointCustomer().loginCustomer(loginDto.value)
-
-  if (response.errors.length == 0) {
+  executeComputed.value = true
+  console.log(response)
+  if (Array.isArray(response.errors) && response.errors.length == 0) {
+    
     successLogin.value = true
-    if (Object.hasOwn(router.currentRoute.value.query,"returnUrl")) {
+    if (Object.hasOwn(router.currentRoute.value.query, "returnUrl")) {
       setTimeout(() => {
         router.push({ path: `${decodeURIComponent(router.currentRoute.value.query.returnUrl as string ?? "/")}` })
       }, 1000);
     }
-    else
-    {
-      setTimeout(()=>{
-        router.push({path:'/product'})
-      },1000)
+    else {
+      setTimeout(() => {
+        router.push({ path: '/product' })
+      }, 1000)
     }
     localStorage.setItem("login", JSON.stringify(response.data));
   }

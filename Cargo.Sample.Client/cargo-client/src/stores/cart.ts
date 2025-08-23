@@ -68,7 +68,6 @@ export const useCartStore = defineStore("cart", {
       const data = await endpointLocation.GetAllLocationForOrder(
         parseLogin.userId
       )
-      console.log(data)
       this.getAllLocationForOrderResponseDto = data.data ?? []
     },
     async removeLocation(locationId:string){
