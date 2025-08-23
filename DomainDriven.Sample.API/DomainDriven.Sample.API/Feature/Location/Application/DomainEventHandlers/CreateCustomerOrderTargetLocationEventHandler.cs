@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Feature.Location.Application.DomainEventHandlers
 {
-    public class CustomerOrderTargetLocationEventHandle(ILocationDbContext locationDbContext) : INotificationHandler<CustomerOrderTargetLocationEvent>
+    public class CustomerOrderTargetLocationEventHandle(ILocationDbContext locationDbContext) : INotificationHandler<CreateCustomerOrderTargetLocationEvent>
     {
-        public async Task Handle(CustomerOrderTargetLocationEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(CreateCustomerOrderTargetLocationEvent notification, CancellationToken cancellationToken)
         {
             var getCity = locationDbContext.City.Include(y=>y.Districts).Single(y => y.Id == notification.CityId);
             var customerOrderTargetLocationReadModel = new CustomerOrderTargetLocationReadModel()
             {
+                Id=notification.Id,
                 CityId = notification.CityId,
                 CustomerId = notification.CustomerId,
                 DistrictId = notification.DistrictId,
@@ -21,8 +22,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.DomainEventHandle
                 DistrictName = getCity.Districts.Single(y => y.Id == notification.DistrictId).Name,
                 CityName = getCity.Name
             };
-            locationDbContext.CustomerOrderTargetLocationReadModel
-                .Add(customerOrderTargetLocationReadModel);
+            locationDbContext.CustomerOrderTargetLocationReadModel.Add(customerOrderTargetLocationReadModel);
         }
     }
 }

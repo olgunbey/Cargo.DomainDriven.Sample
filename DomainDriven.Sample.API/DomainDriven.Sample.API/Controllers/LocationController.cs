@@ -25,5 +25,10 @@ namespace DomainDriven.Sample.API.Controllers
         {
             return this.ResponseApi(await mediator.Send(new GetAllSaveLocationForOrderRequest(customerId)));
         }
+        [HttpGet]
+        public async Task<IActionResult> RemoveLocationForOrder([FromHeader]Guid locationId)
+        {
+            return this.ResponseApi(await mediator.Send(new RemoveLocationForOrderRequest(locationId)));
+        }
     }
 }

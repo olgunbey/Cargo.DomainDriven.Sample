@@ -18,6 +18,7 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Commands.Location
         public async Task<Result<NoContentDto>> Handle(SaveLocationForOrderRequest request, CancellationToken cancellationToken)
         {
             var customOrderTargetLocation = new CustomerOrderTargetLocation(request.LocationHeader, request.CustomerId, request.CityId, request.DistrictId, request.Detail);
+            customOrderTargetLocation.CreateLocation();
             locationDbContext.CustomerOrderTargetLocation.Add(customOrderTargetLocation);
             await locationDbContext.SaveChangesAsync(cancellationToken);
             return Result<NoContentDto>.Success(201);
