@@ -28,37 +28,40 @@
     <footer v-if="cart.items.length" class="basket-footer">
       <div class="total">
         <span>Toplam:</span>
-        <strong>{{ totalPrice }}</strong>
+        <strong>{{ formatPrice(cart.totalPrice) }}</strong>
       </div>
+      <div v-if="loginCheck">
+        <button class="checkout-btn" @click="buyProduct">Satın Al</button>
+        <button class="clear-cart-btn" @click="deleteBasket">
+          🗑 Sepeti Sıfırla
+        </button>
 
-      <button class="checkout-btn" @click="buyProduct">Satın Al</button>
+        <button @click="isOpenLocation" class="addLocation-btn">Adres Ekle</button>
+        <div v-if="cart.orderLocationPopUp">
+          <OrderTargetLocationPopUp></OrderTargetLocationPopUp>
 
-      <button class="clear-cart-btn" @click="deleteBasket">
-        🗑 Sepeti Sıfırla
-      </button>
-    </footer>
-
-    <button @click="isOpenLocation" class="addLocation-btn">Adres Ekle</button>
-
-    <div v-if="cart.orderLocationPopUp">
-      <OrderTargetLocationPopUp></OrderTargetLocationPopUp>
-    </div>
-
-    <div class="address-section">
-      <div v-for="(location, index) in savedLocations" :key="location.id" class="address-card">
-        <span class="delete-btn" @click.stop="deleteAddress(location.id)">×</span>
-
-        <label class="address-label">
-          <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.city" />
-          <div class="address-info">
-            <strong>{{ location.header }}</strong>
-            <p>{{ location.city }} / {{ location.district }}</p>
-            <small>{{ location.detail }}</small>
+          <div class="address-section">
+            <div v-for="(location, index) in savedLocations" :key="location.id" class="address-card">
+              <span class="delete-btn" @click.stop="deleteAddress(location.id)">×</span>
+              <label class="address-label">
+                <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.city" />
+                <div class="address-info">
+                  <strong>{{ location.header }}</strong>
+                  <p>{{ location.city }} / {{ location.district }}</p>
+                  <small>{{ location.detail }}</small>
+                </div>
+              </label>
+            </div>
           </div>
-        </label>
+        </div>
       </div>
-    </div>
-
+      <div v-else>
+        <button class="checkout-btn" @click="router.push({path:'/',query:{returnUrl: `${encodeURIComponent(router.currentRoute.value.fullPath) }`}})">Giriş Yap</button>
+        <button class="clear-cart-btn" @click="router.push({path:'/register',query:{returnUrl:`${encodeURIComponent(router.currentRoute.value.fullPath) }`}})">
+           Kayıt ol
+        </button>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -66,57 +69,66 @@
 import { LocalStorageProductListDto } from "@/Dtos";
 import { useCartStore } from "@/stores/cart";
 import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue";
-import { computed, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
+import router from "@/router";
 
 const cart = useCartStore();
+const loginCheck = ref<boolean>(false)
 
-cart.getAllLocation()
+cart.getAllLocation();
 function formatPrice(price: any) {
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",
     currency: "TRY",
   }).format(price);
 }
-const totalPrice = computed(() => {
-  const sum = cart.items.reduce((total, item) => 
-  {
-    return total + item.product.price * item.quantity;
-  }, 0);
-  return formatPrice(sum);
-});
+
 export interface GetAllLocationForOrderResponseDto {
-  id: string
-  customerId: string
-  locationHeader: string
-  cityName: string
-  districtName: string
-  detail: string
+  id: string;
+  customerId: string;
+  locationHeader: string;
+  cityName: string;
+  districtName: string;
+  detail: string;
 }
 
-const savedLocations = ref<{ id: string, header: string; city: string; district: string; detail: string }[]>([]);
-
+const savedLocations = ref<
+  {
+    id: string;
+    header: string;
+    city: string;
+    district: string;
+    detail: string;
+  }[]
+>([]);
 
 watch(
   () => cart.getAllLocationForOrderResponseDto,
   (newValue) => {
-    savedLocations.value = newValue.map(data => ({
+    savedLocations.value = newValue.map((data) => ({
       id: data.id,
       header: data.locationHeader,
       city: data.cityName,
       district: data.districtName,
-      detail: data.detail
-    }))
+      detail: data.detail,
+    }));
   }
-)
+);
 
+onMounted(async () => {
+  const item = localStorage.getItem('login')
+  const jsonStorage = JSON.parse(item ?? '')
 
+  if (jsonStorage != null) {
+    loginCheck.value = true
+  }
+})
 
 function deleteAddress(orderLocationId: string) {
-  const index = savedLocations.value.findIndex(y => y.id == orderLocationId)
-  savedLocations.value.splice(index, 1)
-  cart.closeBasket()
+  const index = savedLocations.value.findIndex((y) => y.id == orderLocationId);
+  savedLocations.value.splice(index, 1);
+  cart.closeBasket();
 }
-
 
 function deleteBasket() {
   cart.removeBasket();
@@ -125,8 +137,6 @@ function deleteBasket() {
 const isOpenLocation = () => {
   cart.toggleOrderLocationPopUp();
 };
-
-
 
 const selectedAddressId = ref("");
 

@@ -78,15 +78,21 @@ const handleLogin = async () => {
   loginDto.value.clientId = clientId
   loginDto.value.clientSecret = clientSecret
 
-
   var response = await new EndpointCustomer().loginCustomer(loginDto.value)
-
 
   if (response.errors.length == 0) {
     successLogin.value = true
-    setTimeout(() => {
-      router.push('/product')
-    }, 1000)
+    if (Object.hasOwn(router.currentRoute.value.query,"returnUrl")) {
+      setTimeout(() => {
+        router.push({ path: `${decodeURIComponent(router.currentRoute.value.query.returnUrl as string ?? "/")}` })
+      }, 1000);
+    }
+    else
+    {
+      setTimeout(()=>{
+        router.push({path:'/product'})
+      },1000)
+    }
     localStorage.setItem("login", JSON.stringify(response.data));
   }
   else {

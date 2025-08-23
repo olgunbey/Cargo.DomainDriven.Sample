@@ -8,7 +8,6 @@ export const useCartStore = defineStore("cart", {
   state: (): {
     items: LocalStorageProductListDto[];
     basketOpen: boolean;
-    categoryId: string;
     orderLocationPopUp: boolean;
     getAllLocationForOrderResponseDto: GetAllLocationForOrderResponseDto[];
   } => ({
@@ -17,7 +16,6 @@ export const useCartStore = defineStore("cart", {
       return stored ? (JSON.parse(stored) as LocalStorageProductListDto[]) : [];
     })(),
     basketOpen: false,
-    categoryId: "",
     orderLocationPopUp: false,
     getAllLocationForOrderResponseDto: [],
   }),
@@ -43,9 +41,6 @@ export const useCartStore = defineStore("cart", {
         this.items.push(storageAddItem);
       }
       this.saveToLocalStorage();
-    },
-    seletedCategoryId(categoryId: string) {
-      this.categoryId = categoryId;
     },
     removeItem(productId: string) {
       const index = this.items.findIndex(
@@ -87,6 +82,8 @@ export const useCartStore = defineStore("cart", {
   },
   getters: {
     itemCount: (state) =>
-      state.items.reduce((sum, item) => sum + item.quantity, 0)
+      state.items.reduce((sum, item) => sum + item.quantity, 0),
+    totalPrice: (state)=>
+      state.items.reduce((sum,item)=> sum + item.quantity * item.product.price,0)
   },
 });

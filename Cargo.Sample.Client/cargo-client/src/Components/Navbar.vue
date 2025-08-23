@@ -17,7 +17,7 @@
           </span>
           <div class="dropdown-content" v-show="showCategories" @mouseenter="showCategoriesMenu"
             @mouseleave="hideCategories">
-            <div v-for="category in categories" :key="category.id" @click="selectedCategoryId(category.id)">
+            <div v-for="category in categories" :key="category.id">
               <RouterLink 
                 :to="{ name: 'category', params: { categoryId: `${category.id}` } }" class="dropdown-item"
                 @click="showCategories = false">{{ category.name }}</RouterLink>
@@ -73,9 +73,6 @@ onMounted(async () => {
   categories.value = getAllCategory.data?.map(category=> new CategoryDto(category.id,category.categoryName))
 });
 
-const selectedCategoryId =async (categoryId:string) => {
-await cart.seletedCategoryId(categoryId);
-}
 
 
 const showCategories = ref(false)

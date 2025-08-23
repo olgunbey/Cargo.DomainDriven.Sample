@@ -1,6 +1,6 @@
 <template>
   <div class="product-grid">
-    <div v-if="products?.length !== 0" v-for="product in products" :key="product?.productId" class="product-card"
+    <div v-if="productList.length !=0" v-for="product in productList" :key="product?.productId" class="product-card"
       @click.stop="addToCart(product)">
       <div class="product-image-wrapper">
         <img :src="product.image" :alt="product.name" class="product-image" />
@@ -24,7 +24,6 @@
         </div>
         <h2>Ürün bulunamadı</h2>
         <p>Filtreleri daralttın mı? Kategoriyi değiştirerek yeniden dene.</p>
-
         <div class="actions">
           <a class="btn ghost">Filtreleri temizle</a>
           <a class="btn">Tüm ürünleri göster</a>
@@ -35,36 +34,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
-import { EndpointProduct } from "@/Request/EndpointProduct";
-import { ProductDto, ResponseDto } from "@/Dtos";
+import { ProductDto } from "@/Dtos";
 
 const cart = useCartStore();
-const products = ref<ProductDto[]>();
 
-watch(
-  () => cart.categoryId,
-  async (newCategoryId) => {
-    if (!newCategoryId) return;
-    const response: ResponseDto<ProductDto[]> = await new EndpointProduct().getProductsByCategoryId(newCategoryId);
-    products.value = response.data ?? [];
-  }
-)
-
-
+const props = defineProps<{ productList: ProductDto[] }>()
 
 function addToCart(product:ProductDto) {
   cart.addItem(product);
 }
 
 
-function formatPrice(price:number) {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-  }).format(price);
-}
 </script>
 
 <style scoped>
