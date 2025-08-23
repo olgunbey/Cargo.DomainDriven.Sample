@@ -34,15 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import { useCartStore } from "@/stores/cart";
-import { ProductDto } from "@/Dtos";
+import { useCartStore } from "@/stores/cart"
+import { ProductDto } from "@/Dtos"
 
-const cart = useCartStore();
+const cart = useCartStore()
 
 const props = defineProps<{ productList: ProductDto[] }>()
 
 function addToCart(product:ProductDto) {
-  cart.addItem(product);
+  cart.addItem(product)
 }
 
 

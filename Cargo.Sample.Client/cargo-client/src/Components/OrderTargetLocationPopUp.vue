@@ -109,18 +109,21 @@ onMounted(async () => {
 });
 
 async function save() {
-  const loginLocalStorage = localStorage.getItem("login");
+  const loginLocalStorage = localStorage.getItem("login")
+
   const jsonLoginLocalStorage = JSON.parse(
     loginLocalStorage ?? ""
-  ) as LoginResponseDto;
+  ) as LoginResponseDto
+
   const dto = new SaveLocationForOrderRequestDto(
     selectedCityId.value,
     district.value,
     jsonLoginLocalStorage.userId,
     detail.value,
     header.value
-  );
-  const response = await endpointLocation.SaveLocationForOrder(dto);
+  )
+
+  const response = await endpointLocation.SaveLocationForOrder(dto)
 
   if (response.errors.length == 0) { 
   }

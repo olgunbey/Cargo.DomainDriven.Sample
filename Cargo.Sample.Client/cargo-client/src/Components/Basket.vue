@@ -16,7 +16,7 @@
             <span class="quantity">× {{ item.quantity }}</span>
           </div>
           <span class="price">{{
-            formatPrice(item.product.price * item.quantity)
+             formatPrice(item.product.price * item.quantity)
           }}</span>
           <button class="remove-btn" @click="cart.removeItem(item.product.productId)">
             ×
@@ -37,22 +37,21 @@
         </button>
 
         <button @click="isOpenLocation" class="addLocation-btn">Adres Ekle</button>
-        <div v-if="cart.orderLocationPopUp">
-          <OrderTargetLocationPopUp></OrderTargetLocationPopUp>
-
-          <div class="address-section">
-            <div v-for="(location, index) in savedLocations" :key="location.id" class="address-card">
+        <div class="address-section">
+            <div v-for="(location, index) in cart.getAllLocationForOrderResponseDto" :key="location.id" class="address-card">
               <span class="delete-btn" @click.stop="deleteAddress(location.id)">×</span>
               <label class="address-label">
-                <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.city" />
+                <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.id" />
                 <div class="address-info">
-                  <strong>{{ location.header }}</strong>
-                  <p>{{ location.city }} / {{ location.district }}</p>
+                  <strong>{{ location.locationHeader }}</strong>
+                  <p>{{ location.cityName }} / {{ location.districtName }}</p>
                   <small>{{ location.detail }}</small>
                 </div>
               </label>
             </div>
           </div>
+        <div v-if="cart.orderLocationPopUp">
+          <OrderTargetLocationPopUp></OrderTargetLocationPopUp>
         </div>
       </div>
       <div v-else>
@@ -66,16 +65,16 @@
 </template>
 
 <script setup lang="ts">
-import { LocalStorageProductListDto } from "@/Dtos";
-import { useCartStore } from "@/stores/cart";
-import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue";
-import { onMounted, ref, watch } from "vue";
-import router from "@/router";
+import { LocalStorageProductListDto } from "@/Dtos"
+import { useCartStore } from "@/stores/cart"
+import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue"
+import { onMounted, ref } from "vue"
+import router from "@/router"
 
 const cart = useCartStore();
 const loginCheck = ref<boolean>(false)
 
-cart.getAllLocation();
+
 function formatPrice(price: any) {
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",
@@ -92,57 +91,34 @@ export interface GetAllLocationForOrderResponseDto {
   detail: string;
 }
 
-const savedLocations = ref<
-  {
-    id: string;
-    header: string;
-    city: string;
-    district: string;
-    detail: string;
-  }[]
->([]);
 
-watch(
-  () => cart.getAllLocationForOrderResponseDto,
-  (newValue) => {
-    savedLocations.value = newValue.map((data) => ({
-      id: data.id,
-      header: data.locationHeader,
-      city: data.cityName,
-      district: data.districtName,
-      detail: data.detail,
-    }));
-  }
-);
+const selectedAddressId = ref("");
 
 onMounted(async () => {
+ await cart.getAllLocation()
   const item = localStorage.getItem('login')
   const jsonStorage = JSON.parse(item ?? '')
-
   if (jsonStorage != null) {
     loginCheck.value = true
   }
 })
 
-function deleteAddress(orderLocationId: string) {
-  const index = savedLocations.value.findIndex((y) => y.id == orderLocationId);
-  savedLocations.value.splice(index, 1);
-  cart.closeBasket();
+async function deleteAddress(orderLocationId: string) {
+ await cart.removeLocation(orderLocationId)
 }
 
 function deleteBasket() {
-  cart.removeBasket();
+  cart.removeBasket()
 }
 
 const isOpenLocation = () => {
-  cart.toggleOrderLocationPopUp();
-};
+  cart.toggleOrderLocationPopUp()
+}
 
-const selectedAddressId = ref("");
 
 const buyProduct = async () => {
-  const productListDto: LocalStorageProductListDto[] = cart.getItems();
-};
+  const productListDto: LocalStorageProductListDto[] = cart.items
+}
 </script>
 
 <style scoped>

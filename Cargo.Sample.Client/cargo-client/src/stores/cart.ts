@@ -21,9 +21,6 @@ export const useCartStore = defineStore("cart", {
   }),
 
   actions: {
-    getItems(): LocalStorageProductListDto[] {
-      return this.items;
-    },
     toggleBasket() {
       this.basketOpen = !this.basketOpen;
     },
@@ -31,16 +28,14 @@ export const useCartStore = defineStore("cart", {
       this.basketOpen = false;
     },
     addItem(product: ProductDto) {
-      const existing = this.items.find(
-        (i) => i.product.productId === product.productId
-      );
+      const existing = this.items.find(i => i.product.productId === product.productId)
       if (existing) {
-        existing.quantity++;
+        existing.quantity++
       } else {
-        const storageAddItem = new LocalStorageProductListDto(product, 1);
-        this.items.push(storageAddItem);
+        const storageAddItem = new LocalStorageProductListDto(product, 1)
+        this.items.push(storageAddItem)
       }
-      this.saveToLocalStorage();
+      this.saveToLocalStorage()
     },
     removeItem(productId: string) {
       const index = this.items.findIndex(
@@ -63,15 +58,24 @@ export const useCartStore = defineStore("cart", {
       this.saveToLocalStorage();
     },
     async getAllLocation(){
-      const endpointLocation = EndpointLocation.SingletonEndpointRequest();
-      const localStorageLogin = localStorage.getItem("login");
+      const endpointLocation = EndpointLocation.SingletonEndpointRequest()
+      const localStorageLogin = localStorage.getItem("login")
+
       const parseLogin = JSON.parse(
         localStorageLogin ?? ""
-      ) as LoginResponseDto;
+      ) as LoginResponseDto
+
       const data = await endpointLocation.GetAllLocationForOrder(
         parseLogin.userId
-      );
-      this.getAllLocationForOrderResponseDto = data.data ?? [];
+      )
+      console.log(data)
+      this.getAllLocationForOrderResponseDto = data.data ?? []
+    },
+    async removeLocation(locationId:string){
+     const request= EndpointLocation.SingletonEndpointRequest()
+     await request.RemoveLocationForOrder(locationId)
+     await this.getAllLocation()
+
     },
     toggleOrderLocationPopUp() {
       this.orderLocationPopUp = !this.orderLocationPopUp;

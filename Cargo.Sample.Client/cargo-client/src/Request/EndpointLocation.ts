@@ -61,5 +61,21 @@ export class EndpointLocation {
                 return new ResponseDto<GetAllLocationForOrderResponseDto[]>([error], null)
             })
     }
+    async RemoveLocationForOrder(locationId:string):Promise<ResponseDto<NoContentDto>>
+    {
+        return await fetch("/api/Location/RemoveLocationForOrder",{
+            method:'GET',
+            headers:{
+                'Content-type':'application/json',
+                'Accept':'application/json',
+               'locationId':locationId
+            }
+        })
+        .then(async response => (await response.json()) as ResponseDto<NoContentDto>)
+            .catch(error => {
+                console.log(error);
+                return new ResponseDto<NoContentDto>([error], null)
+            })
+    }
 
 }

@@ -6,7 +6,6 @@
         <h1 class="logo">MyShop</h1>
       </div>
 
-      <!-- Orta: Navigation Menü -->
       <div class="navbar-menu" :class="{ 'navbar-menu-active': mobileMenuOpen }">
         <a href="#" class="nav-item">Ana Sayfa</a>
 
@@ -51,29 +50,27 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
-import { EndpointProduct } from '@/Request/EndpointProduct';
-import { ResponseDto,GetAllCategoryResponseDto } from '@/Dtos/index';
+import { EndpointProduct } from '@/Request/EndpointProduct'
+import { ResponseDto,GetAllCategoryResponseDto } from '@/Dtos/index'
 
 
 const cart = useCartStore()
-const categories = ref<CategoryDto[]>();
+const categories = ref<CategoryDto[]>()
 
 class CategoryDto {
-  public id:string;
-  public name:string;
+  public id:string
+  public name:string
   
   constructor(id:string,name:string) {
-        this.id=id;
-        this.name=name;
+        this.id=id
+        this.name=name
   }
 }
 
 onMounted(async () => {
-   const getAllCategory:ResponseDto<GetAllCategoryResponseDto[]> = await new EndpointProduct().getAllCategories();
+   const getAllCategory:ResponseDto<GetAllCategoryResponseDto[]> = await new EndpointProduct().getAllCategories()
   categories.value = getAllCategory.data?.map(category=> new CategoryDto(category.id,category.categoryName))
-});
-
-
+})
 
 const showCategories = ref(false)
 const searchQuery = ref('')

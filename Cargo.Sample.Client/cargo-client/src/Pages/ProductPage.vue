@@ -23,15 +23,13 @@ import router from "@/router";
 
 const products = ref<ProductDto[]>();
 
-
-
 watch(
   ()=> router.currentRoute.value.params["categoryId"] as string,
   async (categoryId:string)=>{
     if(categoryId !=null)
     {
-      const response: ResponseDto<ProductDto[]> =await new EndpointProduct().getProductsByCategoryId(categoryId);
-      products.value = response.data ?? [];
+      const response: ResponseDto<ProductDto[]> =await new EndpointProduct().getProductsByCategoryId(categoryId)
+      products.value = response.data ?? []
     }
   },
   {immediate:true}
