@@ -49,6 +49,7 @@ import { LoginResponseDto } from "@/Pages";
 import { SaveLocationForOrderRequestDto } from "@/Dtos/SaveLocationForOrderRequestDto";
 import { Field, ErrorMessage, useForm } from "vee-validate";
 import { required } from "@vee-validate/rules";
+import  "@/ExtendsMethod/EfCoreMethods";
 
 interface LocationForm {
   header: string;
@@ -68,7 +69,7 @@ export interface CityDto {
   districtResponses: District[];
 }
 
-const { resetForm, handleSubmit,setValues } = useForm<LocationForm>();
+const { resetForm, handleSubmit, setValues } = useForm<LocationForm>();
 const cart = useCartStore();
 
 const endpointLocation = EndpointLocation.SingletonEndpointRequest();
@@ -76,18 +77,18 @@ const endpointLocation = EndpointLocation.SingletonEndpointRequest();
 const districts = ref<District[]>([]);
 const locationDto = ref<CityDto[]>([]);
 
-
-const selectedId = ref<string>()
+const selectedId = ref<string>();
 
 const cityId = computed({
-  get:()=> locationDto.value.find(y=>y.cityId == selectedId.value)?.cityId,
-  set:(city:string)=>{
+  get: () =>
+    locationDto.value.find((y) => y.cityId == selectedId.value)?.cityId,
+  set: (city: string) => {
     selectedId.value = city;
-    districts.value = locationDto.value.find(y=>y.cityId == selectedId.value)?.districtResponses ?? [];
-  }
-})
+    districts.value = locationDto.value.Single(y => y.cityId == selectedId.value).districtResponses ?? []
+  },
+});
 
-const onSubmit = handleSubmit(async values => {
+const onSubmit = handleSubmit(async (values) => {
   const loginLocalStorage = localStorage.getItem("login");
   if (!loginLocalStorage) {
     console.error("Login bilgisi bulunamadı");
@@ -113,21 +114,20 @@ const onSubmit = handleSubmit(async values => {
     cart.closeOrderLocationPopUp();
   } else {
   }
-})
+});
 onMounted(async () => {
-  locationDto.value = await cart.loadCity()
+  locationDto.value = await cart.loadCity();
 
   if (!cart.sendComponent) {
-    resetForm()
+    resetForm();
   } else if (cart.updateLocation) {
-
-    cityId.value=cart.updateLocation.cityId
+    cityId.value = cart.updateLocation.cityId;
     setValues({
-      header:cart.updateLocation.locationHeader,
-      city:cart.updateLocation.cityId,
-      district:cart.updateLocation.districtId,
-      detail:cart.updateLocation.detail
-    })
+      header: cart.updateLocation.locationHeader,
+      city: cart.updateLocation.cityId,
+      district: cart.updateLocation.districtId,
+      detail: cart.updateLocation.detail,
+    });
   }
 });
 </script>
