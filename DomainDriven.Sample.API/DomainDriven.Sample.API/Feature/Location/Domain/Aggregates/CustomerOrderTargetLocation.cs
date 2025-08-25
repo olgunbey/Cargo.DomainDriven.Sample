@@ -27,5 +27,12 @@ namespace DomainDriven.Sample.API.Feature.Location.Domain.Aggregates
         {
             RaiseDomainEvent(new RemoveCustomerOrderTargetLocationEvent(this.Id));
         }
+        public void UpdateTargetLocation(Guid cityId, Guid districtId, string detail)
+        {
+            this.CityId = cityId;
+            this.DistrictId = districtId;
+            this.Detail = detail;
+            RaiseDomainEvent(new UpdateCustomerLocationForOrderTargetLocationEvent(this.CityId, this.DistrictId, this.Detail, this.Id));
+        }
     }
 }

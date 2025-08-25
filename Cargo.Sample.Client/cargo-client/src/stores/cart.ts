@@ -1,4 +1,5 @@
 import { GetAllLocationForOrderResponseDto } from "@/Components/Basket.vue";
+import { CityDto } from "@/Components/OrderTargetLocationPopUp.vue";
 import { LocalStorageProductListDto, ProductDto } from "@/Dtos";
 import { LoginResponseDto } from "@/Pages";
 import { EndpointLocation } from "@/Request/EndpointLocation";
@@ -10,6 +11,8 @@ export const useCartStore = defineStore("cart", {
     basketOpen: boolean;
     orderLocationPopUp: boolean;
     getAllLocationForOrderResponseDto: GetAllLocationForOrderResponseDto[];
+    updateLocation: GetAllLocationForOrderResponseDto | null;
+    sendComponent: boolean; //false => adres ekle, true => edited,
   } => ({
     items: (() => {
       const stored = localStorage.getItem("cartItems");
@@ -18,9 +21,24 @@ export const useCartStore = defineStore("cart", {
     basketOpen: false,
     orderLocationPopUp: false,
     getAllLocationForOrderResponseDto: [],
+    updateLocation: null,
+    sendComponent: false,
   }),
-
   actions: {
+    async WriteCityCache(): Promise<CityDto[]> {
+      const endpointLocation = EndpointLocation.SingletonEndpointRequest();
+      const response = await endpointLocation.GetAllCity();
+      const data = response.data as CityDto[];
+      localStorage.setItem("loadCity", JSON.stringify(data));
+      return data;
+    },
+    async loadCity(): Promise<CityDto[]> {
+      const getCache = localStorage.getItem("loadCity");
+      if (getCache == null) {
+        return this.WriteCityCache();
+      }
+      return JSON.parse(getCache) as CityDto[];
+    },
     toggleBasket() {
       this.basketOpen = !this.basketOpen;
     },
@@ -28,14 +46,16 @@ export const useCartStore = defineStore("cart", {
       this.basketOpen = false;
     },
     addItem(product: ProductDto) {
-      const existing = this.items.find(i => i.product.productId === product.productId)
+      const existing = this.items.find(
+        (i) => i.product.productId === product.productId
+      );
       if (existing) {
-        existing.quantity++
+        existing.quantity++;
       } else {
-        const storageAddItem = new LocalStorageProductListDto(product, 1)
-        this.items.push(storageAddItem)
+        const storageAddItem = new LocalStorageProductListDto(product, 1);
+        this.items.push(storageAddItem);
       }
-      this.saveToLocalStorage()
+      this.saveToLocalStorage();
     },
     removeItem(productId: string) {
       const index = this.items.findIndex(
@@ -57,36 +77,44 @@ export const useCartStore = defineStore("cart", {
       this.items = [];
       this.saveToLocalStorage();
     },
-    async getAllLocation(){
-      const endpointLocation = EndpointLocation.SingletonEndpointRequest()
-      const localStorageLogin = localStorage.getItem("login")
+    async getAllLocation() {
+      const endpointLocation = EndpointLocation.SingletonEndpointRequest();
+      const localStorageLogin = localStorage.getItem("login");
 
       const parseLogin = JSON.parse(
         localStorageLogin ?? ""
-      ) as LoginResponseDto
+      ) as LoginResponseDto;
 
       const data = await endpointLocation.GetAllLocationForOrder(
         parseLogin.userId
-      )
-      this.getAllLocationForOrderResponseDto = data.data ?? []
+      );
+      this.getAllLocationForOrderResponseDto = [...(data.data ?? [])];
     },
-    async removeLocation(locationId:string){
-     const request= EndpointLocation.SingletonEndpointRequest()
-     await request.RemoveLocationForOrder(locationId)
-     await this.getAllLocation()
-
+    async removeLocation(locationId: string) {
+      const request = EndpointLocation.SingletonEndpointRequest();
+      await request.RemoveLocationForOrder(locationId);
+      await this.getAllLocation();
     },
     toggleOrderLocationPopUp() {
       this.orderLocationPopUp = !this.orderLocationPopUp;
+      this.sendComponent = false;
     },
     closeOrderLocationPopUp() {
       this.orderLocationPopUp = false;
+    },
+    async LocationPopupOpen(location: GetAllLocationForOrderResponseDto) {
+      this.toggleOrderLocationPopUp();
+      this.sendComponent = true;
+      this.updateLocation = location;
     },
   },
   getters: {
     itemCount: (state) =>
       state.items.reduce((sum, item) => sum + item.quantity, 0),
-    totalPrice: (state)=>
-      state.items.reduce((sum,item)=> sum + item.quantity * item.product.price,0)
+    totalPrice: (state) =>
+      state.items.reduce(
+        (sum, item) => sum + item.quantity * item.product.price,
+        0
+      ),
   },
 });

@@ -38,10 +38,10 @@
 
         <button @click="isOpenLocation" class="addLocation-btn">Adres Ekle</button>
         <div class="address-section">
-            <div v-for="(location, index) in cart.getAllLocationForOrderResponseDto" :key="location.id" class="address-card">
+            <div v-for="(location, index) in cart.getAllLocationForOrderResponseDto" :key="location.id" @click="editedLocation(location)" class="address-card">
               <span class="delete-btn" @click.stop="deleteAddress(location.id)">×</span>
               <label class="address-label">
-                <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.id" />
+                <input type="radio" name="selectedAddress" v-model="selectedAddressId" :value="location.id" @click.stop />
                 <div class="address-info">
                   <strong>{{ location.locationHeader }}</strong>
                   <p>{{ location.cityName }} / {{ location.districtName }}</p>
@@ -83,12 +83,14 @@ function formatPrice(price: any) {
 }
 
 export interface GetAllLocationForOrderResponseDto {
-  id: string;
-  customerId: string;
-  locationHeader: string;
-  cityName: string;
-  districtName: string;
-  detail: string;
+  id: string
+  customerId: string
+  locationHeader: string
+  cityId:string
+  cityName: string
+  districtId:string
+  districtName: string
+  detail: string
 }
 
 
@@ -102,7 +104,6 @@ onMounted(async () => {
     loginCheck.value = true
   }
 })
-
 async function deleteAddress(orderLocationId: string) {
  await cart.removeLocation(orderLocationId)
 }
@@ -113,6 +114,11 @@ function deleteBasket() {
 
 const isOpenLocation = () => {
   cart.toggleOrderLocationPopUp()
+}
+
+const editedLocation =async (location:GetAllLocationForOrderResponseDto) =>{
+await cart.LocationPopupOpen(location)
+
 }
 
 

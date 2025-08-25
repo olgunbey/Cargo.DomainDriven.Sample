@@ -16,20 +16,16 @@ const router = createRouter({
 })
 
 
-// router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
+  const data = localStorage.getItem("login");
+  const parsedData = data ? JSON.parse(data) : null;
 
-//   //burada refresh token kontrolu yapıp, eüer yoksa login'e yönlendirebilirim...
-//   // const data = localStorage.getItem("login");
-//   // const parsedData = data ? JSON.parse(data) : null;
+  if (parsedData && to.path == "/") {
 
-//   // if (!parsedData && to.path !== "/") {
-
-//   //   next({ path: "/" });
-//   // }
-//   // else {
-//   //   next();
-//   // }
-
-
-// })
+    next({ path: "/product" });
+  }
+  else {
+    next();
+  }
+})
 export default router

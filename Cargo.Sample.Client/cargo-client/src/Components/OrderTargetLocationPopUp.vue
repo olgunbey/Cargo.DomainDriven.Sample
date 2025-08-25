@@ -1,61 +1,44 @@
 <template>
-  <Form @submit="save" :validation-schema="schema">
+  <form @submit="onSubmit">
     <div class="popup-overlay">
       <div class="popup">
         <h2>Adres Bilgileri</h2>
+
         <label for="header">Adres Başlığı</label>
-        <Field id="header" name="header" type="text" v-model="header" />
+        <Field id="header" name="header" type="text" :rules="[required]" />
         <ErrorMessage name="header" class="error-message" />
 
         <label for="city">Şehir</label>
-        <Field as="select" name="city" v-model="selectedCityId">
+        <Field as="select" name="city" v-model="cityId" :rules="[required]">
           <option disabled value="">Seçiniz</option>
-          <option
-            v-for="location in locationDto"
-            :key="location.cityId"
-            :value="location.cityId"
-          >
+          <option v-for="location in locationDto" :key="location.cityId" :value="location.cityId">
             {{ location.cityName }}
           </option>
         </Field>
         <ErrorMessage name="city" class="error-message" />
 
         <label for="district">İlçe</label>
-        <Field as="select" name="district" v-model="district">
+        <Field as="select" name="district" :rules="[required]">
           <option disabled value="">Seçiniz</option>
-          <option
-            v-for="dist in districts"
-            :key="dist.districtId"
-            :value="dist.districtId"
-          >
+          <option v-for="dist in districts" :key="dist.districtId" :value="dist.districtId">
             {{ dist.districtName }}
           </option>
         </Field>
         <ErrorMessage name="district" class="error-message" />
 
         <label for="detail">Adres Detayı</label>
-        <Field
-          as="textarea"
-          id="detail"
-          name="detail"
-          placeholder="Adres detayını giriniz..."
-          v-model="detail"
-        />
+        <Field as="textarea" id="detail" name="detail" placeholder="Adres detayını giriniz..." :rules="[required]" />
         <ErrorMessage name="detail" class="error-message" />
 
         <div class="btn-group">
           <button type="submit">Kaydet</button>
-          <button
-            type="button"
-            @click="cart.closeOrderLocationPopUp()"
-            class="cancel-btn"
-          >
+          <button type="button" @click="cart.closeOrderLocationPopUp()" class="cancel-btn">
             Kapat
           </button>
         </div>
       </div>
     </div>
-  </Form>
+  </form>
 </template>
 
 <script setup lang="ts">
@@ -64,79 +47,89 @@ import { useCartStore } from "@/stores/cart";
 import { EndpointLocation } from "@/Request/EndpointLocation";
 import { LoginResponseDto } from "@/Pages";
 import { SaveLocationForOrderRequestDto } from "@/Dtos/SaveLocationForOrderRequestDto";
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
+import { Field, ErrorMessage, useForm } from "vee-validate";
+import { required } from "@vee-validate/rules";
+
+interface LocationForm {
+  header: string;
+  city: string;
+  district: string;
+  detail: string;
+}
 
 export interface District {
   districtId: string;
   districtName: string;
 }
-export interface LocationDto {
+
+export interface CityDto {
   cityId: string;
   cityName: string;
   districtResponses: District[];
 }
 
+const { resetForm, handleSubmit,setValues } = useForm<LocationForm>();
 const cart = useCartStore();
+
 const endpointLocation = EndpointLocation.SingletonEndpointRequest();
 
-const schema = yup.object({
-  header: yup.string().required("Adres başlığı giriniz"),
-  city: yup.string().required("Şehir seçiniz"),
-  district: yup.string().required("İlçe seçiniz"),
-  detail: yup.string().required("Adres detayı giriniz"),
-});
-
 const districts = ref<District[]>([]);
-const district = ref("");
-const detail = ref("");
-const header = ref("");
-const locationDto = ref<LocationDto[]>([]);
+const locationDto = ref<CityDto[]>([]);
 
 
-const id = ref<string>()
+const selectedId = ref<string>()
 
-const selectedCityId=computed({
-  get:()=> id.value,
-  set:(cityId:string)=>{
-    id.value=cityId
-    districts.value= locationDto.value.find(c=>c.cityId==cityId)?.districtResponses ?? []
-    district.value=""
-    detail.value=""
+const cityId = computed({
+  get:()=> locationDto.value.find(y=>y.cityId == selectedId.value)?.cityId,
+  set:(city:string)=>{
+    selectedId.value = city;
+    districts.value = locationDto.value.find(y=>y.cityId == selectedId.value)?.districtResponses ?? [];
   }
-}
-)
+})
 
-onMounted(async () => {
-  const response = await endpointLocation.GetAllCity();
-  if (response.errors.length == 0) {
-    locationDto.value = response.data ?? [];
+const onSubmit = handleSubmit(async values => {
+  const loginLocalStorage = localStorage.getItem("login");
+  if (!loginLocalStorage) {
+    console.error("Login bilgisi bulunamadı");
+    return;
   }
-});
-
-async function save() {
-  const loginLocalStorage = localStorage.getItem("login")
 
   const jsonLoginLocalStorage = JSON.parse(
-    loginLocalStorage ?? ""
-  ) as LoginResponseDto
+    loginLocalStorage
+  ) as LoginResponseDto;
 
-  
   const dto = new SaveLocationForOrderRequestDto(
-    selectedCityId.value ?? "",
-    district.value,
+    values.city,
+    values.district,
     jsonLoginLocalStorage.userId,
-    detail.value,
-    header.value
-  )
+    values.detail,
+    values.header
+  );
 
-  const response = await endpointLocation.SaveLocationForOrder(dto)
+  const response = await endpointLocation.SaveLocationForOrder(dto);
 
-  if (response.errors.length == 0) { 
+  if (response.errors.length === 0) {
+    await cart.getAllLocation();
+    cart.closeOrderLocationPopUp();
+  } else {
   }
-  await cart.getAllLocation()
-  cart.closeOrderLocationPopUp()
-}
+})
+onMounted(async () => {
+  locationDto.value = await cart.loadCity()
+
+  if (!cart.sendComponent) {
+    resetForm()
+  } else if (cart.updateLocation) {
+
+    cityId.value=cart.updateLocation.cityId
+    setValues({
+      header:cart.updateLocation.locationHeader,
+      city:cart.updateLocation.cityId,
+      district:cart.updateLocation.districtId,
+      detail:cart.updateLocation.detail
+    })
+  }
+});
 </script>
 
 <style scoped>

@@ -72,10 +72,29 @@ export class EndpointLocation {
             }
         })
         .then(async response => (await response.json()) as ResponseDto<NoContentDto>)
-            .catch(error => {
+        .catch(error => {
+            console.log(error);
+            return new ResponseDto<NoContentDto>([error], null)
+        })
+    }
+    async UpdateLocationForOrder(location:GetAllLocationForOrderResponseDto):Promise<ResponseDto<NoContentDto>>
+    {
+        return await fetch("/api/Location/UpdateLocationForOrder",{
+            method:'GET',
+            headers:{
+                'Content-type':'application/json',
+                'Accept':'application/json',
+                'id':location.id,
+                'districtId':location.districtId,
+                'cityId':location.cityId,
+                'detail':location.detail
+            }
+        })
+        .then(async response => await(response.json()) as ResponseDto<NoContentDto>)
+        .catch(error => {
                 console.log(error);
                 return new ResponseDto<NoContentDto>([error], null)
-            })
+        })
     }
 
 }

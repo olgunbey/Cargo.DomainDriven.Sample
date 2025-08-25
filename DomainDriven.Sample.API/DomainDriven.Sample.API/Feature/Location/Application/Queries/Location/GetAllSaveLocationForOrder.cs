@@ -17,7 +17,9 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Queries.Location
                  .Select(y => new ResponseDto
                  {
                      Id = y.Id,
+                     CityId = y.CityId,
                      CityName = y.CityName,
+                     DistrictId = y.DistrictId,
                      DistrictName = y.DistrictName,
                      Detail = y.LocationHeader,
                      LocationHeader = y.LocationHeader,
@@ -34,7 +36,9 @@ namespace DomainDriven.Sample.API.Feature.Location.Application.Queries.Location
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
         public string LocationHeader { get; set; }
+        public Guid CityId { get; set; }
         public string CityName { get; set; }
+        public Guid DistrictId { get; set; }
         public string DistrictName { get; set; }
         public string Detail { get; set; }
     }
