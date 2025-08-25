@@ -34,7 +34,7 @@ builder.Services.AddDbContext<CargoDbContext>(options =>
 
 builder.Services.AddEventStoreClient("esdb://admin:changeit@localhost:2113?tls=false&tlsVerifyCert=false");
 
-builder.Services.AddScoped<ICargoDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
+//builder.Services.AddScoped<ICargoDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
 builder.Services.AddScoped<IProductDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
@@ -42,13 +42,14 @@ builder.Services.AddScoped<IOrderDbContext>(provider => provider.GetRequiredServ
 
 builder.Services.AddScoped<ILocationDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
+
+builder.Services.AddScoped<ICustomerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
+
 builder.Services.AddScoped<IIdentityServerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
 builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
-
-builder.Services.AddScoped<ICustomerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 builder.Services.AddMassTransit(configure =>
 {
     configure.AddConsumer<OrderReceivedIntegrationEventHandler>();

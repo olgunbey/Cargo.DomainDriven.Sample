@@ -13,16 +13,22 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
         {
             var orderProductModel = notification.ProductItems.Select(product => new OrderProductReadModel
             {
-                OrderId = notification.OrderId,
-                ProductId = product.ProductId,
-                Count = product.Count,
-                ProductName = product.ProductName,
-                Detail = notification.Detail
+                Quantity=product.quantity,
+                Price=product.price,
+                ProductId=product.id,
+                ProductName=product.name,
+                CustomerOrderTargetLocationId=notification.TargetLocationId,
+                CityId=notification.CityId,
+                CityName=notification.CityName,
+                DistrictId=notification.DistrictId,
+                DistrictName=notification.DistrictName,
+                Detail=notification.Detail,
+                OrderId=notification.OrderId,
+                CustomerId=notification.CustomerId
             });
 
             await orderDbContext.OrderProductRealModel.AddRangeAsync(orderProductModel);
-            await orderDbContext.SaveChangesAsync(cancellationToken);
-            await publishEndpoint.Publish(new OrderReceivedIntegrationEvent(notification.ProductItems.ToDictionary(y => y.ProductId, y => y.Count)));
+            //await publishEndpoint.Publish(new OrderReceivedIntegrationEvent(notification.ProductItems.ToDictionary(y => y.ProductId, y => y.Count)));
         }
     }
 }

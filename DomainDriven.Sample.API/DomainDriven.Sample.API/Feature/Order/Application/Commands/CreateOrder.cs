@@ -12,14 +12,16 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
         public Guid DistrictId { get; set; }
         public string DistrictName { get; set; }
         public string Detail { get; set; }
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
         public List<ProductItem> ProductItems { get; set; }
         public bool PaymentStatus { get; set; }
+        public Guid LocationId { get; set; }
         public class ProductItem
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
             public int Quantity { get; set; }
+            public int Price { get; set; }
         }
 
     }
@@ -27,12 +29,10 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
     {
         public async Task<Result<NoContentDto>> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
         {
-
-            List<(Guid ProductId, string ProductName, int Count)> productItems = request.ProductItems.Select(y => (ProductId: y.Id, ProductName: y.Name, Count: y.Quantity)).ToList();
-            var generateOrder = new OrderInformation(request.CityId, request.DistrictId, request.Detail, request.CustomerId, productItems, request.PaymentStatus, request.CityName, request.DistrictName);
-
+            var productItems = request.ProductItems.Select(y => (id: y.Id, quantity: y.Quantity, name: y.Name,price:y.Price)).ToList();
+            var generateOrder = new OrderInformation(request.CustomerId, request.LocationId);
+            generateOrder.CreateOrder(request.DistrictId, request.DistrictName, request.CityId, request.CityName, request.Detail, productItems);
             orderDbContext.OrderInformation.Add(generateOrder);
-
             await orderDbContext.SaveChangesAsync(cancellationToken);
 
             return Result<NoContentDto>.Success();

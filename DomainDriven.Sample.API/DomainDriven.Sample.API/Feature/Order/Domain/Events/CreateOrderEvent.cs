@@ -4,12 +4,14 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Events
 {
     public record CreateOrderEvent(
         Guid OrderId,
-        IEnumerable<(Guid ProductId, string ProductName, int Count)> ProductItems,
-        Guid DistrictId,
-        string DistrictName,
+        List<(Guid id, int quantity, string name,int price)> ProductItems,
         Guid CityId,
         string CityName,
-        string Detail
+        Guid DistrictId,
+        Guid TargetLocationId,
+        string DistrictName,
+        string Detail,
+        Guid CustomerId
         ) : ICustomizeNotification
     {
         public bool ShouldLogEvent { get; set; }

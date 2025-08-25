@@ -1,5 +1,4 @@
 ﻿using DomainDriven.Sample.API.Common;
-using DomainDriven.Sample.API.Feature.Order.Domain.Entities;
 using DomainDriven.Sample.API.Feature.Order.Domain.Enums;
 using DomainDriven.Sample.API.Feature.Order.Domain.Events;
 
@@ -11,16 +10,20 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Aggregates
         {
 
         }
-        public OrderInformation(Guid cityId, Guid districtId, string detail, int customerId, List<(Guid ProductId, string ProductName, int Count)> productItems, bool paymentStatus, string cityName, string districtName)
+        public OrderInformation(Guid customerId,Guid orderLocationId)
         {
-            var enumerableProductItems = productItems.Select(x => new ProductItem(x.ProductId, x.Count));
-            CustomerId = customerId;
-            PaymentStatus = paymentStatus;
-            RaiseDomainEvent(new CreateOrderEvent(this.Id, productItems,districtId,districtName,cityId,cityName,detail) { ShouldLogEvent = true });
+            this.CustomerId = customerId;
+            this.PaymentStatus = false;
+            this.OrderLocationId = orderLocationId;
         }
         public OrderStatus OrderStatus { get; private set; }
-        public int CustomerId { get; private set; }
+        public Guid CustomerId { get; private set; }
         public bool PaymentStatus { get; private set; }
+        public Guid OrderLocationId { get; private set; }
+        public void CreateOrder(Guid districtId, string districtName,Guid cityId,string cityName,string detail,List<(Guid id,int quantity,string name,int price)> productItems)
+        {
+            RaiseDomainEvent(new CreateOrderEvent(this.Id, productItems, cityId,cityName,districtId, this.OrderLocationId,districtName, detail,this.CustomerId) { ShouldLogEvent = true });
+        }
         public void UpdateStatus(OrderStatus status)
         {
             this.OrderStatus = status;

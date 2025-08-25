@@ -32,6 +32,7 @@
     <Folder Include="Feature\Location\Application\Queries\District\" />
     <Folder Include="Feature\Location\Infrastructure\" />
     <Folder Include="Feature\Order\Application\Queries\" />
+    <Folder Include="Feature\Order\Domain\Entities\" />
     <Folder Include="Feature\Product\Application\DomainEventHandlers\Category\" />
     <Folder Include="Feature\Product\Domain\Entities\" />
     <Folder Include="Feature\Product\Domain\Events\Category\" />
