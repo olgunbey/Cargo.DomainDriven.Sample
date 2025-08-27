@@ -9,7 +9,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.IntegrationEventHand
     {
         public async Task Consume(ConsumeContext<UpdateProductIntegrationEvent> context)
         {
-            await orderDbContext.OrderProductRealModel.
+            await orderDbContext.OrderProductReadModel.
                Where(y => y.ProductId == context.Message.ProductId)
                .ExecuteUpdateAsync(y => y.SetProperty(prop => prop.ProductName, context.Message.ProductName));
         }

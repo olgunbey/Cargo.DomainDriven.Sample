@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ProductPage from '@/Pages/ProductPage.vue'
 import LoginPage from './Pages/LoginPage.vue'
 import RegisterPage from './Pages/RegisterPage.vue'
+import OrderListPage from './Pages/OrderListPage.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginPage },
   { path: '/product', component: ProductPage },
   { path: '/register', component: RegisterPage },
   { path: '/category/:categoryId', name: 'category', component: ProductPage },
+  {path:'/orderList',component:OrderListPage}
 ]
 
 const router = createRouter({

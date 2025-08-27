@@ -1,4 +1,4 @@
-﻿using DomainDriven.Sample.API.Common;
+﻿    using DomainDriven.Sample.API.Common;
 using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Domain.Aggregates;
 using MediatR;
@@ -14,7 +14,6 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Commands
         public string Detail { get; set; }
         public Guid CustomerId { get; set; }
         public List<ProductItem> ProductItems { get; set; }
-        public bool PaymentStatus { get; set; }
         public Guid LocationId { get; set; }
         public class ProductItem
         {

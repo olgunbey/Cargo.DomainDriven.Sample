@@ -1,7 +1,6 @@
 ﻿using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Domain.Events;
 using DomainDriven.Sample.API.Feature.Order.Domain.ReadModel;
-using DomainDriven.Sample.API.IntegrationEvents;
 using MassTransit;
 using MediatR;
 
@@ -13,21 +12,22 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
         {
             var orderProductModel = notification.ProductItems.Select(product => new OrderProductReadModel
             {
-                Quantity=product.quantity,
-                Price=product.price,
-                ProductId=product.id,
-                ProductName=product.name,
-                CustomerOrderTargetLocationId=notification.TargetLocationId,
-                CityId=notification.CityId,
-                CityName=notification.CityName,
-                DistrictId=notification.DistrictId,
-                DistrictName=notification.DistrictName,
-                Detail=notification.Detail,
-                OrderId=notification.OrderId,
-                CustomerId=notification.CustomerId
+                Quantity = product.quantity,
+                OrderStatus = notification.OrderStatus,
+                Price = product.price,
+                ProductId = product.id,
+                ProductName = product.name,
+                CustomerOrderTargetLocationId = notification.TargetLocationId,
+                CityId = notification.CityId,
+                CityName = notification.CityName,
+                DistrictId = notification.DistrictId,
+                DistrictName = notification.DistrictName,
+                Detail = notification.Detail,
+                OrderId = notification.OrderId,
+                CustomerId = notification.CustomerId
             });
 
-            await orderDbContext.OrderProductRealModel.AddRangeAsync(orderProductModel);
+            await orderDbContext.OrderProductReadModel.AddRangeAsync(orderProductModel);
             //await publishEndpoint.Publish(new OrderReceivedIntegrationEvent(notification.ProductItems.ToDictionary(y => y.ProductId, y => y.Count)));
         }
     }

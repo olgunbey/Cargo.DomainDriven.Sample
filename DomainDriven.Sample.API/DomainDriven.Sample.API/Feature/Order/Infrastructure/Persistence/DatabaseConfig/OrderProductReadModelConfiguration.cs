@@ -8,7 +8,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Infrastructure.Persistence.Datab
     {
         public void Configure(EntityTypeBuilder<OrderProductReadModel> builder)
         {
-            builder.HasKey(y => y.OrderId);
+            builder.HasKey(y => y.Id);
         }
     }
 }

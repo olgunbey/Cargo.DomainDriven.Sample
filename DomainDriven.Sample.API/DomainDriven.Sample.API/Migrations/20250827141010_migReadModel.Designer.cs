@@ -3,6 +3,7 @@ using System;
 using DomainDriven.Sample.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DomainDriven.Sample.API.Migrations
 {
     [DbContext(typeof(CargoDbContext))]
-    partial class CargoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250827141010_migReadModel")]
+    partial class migReadModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

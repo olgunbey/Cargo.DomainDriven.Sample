@@ -1,4 +1,5 @@
 ﻿using DomainDriven.Sample.API.Common;
+using DomainDriven.Sample.API.Feature.Order.Domain.Enums;
 
 namespace DomainDriven.Sample.API.Feature.Order.Domain.Events
 {
@@ -11,7 +12,8 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Events
         Guid TargetLocationId,
         string DistrictName,
         string Detail,
-        Guid CustomerId
+        Guid CustomerId,
+        OrderStatus OrderStatus
         ) : ICustomizeNotification
     {
         public bool ShouldLogEvent { get; set; }

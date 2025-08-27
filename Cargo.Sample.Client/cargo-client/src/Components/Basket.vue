@@ -70,6 +70,8 @@ import { useCartStore } from "@/stores/cart"
 import OrderTargetLocationPopUp from "./OrderTargetLocationPopUp.vue"
 import { onMounted, ref } from "vue"
 import router from "@/router"
+import { EndpointOrder } from "@/Request/EndpointOrder"
+import { ProductItems, SaveOrderRequestDto } from "@/Dtos/SaveOrderRequestDto"
 
 const cart = useCartStore();
 const loginCheck = ref<boolean>(false)
@@ -95,6 +97,8 @@ export interface GetAllLocationForOrderResponseDto {
 
 
 const selectedAddressId = ref("");
+
+
 
 onMounted(async () => {
  await cart.getAllLocation()
@@ -123,7 +127,26 @@ await cart.LocationPopupOpen(location)
 
 
 const buyProduct = async () => {
+  const endpoint = EndpointOrder.GetEndpointOrder();
+
+   const locationInfo = cart.getAllLocationForOrderResponseDto.find(y=>y.id==selectedAddressId.value)
+
   const productListDto: LocalStorageProductListDto[] = cart.items
+
+    const dto= new SaveOrderRequestDto(
+      locationInfo?.cityId ?? "",
+      locationInfo?.cityName ?? "",
+      locationInfo?.districtId ?? "",
+      locationInfo?.districtName ?? "",
+      locationInfo?.detail ?? "",
+      locationInfo?.customerId ?? "",
+      productListDto.map(product=> new ProductItems(product.product.productId,product.product.name,product.quantity,product.product.price)),
+      selectedAddressId.value
+    )
+
+    console.log(endpoint)
+ const response =  await endpoint.SaveOrder(dto)
+ console.log(response)
 }
 </script>
 

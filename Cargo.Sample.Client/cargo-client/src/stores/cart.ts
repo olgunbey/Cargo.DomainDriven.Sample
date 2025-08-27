@@ -13,6 +13,7 @@ export const useCartStore = defineStore("cart", {
     getAllLocationForOrderResponseDto: GetAllLocationForOrderResponseDto[];
     updateLocation: GetAllLocationForOrderResponseDto | null;
     sendComponent: boolean; //false => adres ekle, true => edited,
+    selectedLocationId: string
   } => ({
     items: (() => {
       const stored = localStorage.getItem("cartItems");
@@ -23,8 +24,12 @@ export const useCartStore = defineStore("cart", {
     getAllLocationForOrderResponseDto: [],
     updateLocation: null,
     sendComponent: false,
+    selectedLocationId: ""
   }),
   actions: {
+    SetLocationIdForOrder(id: string) {
+      this.selectedLocationId = id
+    },
     async WriteCityCache(): Promise<CityDto[]> {
       const endpointLocation = EndpointLocation.SingletonEndpointRequest();
       const response = await endpointLocation.GetAllCity();
@@ -81,14 +86,20 @@ export const useCartStore = defineStore("cart", {
       const endpointLocation = EndpointLocation.SingletonEndpointRequest();
       const localStorageLogin = localStorage.getItem("login");
 
-      const parseLogin = JSON.parse(
-        localStorageLogin ?? ""
-      ) as LoginResponseDto;
 
-      const data = await endpointLocation.GetAllLocationForOrder(
-        parseLogin.userId
-      );
-      this.getAllLocationForOrderResponseDto = [...(data.data ?? [])];
+      if (localStorageLogin != null) {
+        const parseLogin = JSON.parse(
+          localStorageLogin ?? ""
+        ) as LoginResponseDto;
+
+        const data = await endpointLocation.GetAllLocationForOrder(
+          parseLogin.userId
+        );
+        this.getAllLocationForOrderResponseDto = [...(data.data ?? [])];
+      }
+
+
+
     },
     async removeLocation(locationId: string) {
       const request = EndpointLocation.SingletonEndpointRequest();

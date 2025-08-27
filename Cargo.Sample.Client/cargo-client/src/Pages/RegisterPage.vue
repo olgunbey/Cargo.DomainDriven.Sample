@@ -100,8 +100,13 @@ const registerSchema = yup.object({
 
 
 const handleRegister = async () => {
-    const response = await new EndpointCustomer().registerCustomer(registerUserDto.value);
-    if (response.errors.length!==0) {
+
+   const endpoint = EndpointCustomer.GetEndpointCustomer();
+    const response = await endpoint.registerCustomer(registerUserDto.value);
+
+    console.log(registerUserDto.value)
+    if (response.errors.length!==0) 
+    {
       console.log(response.errors);
       registerError.value = response.errors;
     }

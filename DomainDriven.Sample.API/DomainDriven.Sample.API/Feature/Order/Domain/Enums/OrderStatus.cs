@@ -9,6 +9,8 @@
         Delivered,            // Teslim edildi
         Cancelled,           // İptal edildi
         Rejected,            // Reddedildi (örn. fiyat reddi)
-        Returned             // İade edildi
+        Returned,             // İade edildi
+        Accepted,
+        Processing
     }
 }

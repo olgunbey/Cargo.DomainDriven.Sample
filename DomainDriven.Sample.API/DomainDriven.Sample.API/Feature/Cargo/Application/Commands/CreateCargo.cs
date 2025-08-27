@@ -23,7 +23,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
             public string Name { get; set; }
         }
     }
-    public class CreateCargoRequestHandler(ICargoDbContext cargoDbContext) : IRequestHandler<CreateCargoRequest, Result<NoContentDto>>
+    public class CreateCargoRequestHandler() : IRequestHandler<CreateCargoRequest, Result<NoContentDto>>
     {
         public async Task<Result<NoContentDto>> Handle(CreateCargoRequest request, CancellationToken cancellationToken)
         {
@@ -39,8 +39,8 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Commands
                 request.Detail);
 
 
-            cargoDbContext.CargoInformation.Add(cargoInformation);
-            await cargoDbContext.SaveChangesAsync(cancellationToken);
+            //cargoDbContext.CargoInformation.Add(cargoInformation);
+            //await cargoDbContext.SaveChangesAsync(cancellationToken);
             return Result<NoContentDto>.Success();
 
         }

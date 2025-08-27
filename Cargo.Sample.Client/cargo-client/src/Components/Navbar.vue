@@ -22,8 +22,10 @@
           </div>
         </div>
 
-        <a href="#" class="nav-item">Kampanyalar</a>
-        <a href="#" class="nav-item">İletişim</a>
+        <RouterLink :to="{path:'/orderlist'}" class="dropdown-item">
+          Siparişlerim
+        </RouterLink>
+
       </div>
 
       <div class="navbar-actions">

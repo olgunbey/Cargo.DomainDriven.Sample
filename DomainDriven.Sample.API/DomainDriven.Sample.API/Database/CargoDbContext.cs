@@ -21,10 +21,10 @@ using System.Reflection;
 
 namespace DomainDriven.Sample.API.Database
 {
-    public class CargoDbContext(DbContextOptions<CargoDbContext> dbContextOptions, IMediator mediator) : DbContext(dbContextOptions), ILocationDbContext, IOrderDbContext, IProductDbContext, ICustomerDbContext, IIdentityServerDbContext
+    public class CargoDbContext(DbContextOptions<CargoDbContext> dbContextOptions,IMediator mediator) : DbContext(dbContextOptions), ILocationDbContext, IOrderDbContext, IProductDbContext, ICustomerDbContext, IIdentityServerDbContext
     {
         public DbSet<City> City { get; set; }
-        public DbSet<OrderProductReadModel> OrderProductRealModel { get; set; }
+        public DbSet<OrderProductReadModel> OrderProductReadModel { get; set; }
         public DbSet<OrderInformation> OrderInformation { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }

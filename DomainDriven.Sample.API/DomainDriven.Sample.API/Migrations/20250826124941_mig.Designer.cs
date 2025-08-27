@@ -3,6 +3,7 @@ using System;
 using DomainDriven.Sample.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DomainDriven.Sample.API.Migrations
 {
     [DbContext(typeof(CargoDbContext))]
-    partial class CargoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250826124941_mig")]
+    partial class mig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,7 +217,7 @@ namespace DomainDriven.Sample.API.Migrations
 
             modelBuilder.Entity("DomainDriven.Sample.API.Feature.Order.Domain.ReadModel.OrderProductReadModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -242,11 +245,8 @@ namespace DomainDriven.Sample.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("OrderStatus")
-                        .HasColumnType("integer");
 
                     b.Property<int>("Price")
                         .HasColumnType("integer");
@@ -261,9 +261,9 @@ namespace DomainDriven.Sample.API.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderId");
 
-                    b.ToTable("OrderProductReadModel");
+                    b.ToTable("OrderProductRealModel");
                 });
 
             modelBuilder.Entity("DomainDriven.Sample.API.Feature.Product.Domain.Aggregates.Category", b =>

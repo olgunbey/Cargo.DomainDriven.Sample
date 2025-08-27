@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
 {
-    public class UpdateCargoStatusEventHandler(EventStoreClient eventStoreClient, ICargoDbContext cargoDbContext, IPublishEndpoint publishEndpoint) : INotificationHandler<UpdateCargoStatusEvent>
+    public class UpdateCargoStatusEventHandler(EventStoreClient eventStoreClient, IPublishEndpoint publishEndpoint) : INotificationHandler<UpdateCargoStatusEvent>
     {
         public async Task Handle(UpdateCargoStatusEvent notification, CancellationToken cancellationToken)
         {

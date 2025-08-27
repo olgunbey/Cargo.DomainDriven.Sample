@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DomainDriven.Sample.API.Migrations
 {
     [DbContext(typeof(CargoDbContext))]
-    [Migration("20250825230502_OrderUpdate")]
-    partial class OrderUpdate
+    [Migration("20250826142918_mig2")]
+    partial class mig2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -263,7 +263,7 @@ namespace DomainDriven.Sample.API.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("OrderProductRealModel");
+                    b.ToTable("OrderProductReadModel");
                 });
 
             modelBuilder.Entity("DomainDriven.Sample.API.Feature.Product.Domain.Aggregates.Category", b =>

@@ -8,6 +8,6 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Interfaces
     {
         public DbSet<Domain.Aggregates.OrderInformation> OrderInformation { get; set; }
 
-        public DbSet<OrderProductReadModel> OrderProductRealModel { get; set; }
+        public DbSet<OrderProductReadModel> OrderProductReadModel { get; set; }
     }
 }

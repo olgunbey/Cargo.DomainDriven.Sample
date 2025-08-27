@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHandlers
 {
-    public class UpdateProductIntegrationEventHandler(ICargoDbContext cargoDbContext) : IConsumer<UpdateProductIntegrationEvent>
+    public class UpdateProductIntegrationEventHandler() : IConsumer<UpdateProductIntegrationEvent>
     {
         public async Task Consume(ConsumeContext<UpdateProductIntegrationEvent> context)
         {
-            await cargoDbContext.CargoProductReadModel.Where(y => y.ProductId == context.Message.ProductId)
-                 .ExecuteUpdateAsync(y => y.SetProperty(prop => prop.ProductName, context.Message.ProductName));
+            //await cargoDbContext.CargoProductReadModel.Where(y => y.ProductId == context.Message.ProductId)
+            //     .ExecuteUpdateAsync(y => y.SetProperty(prop => prop.ProductName, context.Message.ProductName));
         }
     }
 }

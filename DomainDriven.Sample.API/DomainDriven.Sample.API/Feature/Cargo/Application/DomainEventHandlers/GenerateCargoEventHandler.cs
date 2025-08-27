@@ -7,7 +7,7 @@ using MediatR;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
 {
-    public class GenerateCargoEventHandler(IPublishEndpoint publishEndpoint, ICargoDbContext cargoDbContext) : INotificationHandler<GenerateCargoEvent>
+    public class GenerateCargoEventHandler(IPublishEndpoint publishEndpoint) : INotificationHandler<GenerateCargoEvent>
     {
         public async Task Handle(GenerateCargoEvent notification, CancellationToken cancellationToken)
         {
@@ -23,8 +23,8 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
                 Detail = notification.Detail,
             });
 
-            cargoDbContext.CargoProductReadModel.AddRange(addedCargoProductReadModels);
-            await cargoDbContext.SaveChangesAsync(cancellationToken);
+            //cargoDbContext.CargoProductReadModel.AddRange(addedCargoProductReadModels);
+            //await cargoDbContext.SaveChangesAsync(cancellationToken);
 
             await publishEndpoint.Publish(new CargoStatusUpdateIntegrationEvent(notification.OrderId, CargoStatusDto.PickedUp));
         }

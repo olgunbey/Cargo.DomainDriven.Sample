@@ -1,4 +1,6 @@
-﻿namespace DomainDriven.Sample.API.Feature.Order.Domain.ReadModel
+﻿using DomainDriven.Sample.API.Feature.Order.Domain.Enums;
+
+namespace DomainDriven.Sample.API.Feature.Order.Domain.ReadModel
 {
     public class OrderProductReadModel
     {
@@ -14,6 +16,7 @@
         public string DistrictName { get; set; }
         public Guid CityId { get; set; }
         public string CityName { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public string Detail { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DomainDriven.Sample.API.Migrations
 {
     /// <inheritdoc />
-    public partial class OrderUpdate : Migration
+    public partial class mig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

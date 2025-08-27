@@ -32,7 +32,6 @@ export class EndpointProduct {
             console.log(error);
             return new ResponseDto<ProductDto[]>([error], null);
         });
-        
     }
     
 }

@@ -10,6 +10,7 @@ using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Product.Application.IntegrationEventHandlers;
 using DomainDriven.Sample.API.Feature.Product.Application.Interfaces;
 using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using ServiceStack;
@@ -42,13 +43,14 @@ builder.Services.AddScoped<IOrderDbContext>(provider => provider.GetRequiredServ
 
 builder.Services.AddScoped<ILocationDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
-
 builder.Services.AddScoped<ICustomerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
 builder.Services.AddScoped<IIdentityServerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
 builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+
 
 builder.Services.AddMassTransit(configure =>
 {
@@ -74,17 +76,6 @@ builder.Services.AddMassTransit(configure =>
 
 });
 
-
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowFrontend", policy =>
-//    {
-//        policy.WithOrigins("http://localhost:5173")
-//              .AllowAnyHeader()
-//              .AllowAnyMethod();
-//    });
-//});
 
 
 
