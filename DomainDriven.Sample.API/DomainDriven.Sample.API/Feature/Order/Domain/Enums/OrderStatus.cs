@@ -10,7 +10,7 @@
         Cancelled,           // İptal edildi
         Rejected,            // Reddedildi (örn. fiyat reddi)
         Returned,             // İade edildi
-        Accepted,
-        Processing
+        Accepted,             // Sipariş alındı
+        Processing            //Hazırlanıyor
     }
 }

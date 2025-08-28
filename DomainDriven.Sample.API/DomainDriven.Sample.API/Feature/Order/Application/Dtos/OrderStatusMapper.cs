@@ -19,5 +19,6 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.Dtos
                 CargoStatusDto.PickedUp => OrderStatus.PickedUp
             };
         }
+        public static EventOrderStatus MapToEventStatus(OrderStatus orderStatus) => orderStatus switch { OrderStatus.AtDistributionCenter => EventOrderStatus.AtDistributionCenter };
     }
 }

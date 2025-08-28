@@ -8,28 +8,21 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates
     {
         public CargoInformation()
         {
-            
+
         }
-        public CargoInformation(int companyId, DateTime estimatedDateTime, Guid orderId, Guid cityId, string cityName, Guid districtId, string districtName, Dictionary<Guid, string> products, string detail)
+        public CargoInformation(Guid orderId, CargoStatus cargoStatus, Guid cityId, string cityName, Guid districtId, string districtName, string detail, DateTime estimatedDateTime = default)
         {
-            _productIds = new();
-            CompanyId = companyId;
             OrderId = orderId;
             EstimateDateTime = estimatedDateTime;
-            CargoStatus = CargoStatus.PickedUp;
+            CargoStatus = cargoStatus;
             CreatedDate = DateTime.UtcNow;
             CargoCode = "Test123";
-            _productIds.AddRange(products.Select(y => y.Key));
-            RaiseDomainEvent(new GenerateCargoEvent(companyId, this.Id, orderId, estimatedDateTime, CreatedDate, CargoCode, cityId, cityName, districtId, districtName, products, detail) { ShouldLogEvent = true });
+            //RaiseDomainEvent(new GenerateCargoEvent(companyId, this.Id, orderId, estimatedDateTime, CreatedDate, CargoCode, cityId, cityName, districtId, districtName, detail) { ShouldLogEvent = true });
         }
-        public int CompanyId { get; private set; }
         public Guid OrderId { get; private set; }
-
-        private readonly List<Guid> _productIds;
-        public IReadOnlyCollection<Guid> ProductIds => _productIds.AsReadOnly();
         public CargoStatus CargoStatus { get; private set; }
         public string CargoCode { get; private set; }
-        public DateTime EstimateDateTime { get; private set; }
+        public DateTime? EstimateDateTime { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime UpdateDateTime { get; private set; }
 

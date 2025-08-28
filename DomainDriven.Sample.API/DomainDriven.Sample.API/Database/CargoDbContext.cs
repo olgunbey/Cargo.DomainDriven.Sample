@@ -21,7 +21,7 @@ using System.Reflection;
 
 namespace DomainDriven.Sample.API.Database
 {
-    public class CargoDbContext(DbContextOptions<CargoDbContext> dbContextOptions,IMediator mediator) : DbContext(dbContextOptions), ILocationDbContext, IOrderDbContext, IProductDbContext, ICustomerDbContext, IIdentityServerDbContext
+    public class CargoDbContext(DbContextOptions<CargoDbContext> dbContextOptions, IMediator mediator) : DbContext(dbContextOptions), ILocationDbContext, IOrderDbContext, IProductDbContext, ICustomerDbContext, IIdentityServerDbContext, ICargoDbContext
     {
         public DbSet<City> City { get; set; }
         public DbSet<OrderProductReadModel> OrderProductReadModel { get; set; }
@@ -33,11 +33,9 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<UserCredential> UserCredential { get; set; }
         public DbSet<CustomerOrderTargetLocation> CustomerOrderTargetLocation { get; set; }
         public DbSet<CustomerOrderTargetLocationReadModel> CustomerOrderTargetLocationReadModel { get; set; }
-
-        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
-        {
-            return Set<TEntity>();
-        }
+        public DbSet<Company> Company { get; set; }
+        public DbSet<CargoInformation> CargoInformation { get; set; }
+        public DbSet<CargoProductReadModel> CargoProductReadModel { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(assembly: Assembly.GetExecutingAssembly());
@@ -54,7 +52,7 @@ namespace DomainDriven.Sample.API.Database
                 await mediator.Publish(domainEvent, cancellationToken);
             }
 
-            ChangeTracker.Entries<AggregateRoot>().ToList(); // hangi entity'ler üzerinnde state değiştirildi...
+            ChangeTracker.Entries<AggregateRoot>().ToList(); //hangi entity'ler üzerinnde state değiştirildi...
 
             foreach (var entry in ChangeTracker.Entries<AggregateRoot>())
             {
