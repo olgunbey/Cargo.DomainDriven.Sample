@@ -2,6 +2,7 @@
 {
     public interface IJob
     {
-        public Task Execute();
+        public Task OrderStateToProcessing();
+        public Task OrderStateToAtDistributionCenter();
     }
 }

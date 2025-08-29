@@ -70,6 +70,7 @@ builder.Services.AddMassTransit(configure =>
     configure.AddConsumer<OrderReceivedIntegrationEventHandler>();
     configure.AddConsumer<UpdateProductIntegrationEventHandler>();
     configure.AddConsumer<RegisterIntegrationEventHandler>();
+    configure.AddConsumer<UpdateStatusOrderToCargoEventHandler>();
 
     configure.UsingRabbitMq((context, configurator) =>
     {
@@ -84,6 +85,7 @@ builder.Services.AddMassTransit(configure =>
         configurator.ReceiveEndpoint("ProductToCargo", cnf => cnf.ConfigureConsumer<UpdateProductIntegrationEventHandler>(context));
         configurator.ReceiveEndpoint("ProductToOrder", cnf => cnf.ConfigureConsumer<UpdateProductIntegrationEventHandler>(context));
         configurator.ReceiveEndpoint("IdentityServerToCustomer", cnf => cnf.ConfigureConsumer<RegisterIntegrationEventHandler>(context));
+        configurator.ReceiveEndpoint("OrderStatusToCargo", cnf => cnf.ConfigureConsumer<UpdateStatusOrderToCargoEventHandler>(context));
 
     });
 
@@ -99,7 +101,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var job = scope.ServiceProvider.GetService<IJob>();
-    await job.Execute();
+    await job.OrderStateToProcessing();
 }
 
 

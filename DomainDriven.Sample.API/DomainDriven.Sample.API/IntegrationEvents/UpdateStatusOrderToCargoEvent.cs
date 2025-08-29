@@ -1,6 +1,6 @@
 ﻿namespace DomainDriven.Sample.API.IntegrationEvents
 {
-    public record UpdateStatusAtDistributionCenterOrderEvent(
+    public record UpdateStatusOrderToCargoEvent(
         Guid OrderId,
         EventOrderStatus EventOrderStatus,
         Guid CityId,

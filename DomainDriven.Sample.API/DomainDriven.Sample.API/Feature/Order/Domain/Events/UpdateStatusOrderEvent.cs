@@ -3,7 +3,10 @@ using DomainDriven.Sample.API.Feature.Order.Domain.Enums;
 
 namespace DomainDriven.Sample.API.Feature.Order.Domain.Events
 {
-    public record UpdateStatusOrderEvent(Guid orderId,OrderStatus OrderStatus) : ICustomizeNotification
+    public record UpdateStatusOrderEvent(
+        Guid OrderId,
+        OrderStatus OrderStatus
+        ) : ICustomizeNotification
     {
         public bool ShouldLogEvent { get; set; }
     }
