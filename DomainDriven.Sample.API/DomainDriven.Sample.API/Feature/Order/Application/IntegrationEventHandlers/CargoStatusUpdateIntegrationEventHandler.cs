@@ -5,15 +5,19 @@ using MassTransit;
 
 namespace DomainDriven.Sample.API.Feature.Order.Application.IntegrationEventHandlers
 {
-    public class CargoStatusUpdateIntegrationEventHandler(IOrderDbContext orderDbContext) : IConsumer<CargoStatusUpdateIntegrationEvent>
+    public class CargoStatusUpdateIntegrationEventHandler(IOrderDbContext orderDbContext) : IConsumer<CargoStatusUpdateToOrderIntegrationEvent>
     {
-        public async Task Consume(ConsumeContext<CargoStatusUpdateIntegrationEvent> context)
+        public async Task Consume(ConsumeContext<CargoStatusUpdateToOrderIntegrationEvent> context)
         {
-            var getOrderById = await orderDbContext.OrderInformation.FindAsync(context.Message.OrderId);
+            var getAllOrderById = orderDbContext.OrderInformation
+                .Where(y => y.Id == context.Message.OrderId);
 
             var updateOrderStatus = OrderStatusMapper.MapToDomain(context.Message.CargoStatus);
-            getOrderById.UpdateStatus(updateOrderStatus);
-            await orderDbContext.SaveChangesAsync();
+            foreach (var order in getAllOrderById)
+            {
+                order.UpdateStatus(updateOrderStatus);
+            }
+            await orderDbContext.SaveChangesAsync(context.CancellationToken);
         }
     }
 }

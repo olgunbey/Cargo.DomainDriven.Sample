@@ -19,7 +19,7 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
                 .Where(y=>y.OrderId==notification.OrderId)
                 .ExecuteUpdateAsync(y => y.SetProperty(rm => rm.OrderStatus, val => notification.OrderStatus));
 
-            var @event = new UpdateStatusOrderToCargoEvent(
+            var @event = new UpdateStatusOrderToCargoIntegrationEvent(
                 notification.OrderId,
                 orderStatus,
                 orderInfo.CityId,

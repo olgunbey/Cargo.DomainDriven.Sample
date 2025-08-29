@@ -1,6 +1,6 @@
 ﻿namespace DomainDriven.Sample.API.IntegrationEvents
 {
-    public record CargoStatusUpdateIntegrationEvent(Guid OrderId, CargoStatusDto CargoStatus)
+    public record CargoStatusUpdateToOrderIntegrationEvent(Guid OrderId, CargoStatusDto CargoStatus)
     {
     }
     public enum CargoStatusDto

@@ -38,7 +38,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.DomainEventHandlers
 
 
             var updateOrderMapper = OrderStatusMapper.MapToDto(notification.CargoStatus);
-            await publishEndpoint.Publish(new CargoStatusUpdateIntegrationEvent(notification.OrderId, updateOrderMapper));
+            await publishEndpoint.Publish(new CargoStatusUpdateToOrderIntegrationEvent(notification.OrderId, updateOrderMapper));
 
 
         }

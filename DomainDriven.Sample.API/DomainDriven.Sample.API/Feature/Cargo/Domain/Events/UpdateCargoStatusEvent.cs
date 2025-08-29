@@ -3,7 +3,12 @@ using DomainDriven.Sample.API.Feature.Cargo.Domain.Enums;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Events
 {
-    public record UpdateCargoStatusEvent(CargoStatus CargoStatus, DateTime UpdatedDateTime, string CargoCode, Guid OrderId) : ICustomizeNotification
+    public record UpdateCargoStatusEvent(
+        CargoStatus CargoStatus,
+        DateTime UpdatedDateTime,
+        string CargoCode,
+        Guid OrderId
+        ) : ICustomizeNotification
     {
         public bool ShouldLogEvent { get; set; }
     }

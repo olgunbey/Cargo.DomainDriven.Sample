@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHandlers
 {
-    public class UpdateStatusOrderToCargoEventHandler(ICargoDbContext cargoDbContext) : IConsumer<UpdateStatusOrderToCargoEvent>
+    public class UpdateStatusOrderToCargoEventHandler(ICargoDbContext cargoDbContext) : IConsumer<UpdateStatusOrderToCargoIntegrationEvent>
     {
-        public async Task Consume(ConsumeContext<UpdateStatusOrderToCargoEvent> context)
+        public async Task Consume(ConsumeContext<UpdateStatusOrderToCargoIntegrationEvent> context)
         {
             var message = context.Message;
             var cargoStatus = OrderStatusMapper.MapToDto(message.EventOrderStatus);
