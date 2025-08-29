@@ -7,6 +7,7 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Application.Dtos
     {
         public static CargoStatusDto MapToDto(CargoStatus cargoStatus) => cargoStatus switch { CargoStatus.AtDistributionCenter => CargoStatusDto.AtDistributionCenter };
 
+        public static CargoStatus MapToDto(EventOrderStatus cargoStatus) => cargoStatus switch { EventOrderStatus.AtDistributionCenter => CargoStatus.AtDistributionCenter };
     };
 
 }

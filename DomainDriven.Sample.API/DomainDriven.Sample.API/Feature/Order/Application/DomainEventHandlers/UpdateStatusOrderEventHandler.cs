@@ -12,23 +12,36 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
     {
         public async Task Handle(Domain.Events.UpdateStatusOrderEvent notification, CancellationToken cancellationToken)
         {
-            EventOrderStatus orderStatus = OrderStatusMapper.MapToEventStatus(notification.OrderStatus);
-            var orderInfo = await orderDbContext.OrderProductReadModel.Where(y => y.OrderId == notification.OrderId).FirstAsync();
+            //await orderDbContext.OrderProductReadModel
+            //   .Where(y => y.OrderId == notification.OrderId)
+            //   .ExecuteUpdateAsync(y => y.SetProperty(rm => rm.OrderStatus, val => notification.OrderStatus));
 
-            await orderDbContext.OrderProductReadModel
-                .Where(y=>y.OrderId==notification.OrderId)
-                .ExecuteUpdateAsync(y => y.SetProperty(rm => rm.OrderStatus, val => notification.OrderStatus));
 
-            var @event = new UpdateStatusOrderToCargoIntegrationEvent(
-                notification.OrderId,
-                orderStatus,
-                orderInfo.CityId,
-                orderInfo.CityName,
-                orderInfo.DistrictId,
-                orderInfo.DistrictName,
-                orderInfo.Detail);
+            //single transaction
+            var queryOrderForOrderBy = orderDbContext.OrderProductReadModel
+                 .Where(y => y.OrderId == notification.OrderId);
 
-            await publishEndpoint.Publish(@event);
+            foreach (var item in queryOrderForOrderBy)
+            {
+                item.OrderStatus = notification.OrderStatus;
+            }
+
+
+            if (notification.OrderStatus == Domain.Enums.OrderStatus.AtDistributionCenter || notification.OrderStatus == Domain.Enums.OrderStatus.Rejected)
+            {
+                EventOrderStatus orderStatus = OrderStatusMapper.MapToEventStatus(notification.OrderStatus);
+                var orderInfo = await orderDbContext.OrderProductReadModel.Where(y => y.OrderId == notification.OrderId).FirstAsync();
+                var @event = new UpdateStatusOrderToCargoIntegrationEvent(
+                    notification.OrderId,
+                    orderStatus,
+                    orderInfo.CityId,
+                    orderInfo.CityName,
+                    orderInfo.DistrictId,
+                    orderInfo.DistrictName,
+                    orderInfo.Detail);
+                await publishEndpoint.Publish(@event);
+            }
+
         }
     }
 }

@@ -10,8 +10,6 @@ using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Product.Application.IntegrationEventHandlers;
 using DomainDriven.Sample.API.Feature.Product.Application.Interfaces;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
@@ -57,12 +55,6 @@ builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 
-builder.Services.AddHangfire(config =>
-{
-    config.UseMemoryStorage();
-});
-builder.Services.AddHangfireServer();
-
 
 
 builder.Services.AddMassTransit(configure =>
@@ -98,17 +90,19 @@ var app = builder.Build();
 
 
 
+//CargoStatus Simulation
 using (var scope = app.Services.CreateScope())
 {
-    var job = scope.ServiceProvider.GetService<IJob>();
+    var job = scope.ServiceProvider.GetService<IJob>()!;
     await job.OrderStateToProcessing();
+
+    //bu job çalýþtýðýnda UpdateStatusOrderToCargoIntegrationEvent calýsýp cargo bc'sine deðerleri gönderir
+    //await job.OrderStateToAtDistributionCenter();
 }
 
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseHangfireDashboard();
 app.UseHttpsRedirection();
 
 app.MapControllers();

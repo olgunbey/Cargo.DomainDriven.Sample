@@ -27,11 +27,8 @@ namespace DomainDriven.Sample.API.Feature.Order.Domain.Aggregates
         }
         public void UpdateStatus(OrderStatus status)
         {
-            if (status == OrderStatus.AtDistributionCenter || status == OrderStatus.Rejected)
-            {
-                RaiseDomainEvent(new UpdateStatusOrderEvent(this.Id, status));
-            }
             this.OrderStatus = status;
+            RaiseDomainEvent(new UpdateStatusOrderEvent(this.Id, status));
         }
     }
 }

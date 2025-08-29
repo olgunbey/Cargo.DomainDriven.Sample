@@ -1,5 +1,4 @@
-﻿using DomainDriven.Sample.API.Feature.Cargo.Application.Commands;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomainDriven.Sample.API.Controllers
@@ -8,15 +7,15 @@ namespace DomainDriven.Sample.API.Controllers
     [ApiController]
     public class CargoController(IMediator mediator) : ControllerBase
     {
-        [HttpPost]
-        public async Task<IActionResult> AddCargo([FromBody] CreateCargoRequest addCargoRequest)
-        {
-            return Ok(await mediator.Send(addCargoRequest));
-        }
-        [HttpGet]
-        public async Task<IActionResult> UpdateCargoStatus([FromHeader] UpdateCargoStatusRequest updateCargoStatusRequest)
-        {
-            return Ok(await mediator.Send(updateCargoStatusRequest));
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> AddCargo([FromBody] CreateCargoRequest addCargoRequest)
+        //{
+        //    return Ok(await mediator.Send(addCargoRequest));
+        //}
+        //[HttpGet]
+        //public async Task<IActionResult> UpdateCargoStatus([FromHeader] UpdateCargoStatusRequest updateCargoStatusRequest)
+        //{
+        //    return Ok(await mediator.Send(updateCargoStatusRequest));
+        //}
     }
 }

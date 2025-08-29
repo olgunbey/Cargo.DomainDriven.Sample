@@ -17,7 +17,6 @@ namespace DomainDriven.Sample.API.Feature.Cargo.Domain.Aggregates
             CargoStatus = cargoStatus;
             CreatedDate = DateTime.UtcNow;
             CargoCode = "Test123";
-            //RaiseDomainEvent(new GenerateCargoEvent(companyId, this.Id, orderId, estimatedDateTime, CreatedDate, CargoCode, cityId, cityName, districtId, districtName, detail) { ShouldLogEvent = true });
         }
         public Guid OrderId { get; private set; }
         public CargoStatus CargoStatus { get; private set; }

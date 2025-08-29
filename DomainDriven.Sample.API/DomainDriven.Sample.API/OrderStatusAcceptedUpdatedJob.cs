@@ -1,5 +1,6 @@
 ﻿using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Order.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace DomainDriven.Sample.API
 {
@@ -18,13 +19,8 @@ namespace DomainDriven.Sample.API
 
         public async Task OrderStateToProcessing()
         {
-
-            var acceptedOrderInformations = orderDbContext.OrderInformation.Where(y => y.OrderStatus == OrderStatus.Accepted);
-
-            foreach (var acceptedOrderInformation in acceptedOrderInformations)
-            {
-                acceptedOrderInformation.UpdateStatus(OrderStatus.Processing);
-            }
+            var acceptedOrderInformation = await orderDbContext.OrderInformation.SingleAsync(y => y.OrderStatus == OrderStatus.Accepted);
+            acceptedOrderInformation.UpdateStatus(OrderStatus.Processing);
             await orderDbContext.SaveChangesAsync();
         }
     }
