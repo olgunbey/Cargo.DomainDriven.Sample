@@ -45,7 +45,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
-import { EndpointCustomer } from '@/Request/EndpointCustomer'
+import { EndpointIdentity } from '@/Request/EndpointIdentity';
 
 
 export interface LoginDto {
@@ -93,7 +93,8 @@ const handleLogin = async () => {
   loginDto.value.clientId = clientId
   loginDto.value.clientSecret = clientSecret
 
-  var response = await new EndpointCustomer().loginCustomer(loginDto.value)
+  var endpoint = EndpointIdentity.GetEndpointIdentity()
+  var response = await endpoint.loginCustomer(loginDto.value)
   executeComputed.value = true
   console.log(response)
   if (Array.isArray(response.errors) && response.errors.length == 0) {

@@ -73,8 +73,8 @@
 import { computed, ref } from "vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
-import { EndpointCustomer } from "@/Request/EndpointCustomer";
 import router from "@/router";
+import { EndpointIdentity } from "@/Request/EndpointIdentity";
 
 
 export interface RegisterDto {
@@ -101,7 +101,7 @@ const registerSchema = yup.object({
 
 const handleRegister = async () => {
 
-   const endpoint = EndpointCustomer.GetEndpointCustomer();
+   const endpoint = EndpointIdentity.GetEndpointIdentity();
     const response = await endpoint.registerCustomer(registerUserDto.value);
 
     console.log(registerUserDto.value)

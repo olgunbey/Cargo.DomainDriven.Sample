@@ -207,7 +207,6 @@ const getStatusClass = (status: number): string => {
 const toggleOrder = (index: number) => {
   const expandedIndex = expandedOrders.value.indexOf(index)
 
-  console.log(expandedIndex)
   if (expandedIndex > -1) {
     expandedOrders.value.splice(expandedIndex, 1)
   } else {
@@ -384,6 +383,12 @@ const trackOrder = (orderId: string) => {
 .status-processing {
   background: #fef5e7;
   color: #c05621;
+}
+
+
+.status-accepted{
+  background:  #fef5e7;
+  color: #38a169;
 }
 
 .status-shipped {
