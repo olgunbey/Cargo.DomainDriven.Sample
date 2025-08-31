@@ -19,7 +19,8 @@ namespace DomainDriven.Sample.API
 
         public async Task OrderStateToProcessing()
         {
-            var acceptedOrderInformation = await orderDbContext.OrderInformation.SingleAsync(y => y.OrderStatus == OrderStatus.Accepted);
+            var acceptedOrderInformation = await orderDbContext.OrderInformation.SingleOrDefaultAsync(y => y.OrderStatus == OrderStatus.Accepted);
+            if (acceptedOrderInformation == null) return;
             acceptedOrderInformation.UpdateStatus(OrderStatus.Processing);
             await orderDbContext.SaveChangesAsync();
         }

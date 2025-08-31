@@ -3,20 +3,22 @@ using DomainDriven.Sample.API.Feature.IdentityServer.Application.Dtos;
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 {
-    public class LoginRequest : IRequest<Result<LoginResponseDto>>
+    public class ResourceOwnerRequest : IRequest<Result<LoginResponseDto>>
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string Mail { get; set; }
         public string Password { get; set; }
     }
-    public class LoginRequestHandler(IIdentityServerDbContext identityServerDbContext, ITokenService tokenService, IRedisRepository redisService) : IRequestHandler<LoginRequest, Result<LoginResponseDto>>
+    public class ResourceOwnerRequestHandler(IIdentityServerDbContext identityServerDbContext, ITokenService tokenService, IRedisRepository redisService, IOptions<TokenConf> options) : IRequestHandler<ResourceOwnerRequest, Result<LoginResponseDto>>
     {
-        public async Task<Result<LoginResponseDto>> Handle(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDto>> Handle(ResourceOwnerRequest request, CancellationToken cancellationToken)
         {
+            var conf = options.Value;
             var getCustomerReadModel = await identityServerDbContext
                 .UserCredential
                 .SingleOrDefaultAsync(x => x.Mail == request.Mail
@@ -25,17 +27,13 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
             if (getCustomerReadModel == null)
                 return Result<LoginResponseDto>.Fail("Kullanıcı adı veya şifre yanlış", 401);
 
-            var getClientCredential = await identityServerDbContext
-                 .ClientCredential
-                 .SingleOrDefaultAsync(y => y.ClientId == request.ClientId
-                 && y.ClientSecret == request.ClientSecret);
 
-
-            if (getClientCredential == null)
+            if (conf.ClientId != request.ClientId || conf.Secret != request.ClientSecret)
                 return Result<LoginResponseDto>.Fail("ClientId veya ClientSecret yanlış", 401);
 
 
-            var tokenResponse = tokenService.GenerateToken(getCustomerReadModel.Id, getClientCredential.Audience, getClientCredential.Issuer, getClientCredential.ClientSecret);
+            tokenService.SetConfiguration(conf.Audience, conf.Issuer, conf.Secret, DateTime.UtcNow.AddMinutes(1), DateTime.UtcNow.AddDays(1));
+            var tokenResponse = tokenService.ResourceOwnerCredential(getCustomerReadModel.Id);
 
             var getAllCacheRefreshToken = await redisService.GetAllCacheRefreshToken();
 

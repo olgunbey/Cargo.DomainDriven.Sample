@@ -4,6 +4,7 @@ using DomainDriven.Sample.API.Feature.Cargo.Application.IntegrationEventHandlers
 using DomainDriven.Sample.API.Feature.Cargo.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Customer.Application.IntegrationEventHanders;
 using DomainDriven.Sample.API.Feature.Customer.Infrastructure.Persistence;
+using DomainDriven.Sample.API.Feature.IdentityServer.Application.Dtos;
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure;
 using DomainDriven.Sample.API.Feature.Location.Application.Interfaces;
@@ -11,7 +12,9 @@ using DomainDriven.Sample.API.Feature.Order.Application.Interfaces;
 using DomainDriven.Sample.API.Feature.Product.Application.IntegrationEventHandlers;
 using DomainDriven.Sample.API.Feature.Product.Application.Interfaces;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using ServiceStack;
 using ServiceStack.Redis;
@@ -49,13 +52,27 @@ builder.Services.AddScoped<ICustomerDbContext>(provider => provider.GetRequiredS
 
 builder.Services.AddScoped<IIdentityServerDbContext>(provider => provider.GetRequiredService<CargoDbContext>());
 
+builder.Services.Configure<TokenConf>(builder.Configuration.GetSection("TokenConf"));
 
 builder.Services.AddScoped<IJob, OrderStatusAcceptedUpdatedJob>();
 builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(conf =>
+{
+    var config = builder.Configuration.GetSection("TokenConf").Get<TokenConf>();
+    conf.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateAudience = true,
+        ValidAudience = config.Audience,
+        ValidIssuer = config.Issuer,
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Hashing.Hash(config.Secret))
+    };
+});
 
 builder.Services.AddMassTransit(configure =>
 {

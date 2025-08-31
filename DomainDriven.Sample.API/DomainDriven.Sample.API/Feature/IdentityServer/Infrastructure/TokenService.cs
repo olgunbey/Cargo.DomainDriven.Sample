@@ -6,37 +6,71 @@ using System.Security.Claims;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Infrastructure
 {
-    public class TokenService:ITokenService
+    public class TokenService : ITokenService
     {
-        public LoginResponseDto GenerateToken(Guid userId, string audience, string issuer, string clientSecret)
+        public string Audience { get; set; }
+        public string Issuer { get; set; }
+        public string ClientSecret { get; set; }
+        public DateTime AccessTokenLifeTime { get; set; }
+        public DateTime RefreshTokenLifeTime { get; set; }
+        public void SetConfiguration(string audience, string issuer, string clientSecret, DateTime accessTokenLifeTime, DateTime refreshTokenLifeTime)
         {
-            DateTime accessTokenLifeTime = DateTime.UtcNow.AddMinutes(1);
-            var securityKey = new SymmetricSecurityKey(Hashing.Hash(clientSecret));
-
+            this.Audience = audience;
+            this.Issuer = issuer;
+            this.ClientSecret = clientSecret;
+            this.AccessTokenLifeTime = accessTokenLifeTime;
+            this.RefreshTokenLifeTime = refreshTokenLifeTime;
+        }
+        public LoginResponseDto ResourceOwnerCredential(Guid userId)
+        {
             string userIdString = userId.ToString();
-            List<Claim> claims = new List<Claim>
+            List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier,userIdString)
+                {new(ClaimTypes.NameIdentifier,userIdString) }
             };
+            var generateToken = GenerateToken(claims);
+            return new LoginResponseDto()
+            {
+                UserId = userIdString,
+                AccessToken = generateToken.AcessToken,
+                RefreshToken = GenerateRefreshToken,
+                AccessTokenLifeTime = generateToken.AccessTokenLifeTime,
+                RefreshTokenLifeTime = RefreshTokenLifeTime
+            };
+        }
+        public ClientCredentialDto ClientCredential()
+        {
+            var generateToken = GenerateToken();
+            return new ClientCredentialDto()
+            {
+                AccessToken = generateToken.AcessToken,
+                AccessTokenLifeTime = generateToken.AccessTokenLifeTime,
+            };
+        }
+
+        private GenerateTokenDto GenerateToken(List<Claim> claims = default)
+        {
+            var securityKey = new SymmetricSecurityKey(Hashing.Hash(ClientSecret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var SecretToken = new JwtSecurityToken(issuer: issuer,
-                audience: audience,
+            var SecretToken = new JwtSecurityToken(issuer: Issuer,
+                audience: Audience,
                 claims: claims,
-                expires: accessTokenLifeTime,
+                expires: AccessTokenLifeTime,
                 signingCredentials: credentials
                 );
             var token = new JwtSecurityTokenHandler().WriteToken(SecretToken);
 
-            return new LoginResponseDto()
+            return new GenerateTokenDto()
             {
-                UserId = userIdString,
-                AccessToken = token,
-                RefreshToken = GenerateRefreshToken,
-                AccessTokenLifeTime = accessTokenLifeTime,
-                RefreshTokenLifeTime = DateTime.UtcNow.AddDays(1)
+                AcessToken = token,
+                AccessTokenLifeTime = AccessTokenLifeTime,
             };
         }
 
+
+
         private string GenerateRefreshToken => Guid.NewGuid().ToString();
+
+
     }
 }

@@ -2,18 +2,24 @@
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Dtos;
 using DomainDriven.Sample.API.Feature.IdentityServer.Application.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Options;
 
 namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
 {
-    public class RefreshTokenControlRequest : IRequest<Result<LoginResponseDto>>
+    public class RefreshTokenRenewalRequest : IRequest<Result<LoginResponseDto>>
     {
         public string RefreshToken { get; set; }
     }
-    public class RefreshTokenControlRequestHandler(IRedisRepository redisService, ITokenService tokenService) : IRequestHandler<RefreshTokenControlRequest, Result<LoginResponseDto>>
+    public class RefreshTokenRenewalRequestHandler(IRedisRepository redisService, ITokenService tokenService, IOptions<TokenConf> options) : IRequestHandler<RefreshTokenRenewalRequest, Result<LoginResponseDto>>
     {
-        public async Task<Result<LoginResponseDto>> Handle(RefreshTokenControlRequest request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDto>> Handle(RefreshTokenRenewalRequest request, CancellationToken cancellationToken)
         {
+
+            TokenConf conf = options.Value;
             var getAllCacheRefreshToken = await redisService.GetAllCacheRefreshToken();
+
+            if (getAllCacheRefreshToken == null)
+                getAllCacheRefreshToken = new List<CacheRefreshTokenDto>();
 
             var getRefreshToken = getAllCacheRefreshToken.SingleOrDefault(u => u.refreshToken == request.RefreshToken);
             if (getRefreshToken == null)
@@ -22,11 +28,10 @@ namespace DomainDriven.Sample.API.Feature.IdentityServer.Application.Queries
             }
 
             getAllCacheRefreshToken.Remove(getRefreshToken);
-            var token = tokenService.GenerateToken(Guid.Parse(getRefreshToken.userId), "https://localhost:7208", "https://localhost:7208", "testSecret");
-
+            tokenService.SetConfiguration(conf.Audience, conf.Issuer, conf.Secret, DateTime.UtcNow.AddMinutes(1), DateTime.UtcNow.AddDays(2));
+            var token = tokenService.ResourceOwnerCredential(Guid.Parse(getRefreshToken.userId));
             getAllCacheRefreshToken.Add(new Dtos.CacheRefreshTokenDto(token.RefreshTokenLifeTime, token.RefreshToken, token.UserId));
             await redisService.SetCacheRefreshToken("refreshToken", getAllCacheRefreshToken);
-
             return Result<LoginResponseDto>.Success(token);
 
         }

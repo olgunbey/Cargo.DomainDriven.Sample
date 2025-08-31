@@ -17,7 +17,6 @@ namespace DomainDriven.Sample.API.Feature.Order.Application.DomainEventHandlers
             //   .ExecuteUpdateAsync(y => y.SetProperty(rm => rm.OrderStatus, val => notification.OrderStatus));
 
 
-            //single transaction
             var queryOrderForOrderBy = orderDbContext.OrderProductReadModel
                  .Where(y => y.OrderId == notification.OrderId);
 

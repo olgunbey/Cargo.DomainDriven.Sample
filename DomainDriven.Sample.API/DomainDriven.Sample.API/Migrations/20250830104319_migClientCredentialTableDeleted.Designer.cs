@@ -3,6 +3,7 @@ using System;
 using DomainDriven.Sample.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DomainDriven.Sample.API.Migrations
 {
     [DbContext(typeof(CargoDbContext))]
-    partial class CargoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250830104319_migClientCredentialTableDeleted")]
+    partial class migClientCredentialTableDeleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,6 +129,33 @@ namespace DomainDriven.Sample.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CustomerReadModel");
+                });
+
+            modelBuilder.Entity("DomainDriven.Sample.API.Feature.IdentityServer.Domain.Aggregates.ClientCredential", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Audience")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClientSecret")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Issuer")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClientCredential");
                 });
 
             modelBuilder.Entity("DomainDriven.Sample.API.Feature.IdentityServer.Domain.Aggregates.UserCredential", b =>

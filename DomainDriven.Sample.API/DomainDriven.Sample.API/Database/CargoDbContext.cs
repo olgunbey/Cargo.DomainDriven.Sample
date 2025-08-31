@@ -28,7 +28,6 @@ namespace DomainDriven.Sample.API.Database
         public DbSet<OrderInformation> OrderInformation { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<ClientCredential> ClientCredential { get; set; }
         public DbSet<CustomerReadModel> CustomerReadModel { get; set; }
         public DbSet<UserCredential> UserCredential { get; set; }
         public DbSet<CustomerOrderTargetLocation> CustomerOrderTargetLocation { get; set; }
