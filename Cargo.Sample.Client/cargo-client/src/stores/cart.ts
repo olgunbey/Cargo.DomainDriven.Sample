@@ -1,6 +1,7 @@
 import { GetAllLocationForOrderResponseDto } from "@/Components/Basket.vue";
 import { CityDto } from "@/Components/OrderTargetLocationPopUp.vue";
 import { LocalStorageProductListDto, ProductDto } from "@/Dtos";
+import { UserDto } from "@/Dtos/UserDto";
 import { LoginResponseDto } from "@/Pages";
 import { EndpointLocation } from "@/Request/EndpointLocation";
 import { defineStore } from "pinia";

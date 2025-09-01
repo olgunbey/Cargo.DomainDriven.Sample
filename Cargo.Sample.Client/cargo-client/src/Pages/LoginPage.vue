@@ -46,6 +46,7 @@ import { useRouter } from 'vue-router'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { EndpointIdentity } from '@/Request/EndpointIdentity';
+import { useCartStore } from '@/stores/cart';
 
 
 export interface LoginDto {
@@ -55,6 +56,7 @@ export interface LoginDto {
   password: string;
 }
 
+const cart = useCartStore()
 
 const router = useRouter()
 const successLogin = ref<boolean>(false)
@@ -96,7 +98,6 @@ const handleLogin = async () => {
   var endpoint = EndpointIdentity.GetEndpointIdentity()
   var response = await endpoint.loginCustomer(loginDto.value)
   executeComputed.value = true
-  console.log(response)
   if (Array.isArray(response.errors) && response.errors.length == 0) {
     
     successLogin.value = true
@@ -110,7 +111,7 @@ const handleLogin = async () => {
         router.push({ path: '/product' })
       }, 1000)
     }
-    localStorage.setItem("login", JSON.stringify(response.data));
+    localStorage.set('login',JSON.stringify(response.data))
   }
   else {
     successLogin.value = false

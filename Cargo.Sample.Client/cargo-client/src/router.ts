@@ -11,7 +11,7 @@ const routes = [
   { path: '/product', component: ProductPage },
   { path: '/register', component: RegisterPage },
   { path: '/category/:categoryId', name: 'category', component: ProductPage },
-  { path: '/orderList', component: OrderListPage }
+  { path: '/orderlist',   name:'orderlist' ,component: OrderListPage }
 ]
 
 const router = createRouter({

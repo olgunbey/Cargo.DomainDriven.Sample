@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <RouterLink :to="{path:'/orderlist'}" class="dropdown-item">
+        <RouterLink :to="{name:'orderlist',query:{userId: user?.userId}}" class="dropdown-item">
           Siparişlerim
         </RouterLink>
 
@@ -51,10 +51,21 @@ import { onMounted, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { EndpointProduct } from '@/Request/EndpointProduct'
 import { ResponseDto,GetAllCategoryResponseDto } from '@/Dtos/index'
+import { UserDto } from '@/Dtos/UserDto'
 
 
 const cart = useCartStore()
 const categories = ref<CategoryDto[]>()
+
+
+const user: UserDto | null = (() => {
+  const userStr = localStorage.getItem("login")
+  try {
+    return userStr ? JSON.parse(userStr) as UserDto : null
+  } catch {
+    return null
+  }
+})()
 
 class CategoryDto {
   public id:string

@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 import ProductList from "@/Components/ProductList.vue";
-import {  onMounted, ref, watch } from "vue";
+import {  ref, watch } from "vue";
 import { ProductDto, ResponseDto } from "@/Dtos";
 import { EndpointProduct } from "@/Request/EndpointProduct";
 import router from "@/router";
@@ -36,9 +36,8 @@ watch(
       loading.value=false
     }
   },
-  {immediate:true,deep:true}
+  {immediate:true}
 )
-
 
 
 </script>
