@@ -2,7 +2,8 @@
   <div>
     <div class="page-wrapper">
       <div class="product-list-wrapper">
-        <div v-if="!products || products.length === 0">
+        <div v-if="loading"></div>
+        <div v-else-if="!products || products.length === 0">
           <NotProduct />
         </div>
         <div v-else>
@@ -14,24 +15,28 @@
 </template>
 <script setup lang="ts">
 import ProductList from "@/Components/ProductList.vue";
-import {  ref, watch } from "vue";
+import {  onMounted, ref, watch } from "vue";
 import { ProductDto, ResponseDto } from "@/Dtos";
 import { EndpointProduct } from "@/Request/EndpointProduct";
 import router from "@/router";
 import NotProduct from "@/Components/NotProduct.vue";
 
-const products = ref<ProductDto[]>();
+const products = ref<ProductDto[]>()
+
+const loading = ref<boolean>(true)
 
 watch(
   ()=> router.currentRoute.value.params["categoryId"] as string,
   async (categoryId:string)=>{
     if(categoryId !=null)
     {
+      loading.value = true
       const response: ResponseDto<ProductDto[]> =await new EndpointProduct().getProductsByCategoryId(categoryId)
       products.value = response.data ?? []
+      loading.value=false
     }
   },
-  {immediate:true}
+  {immediate:true,deep:true}
 )
 
 
