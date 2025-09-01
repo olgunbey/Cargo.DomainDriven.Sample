@@ -2,18 +2,23 @@
   <div>
     <div class="page-wrapper">
       <div class="product-list-wrapper">
-        <ProductList :product-list="products ?? []" />
+        <div v-if="!products || products.length === 0">
+          <NotProduct />
+        </div>
+        <div v-else>
+          <ProductList :product-list="products ?? []" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import ProductList from "@/Components/ProductList.vue";
-import Basket from "@/Components/Basket.vue";
 import {  ref, watch } from "vue";
 import { ProductDto, ResponseDto } from "@/Dtos";
 import { EndpointProduct } from "@/Request/EndpointProduct";
 import router from "@/router";
+import NotProduct from "@/Components/NotProduct.vue";
 
 const products = ref<ProductDto[]>();
 
